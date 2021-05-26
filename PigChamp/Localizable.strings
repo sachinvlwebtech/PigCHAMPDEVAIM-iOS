@@ -1,0 +1,32 @@
+
+/*
+  Localizable.strings
+  PigChamp
+  Created by Venturelabour on 14/09/16.
+  Copyright © 2016 Venturelabour. All rights reserved.
+*/
+
+//@"http://192.168.20.40/PigchampWeb/" //http://rdstest.pigchamp.com/ ,,//192.168.33.20
+
+//"baseUrl" ="http://pcrds.farmsstaging.com/";
+
+//"baseUrl" ="https://rdstest.pigchamp.com/";
+
+//"baseUrl" ="dev-pc-rds.farmsstaging.com/";
+
+"baseUrl" = "https://dev-pc-cam.farmsstaging.com/";
+
+//"baseUrl" ="http://192.168.20.40/PigchampWeb/";
+
+//"baseUrlVersionCheck" ="http://192.168.20.40/PigchampWeb/";
+
+// "http://pcrds.farmsstaging.com/";//"http://192.168.20.40/PigchampWeb/"; //"http://online.pigchamp.com/"; //"http://pcrds.farmsstaging.com/"; //"http://192.168.33.20/" "http://pcrds.farmsstaging.com/"
+"Unauthorised" = "Your session has been expired. Please login again.";
+"ServerErr"  = "Unexpected result from server, please try again.";
+"Timeout" = "Request Timeout error.";
+"ConnectTimeout"="Network Connect Timeout Error.";
+"ReadTimeout" = "network read timeout error";
+"Gatewaytimeout" = "Gateway Timeout.";
+"connection_lost" = "Not connected";
+"ServerNotFound" = "A server with the specified hostname could not be found";
+"ServerNotResponding" = "Server not responding, Please try again";
