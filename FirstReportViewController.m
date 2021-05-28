@@ -991,8 +991,10 @@ BOOL isOpenFisrReport = NO;
                 if ([dictResponse isKindOfClass:[NSDictionary class]]) {
                      NSString *strRec = [[dictResponse objectForKey:@"_RecCount"] objectForKey:@"totRecs"];
                     
-                     //if (![[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]]) {
-                         if ([[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]]) {
+                   // if (![[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]] || ![[dictResponse valueForKey:@"ErrorMsg"]  isEqual: @"null"] || ![[dictResponse valueForKey:@"ErrorMsg"]  isEqual: @"<null>"]) {
+                    if (![[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]]  && ![[dictResponse valueForKey:@"ErrorMsg"]  isEqual: @"null"]) {
+                    
+                    //if ([dictResponse valueForKey:@"ErrorMsg"] != nil ) {
 
                         if ([[dictResponse valueForKey:@"ErrorMsg"] localizedCaseInsensitiveContainsString:@"Not connected"])
                         {//to do too

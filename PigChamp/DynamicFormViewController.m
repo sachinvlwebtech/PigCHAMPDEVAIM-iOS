@@ -3782,21 +3782,6 @@ float animatedDistance;
                                         //                                              [myAlertController addAction:ok];
                                         //                                              [self presentViewController:myAlertController animated:YES completion:nil];
                                         
-                                        //For maintaining last selected values
-                                        [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
-                                        [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
-                                        [pref synchronize];
-                                        flag = 1;
-                                        
-                                        
-                                        NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
-                                        NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
-                                        if ([strFromDataEntry isEqualToString:@"1"]){
-                                            [self.navigationController popViewControllerAnimated:YES];
-                                        }else{
-                                            
-                                            [self clearFileds];
-                                        }
                                         
                                         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                         hud.mode = MBProgressHUDModeText;
@@ -3804,8 +3789,22 @@ float animatedDistance;
                                         hud.margin = 10.f;
                                         hud.yOffset = 150.f;
                                         hud.removeFromSuperViewOnHide = YES;
-                                        [hud hide:YES afterDelay:3];
                                         
+                                        //For maintaining last selected values
+                                        [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
+                                        [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
+                                        [pref synchronize];
+                                        flag = 1;
+                                        
+                                        NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+                                        NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+                                        if ([strFromDataEntry isEqualToString:@"1"]){
+                                            [self.navigationController popViewControllerAnimated:YES];
+                                        }else{
+                                            [self clearFileds];
+                                        }
+                                        [hud hide:YES afterDelay:3];
+
                                         
                                     }else{
                                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
@@ -3901,12 +3900,18 @@ float animatedDistance;
                     [self presentViewController:myAlertController animated:YES completion:nil];
                 }else if ([[dict valueForKey:@"ResultString"] isEqualToString:strSaved] || [[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:strSavedLitterNote]){
                     
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                       hud.mode = MBProgressHUDModeText;
+                                       hud.labelText = strSaved;
+                                       hud.margin = 10.f;
+                                       hud.yOffset = 150.f;
+                                       hud.removeFromSuperViewOnHide = YES;
+                                       
                     //For maintaining last selected values
                     [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
                     [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
                     [pref synchronize];
                     flag = 1;
-                    
                     
                     NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
                     NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
@@ -3916,17 +3921,8 @@ float animatedDistance;
                         
                         [self clearFileds];
                     }
-                    
-                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                    hud.mode = MBProgressHUDModeText;
-                    hud.labelText = strSaved;
-                    hud.margin = 10.f;
-                    hud.yOffset = 150.f;
-                    hud.removeFromSuperViewOnHide = YES;
                     [hud hide:YES afterDelay:3];
-                    
-                    
-                    
+
                     
 //                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
 //                                                                                               message:strSaved
@@ -5542,6 +5538,20 @@ float animatedDistance;
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
                     }
                 }
+                else if(strEventCode.integerValue == 19){
+                    if ([[dict valueForKey:@"dk"] integerValue]==12){
+                        if (flag == 1){
+//                            NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
+//                            [dictJson setValue:[dictJSON valueForKey:@"12"] forKey:@"12"];
+                            
+                            NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
+                            NSDictionary * dictDictDynamic = [pref objectForKey:@"lastSelectedDictDynamic"];
+                            [dictJson setValue:[dictJSON valueForKey:@"12"] forKey:[dict valueForKey:@"dk"]];
+                            [_dictDynamic setValue:[dictDictDynamic valueForKey:[dict valueForKey:@"Lb"]] forKey:[dict valueForKey:@"Lb"]];
+                        }
+                    }
+                }
+                                
                 
                 // NSLog(@"strEventCode=%@",strEventCode);
             }else if ([[dict valueForKey:@"dk"] integerValue]==42){
@@ -5577,7 +5587,6 @@ float animatedDistance;
         //                }
         //            }
         //        }
-        
         
         //Changed on 21st Oct 20 For maintaining last selected value of Locations
         if (flag == 1){

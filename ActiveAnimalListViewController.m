@@ -403,7 +403,7 @@ BOOL isOpenActiveAnimalList = NO;
                 NSDictionary *dictResponse = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
 
                 //
-                if (![[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]])
+                if ([[dictResponse valueForKey:@"ErrorMsg"] isKindOfClass:[NSNull class]])
                 {
                     if ([[dictResponse valueForKey:@"ErrorMsg"] localizedCaseInsensitiveContainsString:@"Not connected"])
                     { //to do too

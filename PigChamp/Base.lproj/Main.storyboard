@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="yBH-gN-LA2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="yBH-gN-LA2">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -138,7 +138,7 @@
                                             <action selector="btnSubmit_tapped:" destination="wLk-3q-8AN" eventType="touchUpInside" id="529-a0-uQl"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Ver 3.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmd-kS-RDL">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Ver 3.1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmd-kS-RDL">
                                         <rect key="frame" x="132" y="465" width="110" height="12"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -522,7 +522,7 @@
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                 </variation>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="  Ver 3.0" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="msx-RW-3Ep">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="  Ver 3.1" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="msx-RW-3Ep">
                                                 <rect key="frame" x="0.0" y="532" width="375" height="45"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="45" id="isU-OT-70L"/>
@@ -6090,10 +6090,6 @@
             <point key="canvasLocation" x="5066" y="182"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="feB-5l-VZ3"/>
-        <segue reference="Eza-ov-Rpa"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="Menu" width="22" height="22"/>
         <image name="Unchecked" width="22" height="22"/>
@@ -6107,4 +6103,8 @@
         <image name="icon_reports_sort.png" width="48" height="48"/>
         <image name="menuLogo" width="150" height="150"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="uV0-bc-MtN"/>
+        <segue reference="Eza-ov-Rpa"/>
+    </inferredMetricsTieBreakers>
 </document>
