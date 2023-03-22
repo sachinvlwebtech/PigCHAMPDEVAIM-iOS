@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "CoreDataHandler.h"
-///#import "FarmSelectionViewController.h"
+//#import "FarmSelectionViewController.h"
 #import "ServerManager.h"
 #import <Google/Analytics.h>
 #import "ConfigurationViewController.h"
@@ -379,7 +379,9 @@ NSString *Success        = @"";
                         [_pref synchronize];
                         [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"token"];
                         
-                        [self updateMasterDataBase];
+                        [self getUserParametersData];
+                        
+                      //  [self updateMasterDataBase];
                     }else if ([message isEqualToString:@"Incorrect Password, Please note passwords are case sensitive."]){
                         [_customIOS7AlertView close];
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
@@ -438,6 +440,7 @@ NSString *Success        = @"";
                                                  _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
                                                  [_customIOS7AlertView showLoaderWithMessage:NSLocalizedString(@"Loading...", "")];
                                                  
+                            [self getUserParametersData];
                                                  [self updateMasterDataBase];
                                                  [myAlertController dismissViewControllerAnimated:YES completion:nil];
                                              }];
@@ -538,6 +541,69 @@ NSString *Success        = @"";
     }
 }
 
+-(void)getUserParametersData{
+    
+    @try {
+        //NSError *error = nil;
+        if ([[ControlSettings sharedSettings] isNetConnected ]) {
+            [ServerManager sendRequestForUserParametersData:^(NSString *responseData) {
+                [_customIOS7AlertView close];
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                
+                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""]) {
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:responseData
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                                             //[self.navigationController popToRootViewControllerAnimated:YES];
+                                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                         }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }else{
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"userParameterData"];
+
+                    [self updateMasterDataBase];
+    
+                }
+            } onFailure:^(NSString *responseData, NSError *error) {
+                [_customIOS7AlertView close];
+                
+                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                
+                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Simple Report"];
+                [tracker set:kGAIScreenName value:strErr];
+                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+            }];
+        }
+        else {
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                       message:@"You must be online for the app to function."
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+            
+            [myAlertController addAction: ok];
+            [self presentViewController:myAlertController animated:YES completion:nil];
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Exception in updateMasterDataBase=%@",exception.description);
+    }
+}
+
 -(void)updateMasterDataBase {
     @try {
         //NSError *error = nil;
@@ -597,11 +663,13 @@ NSString *Success        = @"";
                         tod = [dict objectForKey:@"_TOD"];
                     }
                     
-                    NSArray *commonLookupsArray;
-                    if (![[dict objectForKey:@"_COMMON_LOOKUPS"] isKindOfClass:[NSNull class]])
-                    {
-                        commonLookupsArray = [dict objectForKey:@"_COMMON_LOOKUPS"];
-                    }
+                   // NSArray *commonLookupsArray;   Change done by harikrishna...
+                    
+                    NSArray *commonLookupsArray = @[@{@"sNo" : @"0"}];
+                //    if (![[dict objectForKey:@"_COMMON_LOOKUPS"] isKindOfClass:[NSNull class]])
+                //    {
+                //        commonLookupsArray = [dict objectForKey:@"_COMMON_LOOKUPS"];
+                //    }
                     
                     NSArray *dataEntryItemsArray;
                     if (![[dict objectForKey:@"_DATA_ENTRY_ITEMS"] isKindOfClass:[NSNull class]])
@@ -609,20 +677,25 @@ NSString *Success        = @"";
                         dataEntryItemsArray = [dict objectForKey:@"_DATA_ENTRY_ITEMS"];
                     }
                     
-                    NSArray *userParametersArray;
-                    if (![[dict objectForKey:@"_User_Parameters"] isKindOfClass:[NSNull class]])
+                    
+        NSDictionary * myDictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"userParameterData"];
+
+                    
+                    NSArray *userParametersArray ;
+                    
+                    if (![[myDictionary objectForKey:@"_User_Parameters"] isKindOfClass:[NSNull class]])   // Commented by harikrishna..
                     {
-                        userParametersArray = [dict objectForKey:@"_User_Parameters"];
-                        
+                        userParametersArray = [myDictionary objectForKey:@"_User_Parameters"];
+
                         //******Code Change By Priyanka on 11th May 2018********//
                         NSString *findKey = @"GHSDY4TTYG4123edfgfyi67";
                         NSArray *array = [userParametersArray valueForKey:@"nm"];
                         NSArray *array1 = [userParametersArray valueForKey:@"val"];
-                        
+
                         if ([array containsObject:findKey]) {
                             NSLog(@"%lu", (unsigned long)[array indexOfObject:findKey]);
                             NSLog(@"%@",[array1 objectAtIndex:[array indexOfObject:findKey]]);
-                            
+
                             NSString * strValue = [array1 objectAtIndex:[array indexOfObject:findKey]];
                             [[NSUserDefaults standardUserDefaults] setObject:strValue forKey:@"user_para_fostering_value"];
                             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -632,18 +705,21 @@ NSString *Success        = @"";
                         }
                     }
                     
+                    
                     NSArray *farmsArray;
-                    if (![[dict objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {
-                        farmsArray = [dict objectForKey:@"_farms"];
+                                        
+                    if (![[myDictionary objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {     //Commented by harikrishna
+                        farmsArray = [myDictionary objectForKey:@"_farms"];
                     }
                     
                     NSMutableArray *arrFilteredFarms = [[NSMutableArray alloc]init];
                     
-                    for (NSDictionary *dict in farmsArray){
-                        if (![[dict valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
-                            [arrFilteredFarms addObject:dict];
+                    for (NSDictionary *myDictionary1 in farmsArray){
+                        if (![[myDictionary1 valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
+                            [arrFilteredFarms addObject:myDictionary1];
                         }
                     }
+                    
                     
                     NSArray *geneticsArray;
                     if (![[dict objectForKey:@"_GENETICS"] isKindOfClass:[NSNull class]])
@@ -651,8 +727,8 @@ NSString *Success        = @"";
                         geneticsArray = [dict objectForKey:@"_GENETICS"];
                     }
                     
-                    NSArray *locationsArray;
-                    if (![[dict objectForKey:@"_LOCATIONS"] isKindOfClass:[NSNull class]]){
+                    NSArray *locationsArray ;
+                    if (![[dict objectForKey:@"_LOCATIONS"] isKindOfClass:[NSNull class]]){   // Commented by hari
                         locationsArray = [dict objectForKey:@"_LOCATIONS"];
                     }
                     
@@ -665,7 +741,8 @@ NSString *Success        = @"";
                     //
                     NSMutableArray *arrOperatorArray = [[NSMutableArray alloc] init];
                     
-                    for (NSDictionary *dict in operatorArray)
+                    
+                    for (NSDictionary *dict in operatorArray)    // Commented by harikrishna
                     {
                         NSMutableDictionary *dt  = [[NSMutableDictionary alloc]init];
                         //                            if (![[dict objectForKey:@"fn"] isKindOfClass:[NSNull class]]){
@@ -680,19 +757,22 @@ NSString *Success        = @"";
                         if (![[dict objectForKey:@"ln"] isKindOfClass:[NSNull class]]){
                             [dt setValue:[dict valueForKey:@"ln"] forKey:@"ln"];
                         }
-                        
+
                         //                            if (![[dict objectForKey:@"sid"] isKindOfClass:[NSNull class]]){
                         //                                [dt setValue:[dict valueForKey:@"sid"] forKey:@"sid"];
                         //                            }
-                        
+
                         [arrOperatorArray addObject:dt];
                     }
-                    //
                     
-                    NSArray* breeedingCompaniesArray;
-                    if (![[dict objectForKey:@"_BREEDING_COMPANIES"] isKindOfClass:[NSNull class]]){
-                        breeedingCompaniesArray = [dict objectForKey:@"_BREEDING_COMPANIES"];
-                    }
+                    
+                    
+                    
+                    NSArray* breeedingCompaniesArray = @[@{ @"SSL" : @"0"}
+                                         ];
+          //          if (![[dict objectForKey:@"_BREEDING_COMPANIES"] isKindOfClass:[NSNull class]]){
+          //              breeedingCompaniesArray = [dict objectForKey:@"_BREEDING_COMPANIES"];
+         //           }
                     
                     NSArray* conditionsArray;
                     if (![[dict objectForKey:@"_CONDITIONS"] isKindOfClass:[NSNull class]]){
@@ -724,7 +804,7 @@ NSString *Success        = @"";
                     if (![[dict objectForKey:@"_MATINGLEAK"] isKindOfClass:[NSNull class]]){
                         _LeakageArray = [dict objectForKey:@"_MATINGLEAK"];
                     }
-                    
+                      
                     NSArray* _QualityArray;
                     if (![[dict objectForKey:@"_MATINGQUALITY"] isKindOfClass:[NSNull class]]){
                         _QualityArray = [dict objectForKey:@"_MATINGQUALITY"];
@@ -812,8 +892,16 @@ NSString *Success        = @"";
                     
                     [[CoreDataHandler sharedHandler] removeAllmanagedObject];
                     {
-                        BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:commonLookupsArray andFarmsArray:arrFilteredFarms andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:userParametersArray andLocations:locationsArray andOperatorArray:arrOperatorArray andBreedingComapniesArray:breeedingCompaniesArray andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds  andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:_arrayEnglish conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
                         
+                        
+                       BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:commonLookupsArray andFarmsArray:arrFilteredFarms andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:userParametersArray andLocations:locationsArray andOperatorArray:arrOperatorArray andBreedingComapniesArray:breeedingCompaniesArray andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds  andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:_arrayEnglish conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:arrFilteredFarms forKey:@"farmsList"];
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:dataEntryItemsArray forKey:@"dataEntryList"];
+
+                        
+                                            
                         if (arrFilteredFarms.count==0) {
                             {
                                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"

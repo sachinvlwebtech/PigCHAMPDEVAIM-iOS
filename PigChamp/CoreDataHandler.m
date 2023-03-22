@@ -279,220 +279,220 @@ this function updates sqllite entries via core data
     NSManagedObjectContext* managedObjectContext = [self defaultManagedObjectContext];
     
     // update common lookups    
-    for (int counter=0; counter<commonLookupsArray.count; counter++)
-    {
-        NSManagedObject* commonLooupManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Common_Lookups" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [commonLookupsArray objectAtIndex:counter];
-        [commonLooupManagedObject setValuesForKeysWithDictionary:dict];
-      //  [managedObjectContext save:&error];
-    }
+//    for (int counter=0; counter<commonLookupsArray.count; counter++)
+//    {
+//        NSManagedObject* commonLooupManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Common_Lookups" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [commonLookupsArray objectAtIndex:counter];
+//        [commonLooupManagedObject setValuesForKeysWithDictionary:dict];
+//      //  [managedObjectContext save:&error];
+//    }
     
     // update data entry items
-    for (int counter=0; counter<dataEntryArray.count; counter++) {
-          NSManagedObject* dataEntryManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Data_Entry_Items" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [dataEntryArray objectAtIndex:counter];
-        [dataEntryManagedObject setValuesForKeysWithDictionary:dict];
-        //[ save:&error];
-    }
+//    for (int counter=0; counter<dataEntryArray.count; counter++) {
+//          NSManagedObject* dataEntryManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Data_Entry_Items" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [dataEntryArray objectAtIndex:counter];
+//        [dataEntryManagedObject setValuesForKeysWithDictionary:dict];
+//   //     [ save:&error];
+//    }
     
     // Update location
     
-    for (int counter=0; counter<locationsArray.count; counter++) {
-        NSManagedObject* locationManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Locations" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [locationsArray objectAtIndex:counter];
-        [locationManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//    for (int counter=0; counter<locationsArray.count; counter++) {
+//        NSManagedObject* locationManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Locations" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [locationsArray objectAtIndex:counter];
+//        [locationManagedObject setValuesForKeysWithDictionary:dict];
+//    }
     
     // update genetics
-    
-    for (int counter=0; counter<geneticsArray.count; counter++) {
-        NSManagedObject* geneticsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Genetics" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [geneticsArray objectAtIndex:counter];
-        [geneticsManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//
+//    for (int counter=0; counter<geneticsArray.count; counter++) {
+//        NSManagedObject* geneticsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Genetics" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [geneticsArray objectAtIndex:counter];
+//        [geneticsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
 
     // update farms
-    for (int counter=0; counter<farmsArray.count; counter++) {
-        NSManagedObject* farmsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Farms" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [farmsArray objectAtIndex:counter];
-        [farmsManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//    for (int counter=0; counter<farmsArray.count; counter++) {
+//        NSManagedObject* farmsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Farms" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [farmsArray objectAtIndex:counter];
+//        [farmsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
     
     // user parameters
-        for (int counter=0; counter<userParametersArray.count; counter++) {
-        NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [userParametersArray objectAtIndex:counter];
-        [userParametersManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//        for (int counter=0; counter<userParametersArray.count; counter++) {
+//        NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [userParametersArray objectAtIndex:counter];
+//        [userParametersManagedObject setValuesForKeysWithDictionary:dict];
+//    }
     
     // operator //Operator
-    for (int counter=0; counter<operatorArray.count; counter++) {
-        NSManagedObject* operatorManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Operator" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [operatorArray objectAtIndex:counter];
-        [operatorManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//    for (int counter=0; counter<operatorArray.count; counter++) {
+//        NSManagedObject* operatorManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Operator" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [operatorArray objectAtIndex:counter];
+//        [operatorManagedObject setValuesForKeysWithDictionary:dict];
+//    }
 
     // breeding companies // Breeding_Companies
-    for (int counter=0; counter<breedingCompaniesArray.count; counter++) {
-        NSManagedObject* breedingManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Breeding_Companies" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [breedingCompaniesArray objectAtIndex:counter];
-        [breedingManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // conditions // Conditions
-    for (int counter=0; counter<conditionsArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Conditions" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [conditionsArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<conditionScore.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ConditionScore" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [conditionScore objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<herdCategory.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"HerdCategory" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [herdCategory objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    
-    //
-    for (int counter=0; counter<_LesionScoreArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Lesion_Scores" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [_LesionScoreArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<lockArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Lock" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [lockArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<leakageArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Leakage" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [leakageArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<qualityArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Quality" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [qualityArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<standingReflexArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Standing_Reflex" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [standingReflexArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    for (int counter=0; counter<testTypeArray.count; counter++) {
-        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Test_Type" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [testTypeArray objectAtIndex:counter];
-        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // flags // Flags
-    for (int counter=0; counter<flagsArray.count; counter++) {
-        NSManagedObject* flagsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Flags" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [flagsArray objectAtIndex:counter];
-        [flagsManagedObject setValuesForKeysWithDictionary:dict];
-    }
-
-    // transport companies // Transport_Companies
-    for (int counter=0; counter<transportCompaniesArray.count; counter++) {
-        NSManagedObject* transportManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Transport_Companies" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [transportCompaniesArray objectAtIndex:counter];
-        [transportManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // packing plants // Packing_Plants
-    for (int counter=0; counter<packingPlantsArray.count; counter++)
-    {
-        NSManagedObject* packingManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Packing_Plants" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [packingPlantsArray objectAtIndex:counter];
-        [packingManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // treatments // Treatments
-    for (int counter=0; counter<treatmentsArray.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Treatments" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [treatmentsArray objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    //Yogita
-    // _ADMIN_ROUTES // _ADMIN_ROUTES
-    for (int counter=0; counter<adminRoutes.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Admin_Routes" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [adminRoutes objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    // _AI_STUDS // _AI_STUDS
-    
-    if ([aiStuds isKindOfClass:[NSArray class]]) {
-        for (int counter=0; counter<aiStuds.count; counter++) {
-            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"AI_STUDS" inManagedObjectContext:managedObjectContext];
-            NSDictionary* dict = [aiStuds objectAtIndex:counter];
-            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-        }
-    }
-  
-    // _BREEDING_COMPANIES
-    for (int counter=0; counter<breedingCompaniesArray.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Breeding_Companies" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [breedingCompaniesArray objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // _Halothane
-    for (int counter=0; counter<halothane.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Halothane" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [halothane objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // _PD_RESULTS
-    for (int counter=0; counter<pdresults.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Pd_Results" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [pdresults objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-    // _SEX
-    for (int counter=0; counter<sex.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Sex" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [sex objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
-    
-     // _TOD
-    for (int counter=0; counter<tod.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Tod" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [tod objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//    for (int counter=0; counter<breedingCompaniesArray.count; counter++) {
+//        NSManagedObject* breedingManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Breeding_Companies" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [breedingCompaniesArray objectAtIndex:counter];
+//        [breedingManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // conditions // Conditions
+//    for (int counter=0; counter<conditionsArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Conditions" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [conditionsArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<conditionScore.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ConditionScore" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [conditionScore objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<herdCategory.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"HerdCategory" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [herdCategory objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//
+//    //
+//    for (int counter=0; counter<_LesionScoreArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Lesion_Scores" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [_LesionScoreArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<lockArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Lock" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [lockArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<leakageArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Leakage" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [leakageArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<qualityArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Quality" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [qualityArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<standingReflexArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Standing_Reflex" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [standingReflexArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    for (int counter=0; counter<testTypeArray.count; counter++) {
+//        NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Test_Type" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [testTypeArray objectAtIndex:counter];
+//        [conditionsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // flags // Flags
+//    for (int counter=0; counter<flagsArray.count; counter++) {
+//        NSManagedObject* flagsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Flags" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [flagsArray objectAtIndex:counter];
+//        [flagsManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // transport companies // Transport_Companies
+//    for (int counter=0; counter<transportCompaniesArray.count; counter++) {
+//        NSManagedObject* transportManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Transport_Companies" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [transportCompaniesArray objectAtIndex:counter];
+//        [transportManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // packing plants // Packing_Plants
+//    for (int counter=0; counter<packingPlantsArray.count; counter++)
+//    {
+//        NSManagedObject* packingManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Packing_Plants" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [packingPlantsArray objectAtIndex:counter];
+//        [packingManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // treatments // Treatments
+//    for (int counter=0; counter<treatmentsArray.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Treatments" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [treatmentsArray objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    //Yogita
+//    // _ADMIN_ROUTES // _ADMIN_ROUTES
+//    for (int counter=0; counter<adminRoutes.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Admin_Routes" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [adminRoutes objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//    // _AI_STUDS // _AI_STUDS
+//
+//    if ([aiStuds isKindOfClass:[NSArray class]]) {
+//        for (int counter=0; counter<aiStuds.count; counter++) {
+//            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"AI_STUDS" inManagedObjectContext:managedObjectContext];
+//            NSDictionary* dict = [aiStuds objectAtIndex:counter];
+//            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//        }
+//    }
+//
+//    // _BREEDING_COMPANIES
+//    for (int counter=0; counter<breedingCompaniesArray.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Breeding_Companies" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [breedingCompaniesArray objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // _Halothane
+//    for (int counter=0; counter<halothane.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Halothane" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [halothane objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // _PD_RESULTS
+//    for (int counter=0; counter<pdresults.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Pd_Results" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [pdresults objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//    // _SEX
+//    for (int counter=0; counter<sex.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Sex" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [sex objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
+//
+//     // _TOD
+//    for (int counter=0; counter<tod.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Tod" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [tod objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
     
     // Destination
     
     @try {
-        for (int counter=0; counter<destination.count; counter++)
-        {
-            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Destination" inManagedObjectContext:managedObjectContext];
-            NSDictionary* dict = [destination objectAtIndex:counter];
-            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-        }
+//        for (int counter=0; counter<destination.count; counter++)
+//        {
+//            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Destination" inManagedObjectContext:managedObjectContext];
+//            NSDictionary* dict = [destination objectAtIndex:counter];
+//            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//        }
   
     }
     @catch (NSException *exception) {
@@ -502,24 +502,31 @@ this function updates sqllite entries via core data
     
     // Origin
     @try {
-        for (int counter=0; counter<origin.count; counter++)
-        {
-            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Origin" inManagedObjectContext:managedObjectContext];
-            NSDictionary* dict = [origin objectAtIndex:counter];
-            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-        }
+//        for (int counter=0; counter<origin.count; counter++)
+//        {
+//            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Origin" inManagedObjectContext:managedObjectContext];
+//            NSDictionary* dict = [origin objectAtIndex:counter];
+//            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//        }
+//        
+//        for (int counter=0; counter<farmsArray.count; counter++) {
+//            NSManagedObject* farmsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Farms" inManagedObjectContext:managedObjectContext];
+//            NSDictionary* dict = [farmsArray objectAtIndex:counter];
+//            [farmsManagedObject setValuesForKeysWithDictionary:dict];
+//        }
+        
     }
     @catch (NSException *exception) {
         
         NSLog(@"Exception =%@",exception.description);
     }
     
-    for (int counter=0; counter<arrTrnaslated.count; counter++)
-    {
-        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"LngData" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [arrTrnaslated objectAtIndex:counter];
-        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
-    }
+//    for (int counter=0; counter<arrTrnaslated.count; counter++)
+//    {
+//        NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"LngData" inManagedObjectContext:managedObjectContext];
+//        NSDictionary* dict = [arrTrnaslated objectAtIndex:counter];
+//        [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+//    }
     
     // save data
     [managedObjectContext save:&error];

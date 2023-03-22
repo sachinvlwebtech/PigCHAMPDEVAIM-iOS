@@ -309,7 +309,9 @@ BOOL isThousandFormat = NO;
                 self.lblSelectedValue.text = self.lblTitle;
                 [_arrDynamic removeAllObjects];
                 
-                NSArray *resultArray = [[CoreDataHandler sharedHandler]getValuesToListWithEntityName:@"Data_Entry_Items" andPredicate:[NSPredicate predicateWithFormat:@"cd == %@", strEventCode] andSortDescriptors:nil];
+          //  NSArray *resultArray = [[CoreDataHandler sharedHandler]getValuesToListWithEntityName:@"Data_Entry_Items" andPredicate:[NSPredicate predicateWithFormat:@"cd == %@", strEventCode] andSortDescriptors:nil];   // Commented by harikrishna
+                
+                NSArray *resultArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"dataEntryList"];
                 
                 for (int count=0; count<resultArray.count; count++){
                     _dictDynamic = [[NSMutableDictionary alloc]init];
@@ -1157,7 +1159,11 @@ BOOL isThousandFormat = NO;
 -(NSString*)getViewType:(NSString*)datatype{
     @try {
         NSArray *arrDate =[[NSArray alloc]initWithObjects:@"DT",@"DD",@"DF",nil];
+
+       // @"AR",@"BR",@"SR",@"GR",@"TR",@"SI",@"CO",@"TX",@"TP",@"WT",@"BL",@"BI",@"EN",@"US",@"SO",@"LC"
+                
         NSArray *arrDropDown =[[NSArray alloc]initWithObjects:@"CO",@"LC",@"TP",@"BL",@"SO",@"FR",nil];
+        
         //NSArray *arrTextField =[[NSArray alloc]initWithObjects:@"BI",@"SI", @"IN",@"AI",@"BL",@"EN",@"WT",@"C$",@"PG",@"TX",@"SI",@"ID",@"MM",@"IP",@"GI",@"MI",@"TT",@"US",nil];
         NSArray *arrTextField =[[NSArray alloc]initWithObjects:@"BI",@"SI", @"IN",@"AI",@"BL",@"EN",@"WT",@"C$",@"PG",@"TX",@"SI",@"ID",@"MM",@"IP",@"GI",@"MI",@"TT",@"US",@"BF",@"LD",nil];
         
@@ -1174,7 +1180,24 @@ BOOL isThousandFormat = NO;
         else if ([datatype isEqualToString:@"IR"])
         {
             return @"IR";
+        }else if ([datatype isEqualToString:@"AR"])
+        {
+            return @"AR";
+        }else if ([datatype isEqualToString:@"BR"])
+        {
+            return @"BR";
+        }else if ([datatype isEqualToString:@"SR"])
+        {
+            return @"SR";
+        }else if ([datatype isEqualToString:@"GR"])
+        {
+            return @"GR";
+        }else if ([datatype isEqualToString:@"TR"])
+        {
+            return @"TR";
         }
+        
+        
     }
     @catch (NSException *exception) {
         NSLog(@"Exception in getViewType = %@",exception.description);
@@ -1561,6 +1584,7 @@ BOOL isThousandFormat = NO;
             }
         }
         //Added for not able to enter value in Piglet Weaned and Liveborn by priyanka on 23rdOct20
+    
         else if ([[dict valueForKey:@"dk"]integerValue]==51 || [[dict valueForKey:@"dk"]integerValue]==15){
             //  else if ([[dict valueForKey:@"dk"]integerValue]==51 || [[dict valueForKey:@"dk"]integerValue]==15  || [[dict valueForKey:@"dk"]integerValue]==3){ //Number of piglets
             NSCharacterSet *characterSet = nil;
@@ -1741,7 +1765,7 @@ BOOL isThousandFormat = NO;
                 if([string isEqualToString:@" "]){
                     return NO;
                 }
-                else if ((newString.length <= 6) || [string isEqualToString:@""]) {//(location.location != NSNotFound)
+                else if ((newString.length <= 6) || [string isEqualToString:@""]) { //(location.location != NSNotFound)
                     [dictText setValue:newString forKey:@"first"];
                     [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                     return ((newString.length <= 6) || [string isEqualToString:@""]);

@@ -29,4 +29,6 @@
 + (void)sendRequestForCheckVersion:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;
 + (void)sendRequestForTimeoutValue:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;
 
+
++ (void)sendRequestForUserParametersData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
 @end

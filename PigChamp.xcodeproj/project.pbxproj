@@ -512,9 +512,9 @@
 				1145C30D22CE080B00DB1C28 /* MBProgressHUD.h */,
 				1145C30E22CE080B00DB1C28 /* MBProgressHUD.m */,
 				11A873D022C9F9DE00AF42D2 /* bluetooth.png */,
-				11C2CE871BD672B4002C14DA /* Main.storyboard */,
 				056EEB0E2629D77600EA4C6F /* 1242x2208.png */,
 				11C2CE8F1BD672B4002C14DA /* LaunchScreen.storyboard */,
+				11C2CE871BD672B4002C14DA /* Main.storyboard */,
 				11C2CE8D1BD672B4002C14DA /* Assets.xcassets */,
 				11C2CE921BD672B4002C14DA /* Info.plist */,
 				11C2CE8A1BD672B4002C14DA /* PigChamp.xcdatamodeld */,
@@ -718,7 +718,7 @@
 					11C2CE7A1BD672B4002C14DA = {
 						CreatedOnToolsVersion = 7.0.1;
 						DevelopmentTeam = Y44NMWY76J;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1058,19 +1058,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Farms Dot Com (Y44NMWY76J)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Farms Dot Com (Y44NMWY76J)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y44NMWY76J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = PigCHAMPAdHOCProvProfile_13thNov20;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -1080,19 +1079,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Farms Dot Com (Y44NMWY76J)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Farms Dot Com (Y44NMWY76J)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y44NMWY76J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = PigCHAMPAdHOCProvProfile_13thNov20;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

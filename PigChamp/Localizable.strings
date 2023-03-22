@@ -20,6 +20,7 @@
 
 //"baseUrlVersionCheck" ="http://192.168.20.40/PigchampWeb/";
 
+
 // "http://pcrds.farmsstaging.com/";//"http://192.168.20.40/PigchampWeb/"; //"http://online.pigchamp.com/"; //"http://pcrds.farmsstaging.com/"; //"http://192.168.33.20/" "http://pcrds.farmsstaging.com/"
 "Unauthorised" = "Your session has been expired. Please login again.";
 "ServerErr"  = "Unexpected result from server, please try again.";

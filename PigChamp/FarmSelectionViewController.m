@@ -173,8 +173,13 @@ NSString *strFarms;
         NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"f_nm"
                                                                ascending:YES];
         NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
-        NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Farms" andPredicate:nil andSortDescriptors:sortDescriptors];
-        // NSLog(@"resultArray=%@",resultArray);
+       
+        //NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Farms" andPredicate:nil andSortDescriptors:sortDescriptors]; // Commented by harikrishna
+        
+        
+        
+        NSArray *resultArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"farmsList"];
+
         
         for (int count=0; count<resultArray.count; count++) {
             @autoreleasepool {
@@ -208,17 +213,18 @@ NSString *strFarms;
 //        }
         
         //Changed by Priyanka on 15thOct for farms conflict btwn staging and production
-        if (_arrFarms.count>1) {
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
-                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
-                [_pref synchronize];
-            
-            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
-        }
+        
+//        if (_arrFarms.count>1) {                      // commented by harikrishna
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
+//                [_pref synchronize];
+//
+//            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
+//        }
         
         NSLog(@"_arrFarms = %@",_arrFarms);
     }
@@ -299,8 +305,8 @@ NSString *strFarms;
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
     @try {
         //
-        [[self.pickerDropDown.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerDropDown.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDown.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDown.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         NSString *strPrevSelectedValue= [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"id"] ?[[NSUserDefaults standardUserDefaults] objectForKey:@"id"] :@""];
         NSInteger prevSelectedIndex=0;
         
@@ -311,7 +317,7 @@ NSString *strFarms;
                 }
             }
         }
-        //
+    
         
         UILabel *lblSortText = (id)view;
         
@@ -785,7 +791,9 @@ NSString *strFarms;
                             }else{
                                 
                                 @try {
-                                    BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:nil andFarmsArray:nil andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:nil andLocations:locationsArray andOperatorArray:operatorArray andBreedingComapniesArray:nil andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:nil conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                                   BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:nil andFarmsArray:nil andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:nil andLocations:locationsArray andOperatorArray:operatorArray andBreedingComapniesArray:nil andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:nil conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                                    
+                                    
                                     //_LesionScoreArray; _LockArray _LeakageArray _QualityArray _StandingReflexArray _TestTypeArray
                                     
                                     if (isSucess && isFromSubmit){

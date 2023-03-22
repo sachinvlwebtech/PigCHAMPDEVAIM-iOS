@@ -15,7 +15,10 @@
 
 //#define kTimeoutUserInteraction 60
 //#define API_BASE_URL @"https://rdstest.pigchamp.com/"
-#define API_BASE_URL @"https://dev-pc-mobile.farmsstaging.com/"
+
+#define API_BASE_URL @"https://pcmobile.pigchamp.com/"
+
+//#define API_BASE_URL @"https://dev-pc-mobile.farmsstaging.com/"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate,NSStreamDelegate>
 {
