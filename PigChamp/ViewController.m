@@ -275,8 +275,8 @@ NSString *Success        = @"";
 {
     @try
     {
-        [[self.pickerLanguage.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerLanguage.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerLanguage.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerLanguage.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         UILabel *lblSortText = (id)view;
         
         if (!lblSortText){
@@ -441,7 +441,7 @@ NSString *Success        = @"";
                                                  [_customIOS7AlertView showLoaderWithMessage:NSLocalizedString(@"Loading...", "")];
                                                  
                             [self getUserParametersData];
-                                                 [self updateMasterDataBase];
+                                                // [self updateMasterDataBase];
                                                  [myAlertController dismissViewControllerAnimated:YES completion:nil];
                                              }];
                         
@@ -1382,6 +1382,9 @@ NSString *Success        = @"";
         NSString *strPrevSelectedValue = [weakSelf.pref valueForKey:@"selectedLanguage"];
         
         for (int count=0;count<weakSelf.arrLanguage.count;count++) {
+            
+            
+            
             if (strPrevSelectedValue.length>0){
                 if( [strPrevSelectedValue caseInsensitiveCompare:[[weakSelf.arrLanguage objectAtIndex:count] valueForKey:@"name"]] == NSOrderedSame){
                     [self.pickerLanguage selectRow:count inComponent:0 animated:NO];
