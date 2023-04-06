@@ -220,6 +220,9 @@ static NSURLConnection *theConnection;
         
         serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvGrowFinish.svc/GetUserParamsAndFarms/?Token=%@&FarmTypes=%@&SiteType=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],@"0",@"0"]];
         
+        
+        
+       // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms/?Token=%@&FarmTypes=%@&SiteType=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],@"0",@"0"]];
 // https://dev-pc-mobile.farmsstaging.com/SrvGrowFinish.svc/GetUserParamsAndFarms/?Token=cf44ab8cc6c8238c3b63d5ea112734ee&FarmTypes=0&SiteType=0
 
         
