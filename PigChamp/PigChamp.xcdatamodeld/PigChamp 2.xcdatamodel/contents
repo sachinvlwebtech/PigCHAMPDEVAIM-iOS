@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="18F132" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G419" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Admin_Routes" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="AI_STUDS" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -46,16 +46,16 @@
         <attribute name="ac" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cd" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="co" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dfT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dft" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dfv" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lC" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mnV" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mxV" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nC" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nD" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mnv" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mxv" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nd" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="op" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ps" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -67,11 +67,11 @@
     </entity>
     <entity name="Farms" syncable="YES">
         <attribute name="f_nm" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="f_No" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="f_no" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="sSL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sSW" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="zD" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ssl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ssw" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zd" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Flags" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -88,8 +88,8 @@
         <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Halothane" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="HerdCategory" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -139,8 +139,8 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Pd_Results" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Quality" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -148,8 +148,8 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Sex" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Standing_Reflex" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -162,8 +162,8 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Tod" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Transport_Companies" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -180,36 +180,4 @@
         <attribute name="nm" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="val" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <elements>
-        <element name="Admin_Routes" positionX="-351" positionY="99" width="128" height="75"/>
-        <element name="AI_STUDS" positionX="-360" positionY="90" width="128" height="103"/>
-        <element name="Breeding_Companies" positionX="-153" positionY="81" width="128" height="105"/>
-        <element name="Common_Lookups" positionX="25" positionY="-45" width="128" height="120"/>
-        <element name="Conditions" positionX="259" positionY="297" width="128" height="225"/>
-        <element name="ConditionScore" positionX="-405" positionY="45" width="128" height="90"/>
-        <element name="Data_Entry_Items" positionX="-317" positionY="83" width="128" height="270"/>
-        <element name="Destination" positionX="-369" positionY="81" width="128" height="105"/>
-        <element name="Farms" positionX="-342" positionY="-36" width="128" height="135"/>
-        <element name="Flags" positionX="-603" positionY="285" width="128" height="120"/>
-        <element name="Genetics" positionX="-144" positionY="395" width="128" height="120"/>
-        <element name="Halothane" positionX="-378" positionY="72" width="128" height="75"/>
-        <element name="HerdCategory" positionX="-405" positionY="45" width="128" height="90"/>
-        <element name="Leakage" positionX="-387" positionY="63" width="128" height="90"/>
-        <element name="Lesion_Scores" positionX="-405" positionY="45" width="128" height="90"/>
-        <element name="LngData" positionX="-387" positionY="63" width="128" height="75"/>
-        <element name="Locations" positionX="34" positionY="243" width="128" height="120"/>
-        <element name="Lock" positionX="-396" positionY="54" width="128" height="90"/>
-        <element name="Operator" positionX="-567" positionY="-36" width="128" height="90"/>
-        <element name="Origin" positionX="-396" positionY="54" width="128" height="105"/>
-        <element name="Packing_Plants" positionX="-567" positionY="144" width="128" height="90"/>
-        <element name="Pd_Results" positionX="-405" positionY="45" width="128" height="75"/>
-        <element name="Quality" positionX="-378" positionY="72" width="128" height="90"/>
-        <element name="Sex" positionX="-90" positionY="189" width="128" height="75"/>
-        <element name="Standing_Reflex" positionX="-369" positionY="81" width="128" height="90"/>
-        <element name="Test_Type" positionX="-360" positionY="90" width="128" height="90"/>
-        <element name="Tod" positionX="-81" positionY="198" width="128" height="75"/>
-        <element name="Transport_Companies" positionX="-144" positionY="-99" width="128" height="90"/>
-        <element name="Treatments" positionX="430" positionY="228" width="128" height="105"/>
-        <element name="User_Parameters" positionX="178" positionY="99" width="128" height="75"/>
-    </elements>
 </model>
