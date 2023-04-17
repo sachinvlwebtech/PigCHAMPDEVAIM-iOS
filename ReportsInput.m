@@ -677,8 +677,8 @@ BOOL isThousandFormatReport = NO;
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     @try{
-        [[self.pickerDropDownReport.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerDropDownReport.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDownReport.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDownReport.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         if (pickerView==self.pickerDropDownReport){
             return [[_arrDropDownReport objectAtIndex:row] valueForKey:@"visible"];
         }
@@ -694,8 +694,8 @@ BOOL isThousandFormatReport = NO;
 {
     @try
     {
-        [[self.pickerDropDownReport.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerDropDownReport.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDownReport.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+//        [[self.pickerDropDownReport.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         UILabel *lblSortText = (id)view;
         
         if (!lblSortText)
@@ -845,6 +845,8 @@ BOOL isThousandFormatReport = NO;
         else{
             [self.dtPickerReport setDate:[NSDate date]];
         }
+        
+        
         
         //
         NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
