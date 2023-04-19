@@ -2050,7 +2050,7 @@
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="7BZ-Mn-QZV">
-                                    <rect key="frame" x="0.0" y="967" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="637" width="375" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-Um-aGR">
@@ -5902,7 +5902,7 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     </variation>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grayPointingArrow" translatesAutoresizingMaskIntoConstraints="NO" id="ljI-RI-kK2">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="calendar" translatesAutoresizingMaskIntoConstraints="NO" id="ljI-RI-kK2">
                                                     <rect key="frame" x="328" y="22" width="22" height="22"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -5910,14 +5910,13 @@
                                                         <constraint firstAttribute="height" constant="22" id="zz9-Xd-s5e"/>
                                                     </constraints>
                                                 </imageView>
-                                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sjR-Gg-sML">
+                                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sjR-Gg-sML">
                                                     <rect key="frame" x="191.5" y="18" width="160.5" height="30"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="ULM-u8-LJc"/>
                                                         <constraint firstAttribute="height" constant="32" id="fjL-7q-W6W"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="20" maxY="0.0"/>
                                                     <state key="normal">
                                                         <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -5998,7 +5997,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MkT-JF-nTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5268" y="2447"/>
+            <point key="canvasLocation" x="5268" y="2446.3268365817094"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="MEN-x8-aKM">
@@ -6101,6 +6100,7 @@
         <image name="arrowCircle" width="54" height="54"/>
         <image name="barcode" width="96" height="96"/>
         <image name="bluetooth.png" width="32" height="32"/>
+        <image name="calendar" width="22" height="22"/>
         <image name="dropDown" width="22" height="22"/>
         <image name="grayArrow" width="54" height="54"/>
         <image name="grayPointingArrow" width="22" height="22"/>
