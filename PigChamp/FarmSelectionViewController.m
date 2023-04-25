@@ -57,6 +57,9 @@ NSString *strFarms;
         [arrStringsToTranslate addObject:@"Signing off."];
         
         NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:arrStringsToTranslate];
+        
+        
+        
         //
         NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
         
@@ -190,25 +193,10 @@ NSString *strFarms;
             }
         }
         
-//        if (_arrFarms.count>1) {
-//            NSString *strFarm = [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"] ? [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"]:@"";
-//
-//            if (strFarm.length==0){
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
-//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
-//                [_pref synchronize];
-//            }
-//
-//           [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
-//            //[self btnSubmit_tapped:nil];
-//        }
-        
-        //Changed by Priyanka on 15thOct for farms conflict btwn staging and production
         if (_arrFarms.count>1) {
+            NSString *strFarm = [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"] ? [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"]:@"";
+
+            if (strFarm.length==0){
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
@@ -216,9 +204,24 @@ NSString *strFarms;
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
                 [_pref synchronize];
-            
-            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
+            }
+
+           [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
+            //[self btnSubmit_tapped:nil];
         }
+        
+//        //Changed by Priyanka on 15thOct for farms conflict btwn staging and production
+//        if (_arrFarms.count>1) {
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
+//                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
+//                [_pref synchronize];
+//
+//            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
+//        }
         
         NSLog(@"_arrFarms = %@",_arrFarms);
     }

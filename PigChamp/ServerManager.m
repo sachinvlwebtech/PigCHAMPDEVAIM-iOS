@@ -112,6 +112,9 @@ static NSURLConnection *theConnection;
         NSString *serviceUrl = @"";
         serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getSysLookups?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
+        // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+        //https://pcmobile-beta.farmsstaging.com/SrvLookups.svc/GetAccessibleFarms/?Token=b1d6f8e2de4f04db7a8444ef8e965070
         serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         
         NSMutableURLRequest * request = [[NSMutableURLRequest alloc] init];

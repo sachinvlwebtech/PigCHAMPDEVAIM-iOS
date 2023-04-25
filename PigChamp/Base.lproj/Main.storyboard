@@ -1972,7 +1972,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z4I-LS-zHi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2798" y="173"/>
+            <point key="canvasLocation" x="2785" y="215"/>
         </scene>
         <!--Dynamic Form View Controller-->
         <scene sceneID="VEC-3R-F9c">
@@ -2050,7 +2050,7 @@
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="7BZ-Mn-QZV">
-                                    <rect key="frame" x="0.0" y="637" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="767" width="375" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-Um-aGR">
@@ -2772,7 +2772,7 @@
                                                         <action selector="btnDate_tapped:" destination="hdc-ni-HU8" eventType="touchUpInside" id="6pk-Bp-PNE"/>
                                                     </connections>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grayPointingArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Pe8-hN-6Oh">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="calendar" translatesAutoresizingMaskIntoConstraints="NO" id="Pe8-hN-6Oh">
                                                     <rect key="frame" x="343" y="19" width="22" height="22"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -3188,7 +3188,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cSf-An-Boz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3677.5999999999999" y="181.25937031484258"/>
+            <point key="canvasLocation" x="3581.5999999999999" y="158.77061469265368"/>
         </scene>
         <!--Barcode Scanner View Controller-->
         <scene sceneID="4Dh-1g-zhP">
@@ -3744,7 +3744,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0JQ-0x-0c1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5268" y="1781"/>
+            <point key="canvasLocation" x="5268" y="1850"/>
         </scene>
         <!--Sow Details View Controller-->
         <scene sceneID="nU3-pv-o8T">
@@ -6090,7 +6090,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="uV0-bc-MtN"/>
+        <segue reference="feB-5l-VZ3"/>
         <segue reference="bkg-l8-YJe"/>
     </inferredMetricsTieBreakers>
     <resources>
@@ -6103,7 +6103,6 @@
         <image name="calendar" width="22" height="22"/>
         <image name="dropDown" width="22" height="22"/>
         <image name="grayArrow" width="54" height="54"/>
-        <image name="grayPointingArrow" width="22" height="22"/>
         <image name="icon_reports_sort.png" width="48" height="48"/>
         <image name="menuLogo" width="150" height="150"/>
         <systemColor name="groupTableViewBackgroundColor">

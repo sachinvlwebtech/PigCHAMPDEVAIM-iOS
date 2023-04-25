@@ -847,17 +847,20 @@ BOOL isThousandFormatReport = NO;
         }
         
         
-        
-        //
         NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
         [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
         NSDate *date = [dateFormatterrr dateFromString:@"1/1/1900"];
         self.dtPickerReport.minimumDate=date;
+                 
+
+    //   [self.view addSubview:self.dtPickerReport];
         
         _alertForPickUpDateReport = [[CustomIOS7AlertView alloc] init];
         [_alertForPickUpDateReport setMyDelegate:self];
         [_alertForPickUpDateReport setButtonTitles:[NSMutableArray arrayWithObjects:strOk,strCancel, nil]];
         [_alertForPickUpDateReport showCustomwithView:self.dtPickerReport title:strTitle];
+        
+        
         __weak typeof(self) weakSelf = self;
         
         [_alertForPickUpDateReport setOnButtonTouchUpInside:^(CustomIOS7AlertView *alertView, int buttonIndex) {
