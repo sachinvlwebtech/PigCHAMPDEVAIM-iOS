@@ -614,7 +614,7 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12){
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==12){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -5147,8 +5147,16 @@ float animatedDistance;
         NSDate *dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];//YYYYMMDD
         
         self.dtPicker= [[UIDatePicker alloc] init];
-        self.dtPicker.frame=CGRectMake(15, 20, 260, 150.0);
+        self.dtPicker.frame = CGRectMake(15, 20, 250, 80.0);
+       
+       // self.dtPicker.transform = CGAffineTransformMake(0.8, 0, 0, 0.8, 80, 0);
         self.dtPicker.datePickerMode = UIDatePickerModeDate;
+        if (@available(iOS 13.4, *)) {
+            self.dtPicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+        } else {
+            // Fallback on earlier versions
+        }
+        self.dtPicker.contentMode = UIViewContentModeScaleAspectFit;
         
         if ([[dict valueForKey:@"dk"]integerValue]!=22) {
             self.dtPicker.maximumDate=[NSDate date];
@@ -5176,7 +5184,7 @@ float animatedDistance;
         //
         NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
         [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
-        NSDate *date = [dateFormatterrr dateFromString:@"1/1/1900"];
+        NSDate *date = [dateFormatterrr dateFromString:@"1/1/2034"];
         self.dtPicker.minimumDate = date;
         //
         
@@ -5195,6 +5203,8 @@ float animatedDistance;
         }else {
             [_alertForPickUpDate setButtonTitles:[NSMutableArray arrayWithObjects:strOk,strCancel,nil]];//yogita removed Clrbtn
         }
+        
+        _alertForPickUpDate.fromDynamic = @"Dynamic";
         
         [_alertForPickUpDate showCustomwithView:self.dtPicker title:strTitle];
         __weak typeof(self) weakSelf = self;

@@ -89,9 +89,9 @@
 }
 
 - (IBAction)btnResetClicked:(id)sender {
-    self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+   self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
     
-   // self.txtURL.text = @"https://pcmobile.pigchamp.com";
+  // self.txtURL.text = @"https://pcmobile.pigchamp.com";
     
 //    if ([defaults valueForKey:@"baseURL"] != nil)
 //    {

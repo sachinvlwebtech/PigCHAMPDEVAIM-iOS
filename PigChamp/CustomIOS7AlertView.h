@@ -18,6 +18,8 @@
 @property (nonatomic, retain) UIView *containerView; // Container within the dialog (place your ui elements here)
 @property (nonatomic, retain) UIView *buttonView;    // Buttons on the bottom of the dialog
 
+@property (nonatomic, retain) NSString *fromDynamic;
+
 @property (nonatomic, assign) id<CustomIOS7AlertViewDelegate> delegate;
 @property (nonatomic, retain) NSArray *buttonTitles;
 @property (nonatomic, assign) BOOL useMotionEffects;

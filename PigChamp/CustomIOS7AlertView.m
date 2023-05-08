@@ -168,7 +168,11 @@ UIButton *btnClose;
 - (UIView *)createContainerView
 {
     if (containerView == NULL) {
-        containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
+        if ( [self.fromDynamic  isEqual: @"Dynamic"]){
+            containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 310, 230)];
+        }else {
+            containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
+        }
     }
     
     CGSize screenSize = [self countScreenSize];

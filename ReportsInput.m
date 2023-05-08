@@ -839,6 +839,12 @@ BOOL isThousandFormatReport = NO;
         self.dtPickerReport.frame=CGRectMake(15, 14, 260, 150.0);
         self.dtPickerReport.datePickerMode = UIDatePickerModeDate;
         
+        if (@available(iOS 13.4, *)) {
+            self.dtPickerReport.preferredDatePickerStyle = UIDatePickerStyleWheels;
+        } else {
+            // Fallback on earlier versions
+        }
+        
         if (strPrevSelectedValue.length>0) {
             [self.dtPickerReport setDate:dt2];
         }
@@ -858,6 +864,8 @@ BOOL isThousandFormatReport = NO;
         _alertForPickUpDateReport = [[CustomIOS7AlertView alloc] init];
         [_alertForPickUpDateReport setMyDelegate:self];
         [_alertForPickUpDateReport setButtonTitles:[NSMutableArray arrayWithObjects:strOk,strCancel, nil]];
+        _alertForPickUpDateReport.fromDynamic = @"Dynamic";
+
         [_alertForPickUpDateReport showCustomwithView:self.dtPickerReport title:strTitle];
         
         
