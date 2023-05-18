@@ -538,15 +538,19 @@ BOOL isOpenActiveAnimalList = NO;
                 }
             }
             else{
+               // UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+//                                                                                           message:[responseData valueForKey:@"Error"]
+//                                                                                    preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-                                                                                           message:[responseData valueForKey:@"Error"]
-                                                                                    preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction* ok = [UIAlertAction
+                                                                                           message:@"There is no animal with the identity, please enter a valid identity"
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];                UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOK
                                      style:UIAlertActionStyleDefault
                                      handler:^(UIAlertAction * action) {
                                          //[self.navigationController popToRootViewControllerAnimated:YES];
                                          [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                                                                    
                                      }];
                 
                 [myAlertController addAction: ok];

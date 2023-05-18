@@ -112,8 +112,13 @@ static NSURLConnection *theConnection;
         NSString *serviceUrl = @"";
         serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getSysLookups?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
-        // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+    // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
+        
+      // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+        
+  //  https://dev-pc-mobile.farmsstaging.com/SrvLookups.svc/GetAccessibleFarms_J/?
         //https://pcmobile-beta.farmsstaging.com/SrvLookups.svc/GetAccessibleFarms/?Token=b1d6f8e2de4f04db7a8444ef8e965070
         serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         
@@ -281,11 +286,18 @@ static NSURLConnection *theConnection;
         
         deviceType = [NSString stringWithCString:systemInfo.machine
                                         encoding:NSUTF8StringEncoding];
+        
         NSLog(@"udid=%lu",(unsigned long)udid.length);
+        
+        
+        NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+        NSString *deviceType1 = [UIDevice currentDevice].model;
+        NSString *deviceTyp21 = [UIDevice currentDevice].systemVersion;
+        
         //
         NSString *serviceUrl = @"";
         NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]);
-        serviceUrl = [[[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:@"SrvAuthentication.svc/CAMauth/?"] stringByAppendingString:[NSString stringWithFormat:@"accountNumber=%@&lang=%@&uname=%@&pass=%@&mobileDeviceID=%@&mobileDeviceType=%@&mobileAppVersion=%@",accNumber,language,userName,password,udid,deviceType,appBuildString]];//Changed by Priyanka for CR141 previous API Endpoint - auth
+        serviceUrl = [[[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:@"SrvAuthentication.svc/CAMauth/?"] stringByAppendingString:[NSString stringWithFormat:@"accountNumber=%@&lang=%@&uname=%@&pass=%@&mobileDeviceID=%@&mobileDeviceType=%@&mobileAppVersion=%@",accNumber,language,userName,password,udid,[NSString stringWithFormat:@"%@ %@", deviceType1, deviceTyp21],version]];//Changed by Priyanka for CR141 previous API Endpoint - auth
         
         serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];

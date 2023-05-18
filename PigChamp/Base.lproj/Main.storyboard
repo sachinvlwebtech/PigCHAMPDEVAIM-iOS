@@ -2050,7 +2050,7 @@
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="7BZ-Mn-QZV">
-                                    <rect key="frame" x="0.0" y="978" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="648" width="375" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-Um-aGR">
@@ -2206,7 +2206,7 @@
                                                     <color key="backgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="yes" spellCheckingType="no" keyboardType="emailAddress"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="yes" spellCheckingType="no" keyboardType="URL"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="layer.shadowColor ">
                                                             <color key="value" red="0.0" green="0.33241673519999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2560,14 +2560,30 @@
                                                                 <outlet property="delegate" destination="hdc-ni-HU8" id="Omv-q1-PjN"/>
                                                             </connections>
                                                         </textField>
+                                                        <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9x-cT-1T2">
+                                                            <rect key="frame" x="138.5" y="10.5" width="25" height="33"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="25" id="2QR-NJ-Ysr">
+                                                                    <variation key="heightClass=regular-widthClass=regular" constant="25"/>
+                                                                </constraint>
+                                                                <constraint firstAttribute="height" constant="33" id="ott-B8-Gvv">
+                                                                    <variation key="heightClass=regular-widthClass=regular" constant="33"/>
+                                                                </constraint>
+                                                            </constraints>
+                                                            <state key="normal" backgroundImage="barcode">
+                                                                <color key="titleColor" red="0.64313725489999995" green="0.25490196079999999" blue="0.21960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </state>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
+                                                        <constraint firstItem="C9x-cT-1T2" firstAttribute="trailing" secondItem="Wcd-qg-1Of" secondAttribute="trailing" id="7dy-Ba-ccM"/>
                                                         <constraint firstAttribute="trailing" secondItem="Wcd-qg-1Of" secondAttribute="trailing" id="9yR-md-rpk"/>
                                                         <constraint firstItem="Wcd-qg-1Of" firstAttribute="leading" secondItem="c97-gM-mbW" secondAttribute="leading" id="GFN-to-uSp">
                                                             <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                                                         </constraint>
                                                         <constraint firstAttribute="height" constant="54" id="GzL-oX-7bG"/>
+                                                        <constraint firstItem="C9x-cT-1T2" firstAttribute="centerY" secondItem="Wcd-qg-1Of" secondAttribute="centerY" id="chf-8D-AV5"/>
                                                         <constraint firstItem="Wcd-qg-1Of" firstAttribute="centerY" secondItem="c97-gM-mbW" secondAttribute="centerY" id="zxf-a2-SAr"/>
                                                     </constraints>
                                                 </view>
@@ -2773,7 +2789,7 @@
                                                     </connections>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="calendar" translatesAutoresizingMaskIntoConstraints="NO" id="Pe8-hN-6Oh">
-                                                    <rect key="frame" x="343" y="19" width="22" height="22"/>
+                                                    <rect key="frame" x="345" y="19" width="22" height="22"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="22" id="M17-Th-NzF"/>
@@ -2799,7 +2815,7 @@
                                                 </constraint>
                                                 <constraint firstItem="yd9-O3-jpc" firstAttribute="top" secondItem="rxY-wB-6dV" secondAttribute="topMargin" constant="5" id="cem-Ws-apg"/>
                                                 <constraint firstItem="Pe8-hN-6Oh" firstAttribute="centerY" secondItem="rxY-wB-6dV" secondAttribute="centerY" id="cwE-so-K6Q"/>
-                                                <constraint firstAttribute="trailing" secondItem="Pe8-hN-6Oh" secondAttribute="trailing" constant="10" id="hg8-r4-GRI">
+                                                <constraint firstAttribute="trailing" secondItem="Pe8-hN-6Oh" secondAttribute="trailing" constant="8" id="hg8-r4-GRI">
                                                     <variation key="heightClass=regular-widthClass=regular" constant="80"/>
                                                 </constraint>
                                             </constraints>
@@ -3188,7 +3204,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cSf-An-Boz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3581.5999999999999" y="158.77061469265368"/>
+            <point key="canvasLocation" x="3498" y="-16"/>
         </scene>
         <!--Barcode Scanner View Controller-->
         <scene sceneID="4Dh-1g-zhP">

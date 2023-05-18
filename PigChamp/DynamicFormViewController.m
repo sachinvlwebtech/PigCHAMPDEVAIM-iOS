@@ -614,7 +614,7 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==12){
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -1157,9 +1157,9 @@ BOOL isThousandFormat = NO;
 -(NSString*)getViewType:(NSString*)datatype{
     @try {
         NSArray *arrDate =[[NSArray alloc]initWithObjects:@"DT",@"DD",@"DF",nil];
-        NSArray *arrDropDown =[[NSArray alloc]initWithObjects:@"CO",@"LC",@"TP",@"BL",@"SO",@"FR",nil];
+        NSArray *arrDropDown =[[NSArray alloc]initWithObjects:@"CO",@"LC",@"TP",@"BL",@"SO",@"FR",@"BF",nil];
         //NSArray *arrTextField =[[NSArray alloc]initWithObjects:@"BI",@"SI", @"IN",@"AI",@"BL",@"EN",@"WT",@"C$",@"PG",@"TX",@"SI",@"ID",@"MM",@"IP",@"GI",@"MI",@"TT",@"US",nil];
-        NSArray *arrTextField =[[NSArray alloc]initWithObjects:@"BI",@"SI", @"IN",@"AI",@"BL",@"EN",@"WT",@"C$",@"PG",@"TX",@"SI",@"ID",@"MM",@"IP",@"GI",@"MI",@"TT",@"US",@"BF",@"LD",@"AR",@"BR",@"TR",@"SR",@"GR",nil];
+        NSArray *arrTextField =[[NSArray alloc]initWithObjects:@"BI",@"SI", @"IN",@"AI",@"BL",@"EN",@"WT",@"C$",@"PG",@"TX",@"SI",@"ID",@"MM",@"IP",@"GI",@"MI",@"TT",@"US",@"LD",@"AR",@"BR",@"TR",@"SR",@"GR",nil];
         
         // Added AR,SR,GR,BR,TR on 25thApril2023
         
@@ -1460,7 +1460,7 @@ BOOL isThousandFormat = NO;
                 return (location.location != NSNotFound);
             }
             else{
-                return NO;
+                return YES;
             }
         }else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
             if([string isEqualToString:@""]){
@@ -2417,6 +2417,68 @@ float animatedDistance;
                 }
             }
             //*******Code change on 16th May by Priyanka bugnet 20927***********//
+            
+            
+            // Code change done by hari 9thMay2023
+                       
+                       if ([[dict valueForKey:@"dk"] integerValue] == 24 && [[dict valueForKey:@"dt"] isEqualToString:@"IN"])
+                       {
+                          // NSString * strPigletValue = [dictJson valueForKey:@"24"];
+                           
+                           NSString *str  = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
+                           
+                           if([str  isEqual: @"0"]) {
+                               
+                               UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                          message:[[[[NSString stringWithFormat:@"%@ %@",@"Please enter Doses value more than",str] stringByAppendingString:[arrLableList componentsJoinedByString:@","]] stringByAppendingString:@""] stringByAppendingString:@"."]
+                                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                               UIAlertAction* ok = [UIAlertAction
+                                                    actionWithTitle:strOk
+                                                    style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * action){
+                                   [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                               }];
+
+                               [myAlertController addAction: ok];
+                               [self presentViewController:myAlertController animated:YES completion:nil];
+
+                                    return;
+                           }else {
+                               
+                                                                 
+                           }
+                           
+//                           for (int i=0; i<strPigletValue.length; i++)
+//                           {
+//                               if (strPigletValue > 0)
+//                               {
+//
+//                                   strPigletValue=@"";
+////                                   if ([[dict valueForKey:@"co"] isEqualToString:@"0"] && strPigletValue.length==0){
+////                                       [arrLableList addObject:[dict valueForKey:@"Lb"]];
+////                                       // NSLog(@"Label Name =%@",[dict valueForKey:@"Lb"]);
+////                                   }
+//                               } else {
+//
+//                                   UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+//                                                                                                              message:[[[[NSString stringWithFormat:@"%@ ",strMustValue] stringByAppendingString:[arrLableList componentsJoinedByString:@","]] stringByAppendingString:@""] stringByAppendingString:@"."]
+//                                                                                                       preferredStyle:UIAlertControllerStyleAlert];
+//                                   UIAlertAction* ok = [UIAlertAction
+//                                                        actionWithTitle:strOk
+//                                                        style:UIAlertActionStyleDefault
+//                                                        handler:^(UIAlertAction * action){
+//                                       [myAlertController dismissViewControllerAnimated:YES completion:nil];
+//                                   }];
+//
+//                                   [myAlertController addAction: ok];
+//                                   [self presentViewController:myAlertController animated:YES completion:nil];
+//
+//
+//                               }
+//                           }
+                       }
+            
+            
             
             if ([[dict valueForKey:@"dk"] integerValue] == 92){
                 dictForGuilt = dict;
@@ -4532,7 +4594,7 @@ float animatedDistance;
                     }
                 }
                 else {
-                    strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
+                    strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]: @""];
                     sortBy = [[NSSortDescriptor alloc] initWithKey:@"ds"
                                                          ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
@@ -5159,7 +5221,24 @@ float animatedDistance;
         self.dtPicker.contentMode = UIViewContentModeScaleAspectFit;
         
         if ([[dict valueForKey:@"dk"]integerValue]!=22) {
+            
             self.dtPicker.maximumDate=[NSDate date];
+            
+            NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
+            [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
+            NSDate *date = [dateFormatterrr dateFromString:@"1/1/2034"];
+            self.dtPicker.minimumDate = date;
+        }else {
+            
+            NSDateFormatter *dateFormatterrr1 = [[NSDateFormatter alloc]init];
+            [dateFormatterrr1 setDateFormat:@"MM/dd/yyyy"];
+            NSDate *date1 = [dateFormatterrr1 dateFromString:@"1/1/2034"];
+            self.dtPicker.maximumDate= date1;
+            
+            NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
+            [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
+            NSDate *date = [dateFormatterrr dateFromString:@"1/1/2034"];
+            self.dtPicker.minimumDate = [NSDate date];
         }
         
         //Adding this for Add forward Date change for wean,transfer events - Repro New Features
@@ -5182,10 +5261,10 @@ float animatedDistance;
         }
         
         //
-        NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
-        [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
-        NSDate *date = [dateFormatterrr dateFromString:@"1/1/2034"];
-        self.dtPicker.minimumDate = date;
+//        NSDateFormatter *dateFormatterrr = [[NSDateFormatter alloc]init];
+//        [dateFormatterrr setDateFormat:@"MM/dd/yyyy"];
+//        NSDate *date = [dateFormatterrr dateFromString:@"1/1/2034"];
+//        self.dtPicker.minimumDate = [NSDate date];
         //
         
         NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
