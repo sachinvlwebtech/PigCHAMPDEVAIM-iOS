@@ -168,7 +168,12 @@ static NSURLConnection *theConnection;
 {
     @try {
         NSString *serviceUrl = @"";
-        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+      serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+     //   serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetSysLookups/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+      //  SrvLookups.svc/GetSysLookups/?
+        
         
         serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         
