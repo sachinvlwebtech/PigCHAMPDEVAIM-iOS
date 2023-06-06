@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G531" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G646" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Admin_Routes" syncable="YES">
         <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
@@ -162,8 +162,8 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Tod" syncable="YES">
-        <attribute name="dK" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dT" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Transport_Companies" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>

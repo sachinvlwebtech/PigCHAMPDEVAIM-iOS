@@ -110,7 +110,7 @@ static NSURLConnection *theConnection;
 {
     @try{
         NSString *serviceUrl = @"";
-        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getSysLookups?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+       serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getSysLookups?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
     // serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
@@ -170,7 +170,7 @@ static NSURLConnection *theConnection;
         NSString *serviceUrl = @"";
       serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
-     //   serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetSysLookups/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+//        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetSysLookups/?token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
       //  SrvLookups.svc/GetSysLookups/?
         
@@ -211,6 +211,78 @@ static NSURLConnection *theConnection;
     @catch (NSException *exception){
     }
 }
+
+
+// Function added by harikrishna for to get userparameters & Farms Data.....
+
++ (void)sendRequestForFarmsData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure
+{
+    @try {
+        NSString *serviceUrl = @"";
+        
+      //  serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+        
+        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+        
+                
+        serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        
+        NSMutableURLRequest * request = [[NSMutableURLRequest alloc] init];
+        NSURL *url = [NSURL URLWithString:serviceUrl];
+        [request setURL:url];
+        [request setHTTPMethod:@"GET"];
+        NSData *requestBody = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+        [request setHTTPBody:requestBody];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            @try
+            {
+                NSString *myXMLResponse = [[NSString alloc] initWithBytes: [data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+                
+                if(!connectionError){
+                    success(myXMLResponse);
+                }
+                else{
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                    long statusCodeResponse = (long)[httpResponse statusCode];
+                    
+                    NSString *strError = [NSString stringWithFormat:@"%@", [connectionError description]];
+                    if ([strError rangeOfString:@"Code=-1012"].location != NSNotFound) {
+                        statusCodeResponse = 401;
+                    }
+                    
+                    failure([NSString stringWithFormat:@"%ld",(long)statusCodeResponse], connectionError);
+                }
+            }
+            @catch (NSException *exception){
+                failure(@"Error Occured", connectionError);
+            }}];
+    }
+    @catch (NSException *exception){
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 + (void)sendRequestForLanguageList:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure {
     @try{

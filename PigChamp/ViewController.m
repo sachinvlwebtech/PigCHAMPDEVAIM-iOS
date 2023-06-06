@@ -378,7 +378,10 @@ NSString *Success        = @"";
                         [_pref synchronize];
                         [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"token"];
                         
-                        [self updateMasterDataBase];
+                        [self getFarmsData];
+                        
+                       // [self updateMasterDataBase];
+                        
                     }else if ([message isEqualToString:@"Incorrect Password, Please note passwords are case sensitive."]){
                         [_customIOS7AlertView close];
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
@@ -437,7 +440,9 @@ NSString *Success        = @"";
                                                  _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
                                                  [_customIOS7AlertView showLoaderWithMessage:NSLocalizedString(@"Loading...", "")];
                                                  
-                                                 [self updateMasterDataBase];
+                                               //  [self updateMasterDataBase];
+                            [self getFarmsData];
+                            
                                                  [myAlertController dismissViewControllerAnimated:YES completion:nil];
                                              }];
                         
@@ -537,11 +542,95 @@ NSString *Success        = @"";
     }
 }
 
+// Added extra function to get Farms Data ...
+
+-(void)getFarmsData{
+    
+    @try {
+        //NSError *error = nil;
+        if ([[ControlSettings sharedSettings] isNetConnected ]) {
+            [ServerManager sendRequestForFarmsData:^(NSString *responseData) {
+                [_customIOS7AlertView close];
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                
+                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""]) {
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:responseData
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                                             //[self.navigationController popToRootViewControllerAnimated:YES];
+                                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                         }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }else{
+                    
+                    
+                    NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
+                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dict];
+                    [currentDefaults setObject:data forKey:@"frmsData"];
+                    
+                    
+//                    NSArray *frmArray = [dict valueForKey:@"_farms"];
+//
+//                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//                  //  [prefs setObject:frmArray forKey:@"frmsData"];
+//                    [prefs setValue:frmArray forKey:@"frmsData"];
+//                    [prefs synchronize];
+
+//                    [[NSUserDefaults standardUserDefaults] setObject:[dict valueForKey:@"_farms"] forKey:@"userParameterData"];
+
+                    [self updateMasterDataBase];
+    
+                }
+            } onFailure:^(NSString *responseData, NSError *error) {
+                [_customIOS7AlertView close];
+                
+                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                
+                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Simple Report"];
+                [tracker set:kGAIScreenName value:strErr];
+                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+            }];
+        }
+        else {
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                       message:@"You must be online for the app to function."
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+            
+            [myAlertController addAction: ok];
+            [self presentViewController:myAlertController animated:YES completion:nil];
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Exception in updateMasterDataBase=%@",exception.description);
+    }
+}
+
+
+
+
+
+
+
 -(void)updateMasterDataBase {
     @try {
         //NSError *error = nil;
         if ([[ControlSettings sharedSettings] isNetConnected ]) {
-            [ServerManager sendRequestForGetmasterData:^(NSString *responseData) {
+            [ServerManager sendRequestForSysLookup:^(NSString *responseData) {
                 [_customIOS7AlertView close];
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
@@ -631,18 +720,47 @@ NSString *Success        = @"";
                         }
                     }
                     
+        // Adding additional functional call for Getting Farms list ..... Gudipti harikrishna.
+                    
+                    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"frmsData"];
+                    NSDictionary * myDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                    
+                //    NSDictionary * myDictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"userParameterData"];
+
+                    
                     NSArray *farmsArray;
-                    if (![[dict objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {
-                        farmsArray = [dict objectForKey:@"_farms"];
+                                        
+                    if (![[myDictionary objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {     //Commented by harikrishna
+                        farmsArray = [myDictionary objectForKey:@"_farms"];
                     }
                     
                     NSMutableArray *arrFilteredFarms = [[NSMutableArray alloc]init];
                     
-                    for (NSDictionary *dict in farmsArray){
-                        if (![[dict valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
-                            [arrFilteredFarms addObject:dict];
+                    for (NSDictionary *myDictionary1 in farmsArray){
+                        if (![[myDictionary1 valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
+                            [arrFilteredFarms addObject:myDictionary1];
                         }
                     }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+//                    NSArray *farmsArray;
+//                    if (![[dict objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {
+//                        farmsArray = [dict objectForKey:@"_farms"];
+//                    }
+//
+//                    NSMutableArray *arrFilteredFarms = [[NSMutableArray alloc]init];
+//
+//                    for (NSDictionary *dict in farmsArray){
+//                        if (![[dict valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
+//                            [arrFilteredFarms addObject:dict];
+//                        }
+//                    }
                     
                     NSArray *geneticsArray;
                     if (![[dict objectForKey:@"_GENETICS"] isKindOfClass:[NSNull class]])

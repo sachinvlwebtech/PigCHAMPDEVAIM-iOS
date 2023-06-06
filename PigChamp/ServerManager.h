@@ -25,6 +25,7 @@
 + (void)sendRequestEvent:(NSString*)url idOfServiceUrl:(NSData*)data methodType:(NSString*)methodType onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
 + (void)sendRequest:(NSString*)url idOfServiceUrl:(NSInteger)idOfServiceUrl headers:(NSMutableDictionary*)headers methodType:(NSString*)methodType onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;
 
++ (void)sendRequestForFarmsData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
 
 + (void)sendRequestForCheckVersion:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;
 + (void)sendRequestForTimeoutValue:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;

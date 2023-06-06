@@ -614,7 +614,7 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32){
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -848,10 +848,10 @@ BOOL isThousandFormat = NO;
             
             //
             NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init];
-            [dateFormatterr setDateFormat:@"MM/dd/yyyy"];//
+            [dateFormatterr setDateFormat:@"dd/MM/yyyy"];//
             
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init] ;
-            [dateFormatter setDateFormat:@"yyyy-MM-dd'T'00:00:00"];
+            [dateFormatter setDateFormat:@"dd-MM-yyyy'T'00:00:00"];
             NSString *currentDate;
             
             if(currentDate == nil) {
@@ -862,7 +862,7 @@ BOOL isThousandFormat = NO;
             todayDate =[dateFormatter dateFromString:currentDate];
             
             NSDateFormatter *dateFormatterr1 = [[NSDateFormatter alloc]init] ;
-            [dateFormatterr1 setDateFormat:@"yyyyMMdd"];//
+            [dateFormatterr1 setDateFormat:@"ddMMyyyy"];//
             NSDate *dtCheckIn = [dateFormatterr1 dateFromString:[dictJson valueForKey:[dict valueForKey:@"dk"]]];
             
             int days = [dtCheckIn timeIntervalSinceDate:todayDate]/24/60/60;
@@ -1424,7 +1424,19 @@ BOOL isThousandFormat = NO;
                     return NO;
                 }
             }
-        } else if ([[dict valueForKey:@"dk"]integerValue]==24) {
+        }else if ([[dict valueForKey:@"dk"]integerValue]==27) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
+        }
+        else if ([[dict valueForKey:@"dk"]integerValue]==20) {
+            if([newString intValue] > 999){
+                return NO;
+            }else {
+                return YES;
+            }
+        }
+        else if ([[dict valueForKey:@"dk"]integerValue]==24) {
             if([string isEqualToString:@""]) {
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
@@ -5301,7 +5313,7 @@ float animatedDistance;
                 
                 NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
                 //[dateFormatterNew setDateFormat:@"YYYYMMdd"];//,MMMM dd
-                [dateFormatterNew setDateFormat:@"yyyy-MM-dd"];
+                [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
                 NSString *strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
                 strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                    withString:@""];
@@ -5309,9 +5321,9 @@ float animatedDistance;
                 [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];//change strSelectedDate to strSelectedDateMMM
                 
                 if (isThousandFormat) {
-                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    [formatter setDateFormat:@"dd/MM/yyyy"];
                     NSDate *dtselectedDate = [formatter dateFromString:strSelectedDate];
-                    [formatter setDateFormat:@"YYYYMMdd"];
+                    [formatter setDateFormat:@"ddMMYYYY"];
                     NSDate *BaseDate = [formatter dateFromString:strBaseDate];
                     int days = [dtselectedDate timeIntervalSinceDate:BaseDate]/24/60/60;
                     
@@ -5336,7 +5348,7 @@ float animatedDistance;
                     [weakSelf.dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
                 }
                 else if([weakSelf.strDateFormat isEqualToString:@"6"]){
-                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    [formatter setDateFormat:@"dd/MM/yyyy"];
                     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
                     NSDate *dtselectedDate = [formatter dateFromString:strSelectedDate];
                     NSDate *Firstdate= [weakSelf getFirstDateOfCurrentYear:dtselectedDate];

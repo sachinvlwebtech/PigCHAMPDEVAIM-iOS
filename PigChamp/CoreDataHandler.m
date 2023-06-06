@@ -324,6 +324,8 @@ this function updates sqllite entries via core data
         [geneticsManagedObject setValuesForKeysWithDictionary:dict];
     }
 
+    
+    
     // update farms
     for (int counter=0; counter<farmsArray.count; counter++) {
         NSManagedObject* farmsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Farms" inManagedObjectContext:managedObjectContext];
@@ -536,7 +538,7 @@ this function updates sqllite entries via core data
     {
         NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Tod" inManagedObjectContext:managedObjectContext];
         NSDictionary* dict = [tod objectAtIndex:counter];
-       // [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+      //  [treatmentManagedObject setValuesForKeysWithDictionary:dict];
         
         [dict enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent
                                       usingBlock:^(id key, id object, BOOL *stop) {
@@ -569,15 +571,28 @@ this function updates sqllite entries via core data
         NSLog(@"Exception =%@",exception.description);
     }
     
+    
     // Origin
     @try {
         for (int counter=0; counter<origin.count; counter++)
         {
             NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Origin" inManagedObjectContext:managedObjectContext];
             NSDictionary* dict = [origin objectAtIndex:counter];
-            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+            
+            [dict enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent
+                                          usingBlock:^(id key, id object, BOOL *stop) {
+             //   NSLog(@"%@ = %@", key, object);
+                [treatmentManagedObject setValue:object forKey:[key lowercaseString]];
+
+            }];
+            
+            
+           // [treatmentManagedObject setValuesForKeysWithDictionary:dict];
         }
     }
+    
+    
+    
     @catch (NSException *exception) {
         
         NSLog(@"Exception =%@",exception.description);
