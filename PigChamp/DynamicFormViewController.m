@@ -1435,6 +1435,12 @@ BOOL isThousandFormat = NO;
             }else {
                 return YES;
             }
+        }else if ([[dict valueForKey:@"dk"]integerValue]==40) {
+            if([newString intValue] > 999){
+                return NO;
+            }else {
+                return YES;
+            }
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==24) {
             if([string isEqualToString:@""]) {
@@ -1638,9 +1644,10 @@ BOOL isThousandFormat = NO;
             
             NSRange location = [string rangeOfCharacterFromSet:characterSet];
             if(location.location != NSNotFound){
-                if (([newString integerValue] >= [strMinVal integerValue]) && ([newString integerValue] <= [strMaxVal integerValue])) {
+//                if (([newString integerValue] >= [strMinVal integerValue]) && ([newString integerValue] <= [strMaxVal integerValue])) {
+                if (([newString integerValue] <= [strMaxVal integerValue])) {
                     
-                    if([[dict valueForKey:@"dk"] integerValue]==51  || [[dict valueForKey:@"dk"] integerValue]==15 || [[dict valueForKey:@"dk"] integerValue]==19 || [[dict valueForKey:@"dk"] integerValue]==42|| [[dict valueForKey:@"dk"]integerValue]==18 || [[dict valueForKey:@"dt"] isEqualToString:@"IN"]) {
+                    if([[dict valueForKey:@"dk"] integerValue]==51  || [[dict valueForKey:@"dk"] integerValue]==15 || [[dict valueForKey:@"dk"] integerValue]==19 || [[dict valueForKey:@"dk"] integerValue]==42|| [[dict valueForKey:@"dk"]integerValue]==18 || [[dict valueForKey:@"dt"] isEqualToString:@"IN"] || [[dict valueForKey:@"dk"] integerValue]==40 || [[dict valueForKey:@"dk"] integerValue]==3) {
                         
                         
                         //*******Code change on 16th May by Priyanka bugnet 20927***********//
@@ -3121,10 +3128,6 @@ float animatedDistance;
             //                       reqStringFUll = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":\"%@\"",strKey,strValue]];
             //                       [arrMultipleSowIdentities addObject:reqStringFUll];
             //                   }
-            //                }
-            //            }
-            //
-            
             if (x!=_arrDynamic.count) {
                 reqStringFUll  = [reqStringFUll stringByAppendingString:@","];
                 
@@ -3176,6 +3179,8 @@ float animatedDistance;
                 [self callSaveEvent:strServiceName :jsonData];
             }
         }
+          
+            
         else{
             NSError *error;
             
@@ -4633,20 +4638,20 @@ float animatedDistance;
                 break;
             case 37:{
                 strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
-                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dT"
+                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt"
                                                      ascending:YES];
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Halothane" andPredicate:nil andSortDescriptors:sortDescriptors];
                 
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dT"]?[[resultArray objectAtIndex:count] valueForKey:@"dT"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dK"]?[[resultArray objectAtIndex:count] valueForKey:@"dK"]:@"" forKey:@"dataTosend"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dt"]:@"" forKey:@"visible"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dk"]?[[resultArray objectAtIndex:count] valueForKey:@"dk"]:@"" forKey:@"dataTosend"];
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
                     {
-                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dK"]] == NSOrderedSame)
+                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dk"]] == NSOrderedSame)
                         {
                             prevSelectedIndex = count;
                         }
@@ -4700,20 +4705,20 @@ float animatedDistance;
             }
                 break;
             case 73:{
-                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dT"
+                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt"
                                                      ascending:YES];
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Admin_Routes" andPredicate:nil andSortDescriptors:sortDescriptors];
                 
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dT"]?[[resultArray objectAtIndex:count] valueForKey:@"dT"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dK"]?[[resultArray objectAtIndex:count] valueForKey:@"dK"]:@"" forKey:@"dataTosend"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dt"]:@"" forKey:@"visible"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dk"]:@"" forKey:@"dataTosend"];
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
                     {
-                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dK"]] == NSOrderedSame){
+                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dk"]] == NSOrderedSame){
                             prevSelectedIndex = count;
                         }
                     }
