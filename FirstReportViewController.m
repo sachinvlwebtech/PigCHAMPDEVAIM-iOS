@@ -1095,7 +1095,7 @@ BOOL isOpenFisrReport = NO;
                              [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
                              NSString *strToday = [dateFormatterr stringFromDate:[NSDate date]];
                              strToday = [self displayDate:strToday];
-                             self.lblHeader.text = [[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"gilt(s) in herd on"]]] stringByAppendingString:strToday];
+                         //    self.lblHeader.text = [[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"gilt(s) in herd on"]]] stringByAppendingString:strToday];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------

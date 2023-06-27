@@ -614,7 +614,7 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59){
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -1428,6 +1428,23 @@ BOOL isThousandFormat = NO;
             if([string isEqualToString:@" "]){
                 return NO;
             }
+        }else if ([[dict valueForKey:@"dk"]integerValue]==38) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
+        }else if ([[dict valueForKey:@"dk"]integerValue]==69) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
+        }else if ([[dict valueForKey:@"dk"]integerValue]==68) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
+        }
+        else if ([[dict valueForKey:@"dk"]integerValue]==39) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==20) {
             if([newString intValue] > 999){
@@ -1437,6 +1454,13 @@ BOOL isThousandFormat = NO;
             }
         }else if ([[dict valueForKey:@"dk"]integerValue]==40) {
             if([newString intValue] > 999){
+                return NO;
+            }else {
+                return YES;
+            }
+        }
+        else if ([[dict valueForKey:@"dk"]integerValue]==29) {
+            if(newString.length > 15){
                 return NO;
             }else {
                 return YES;
@@ -4354,7 +4378,7 @@ float animatedDistance;
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+               //     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0){
@@ -4363,6 +4387,9 @@ float animatedDistance;
                         }
                     }
                 }
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
                 
@@ -4573,7 +4600,22 @@ float animatedDistance;
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+               //     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                    
+//                    if (_arrDropDown.count > 0) {
+//
+//                        NSDictionary *dic1 = [_arrDropDown objectAtIndex:count-1];
+//
+//                        if ([dict valueForKey:@"visible"]  == [dic1 valueForKey:@"visible"]) {
+//
+//
+//
+//                        }else {
+//                            [_arrDropDown addObject:dict];
+//                        }}else {
+//                                [_arrDropDown addObject:dict];
+//                            }
+                    
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
@@ -4584,6 +4626,10 @@ float animatedDistance;
                         }
                     }
                 }
+                
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
             case 34:{
@@ -4755,6 +4801,9 @@ float animatedDistance;
                     }
                     
                 }
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
                 
@@ -4787,6 +4836,10 @@ float animatedDistance;
                     }
                     
                 }
+                
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
                 
@@ -4939,6 +4992,7 @@ float animatedDistance;
                     }
                     
                 }
+                
             }
                 break;
                 
@@ -4971,6 +5025,9 @@ float animatedDistance;
                     }
                     
                 }
+                
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
             }
                 break;
                 
@@ -5002,6 +5059,9 @@ float animatedDistance;
                         }
                     }
                 }
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
             case 78:{
