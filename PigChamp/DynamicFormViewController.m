@@ -1721,7 +1721,39 @@ BOOL isThousandFormat = NO;
                 }
                 else {
                     //[self notinRangeMessage:dict];
-                    return NO;
+                    if([[dict valueForKey:@"dk"] integerValue]==3) {
+                        
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                   message:@"Value entered for number of piglets is more than maximum allowed, 30"
+                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction* yes = [UIAlertAction
+                                              actionWithTitle:strYes
+                                              style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action){
+                            [self callEventSaveService];
+                        }];
+                        
+                        UIAlertAction* no = [UIAlertAction
+                                             actionWithTitle:strNo
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action){
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                        
+                        [myAlertController addAction: yes];
+                        [myAlertController addAction: no];
+                        
+                        [self presentViewController:myAlertController animated:YES completion:nil];
+                        
+                        
+                        return  NO;
+                    }else {
+                        return NO;
+                    }
+                    
+                    
+                    
+                   // return NO;
                 }
             }else{
                 return NO;
@@ -2802,6 +2834,32 @@ float animatedDistance;
                                       style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * action){
                     [self callEventSaveService];
+                }];
+                
+                UIAlertAction* no = [UIAlertAction
+                                     actionWithTitle:strNo
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action){
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: yes];
+                [myAlertController addAction: no];
+                
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }else{
+                [self callEventSaveService];
+            }
+        }if ([[dictJson allKeys]containsObject:@"3"]) {
+            if ([[dictJson valueForKey:@"32"] length]==0) {
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:@"Value entered for number of piglets is less than the minimum allowed ,1.00"
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction* yes = [UIAlertAction
+                                      actionWithTitle:strYes
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action){
+                   // [self callEventSaveService];
                 }];
                 
                 UIAlertAction* no = [UIAlertAction
