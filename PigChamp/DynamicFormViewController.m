@@ -334,7 +334,7 @@ BOOL isThousandFormat = NO;
                         
                         [_arrDynamic addObject:_dictDynamic];
                         
-                        
+                        // suppose to cooment for Bug-27856 by M.
                         //For removing 169 and piglet identities -------------------
                         for (NSMutableDictionary *dict  in _arrDynamic){
                             if ([[dict valueForKey:@"dk"] integerValue] == 169 && [[dict valueForKey:@"Lb"]   isEqual: @"Piglet Identities"]){
@@ -473,6 +473,13 @@ BOOL isThousandFormat = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -489,6 +496,13 @@ BOOL isThousandFormat = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"Token not found"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -505,6 +519,13 @@ BOOL isThousandFormat = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strUnauthorised
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            //** added Pigchamp logo on alert Bug-27920 by M.
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
+            
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -1424,6 +1445,17 @@ BOOL isThousandFormat = NO;
                     return NO;
                 }
             }
+        }
+        //**added below condition Bugnet - 27946 by M.
+        else if (([[dict valueForKey:@"dk"]integerValue]==88) || ([[dict valueForKey:@"dk"]integerValue]==89) || ([[dict valueForKey:@"dk"]integerValue]==90) || ([[dict valueForKey:@"dk"]integerValue]==91)){
+            if([string isEqualToString:@" "]){
+                return NO;
+            } //end of code by M.
+           // NSArray *compWhiteSpace = [string componentsSeparatedByString:@" "];
+           // if(compWhiteSpace.count > 1) {
+            //    [string stringByReplacingOccurrencesOfString:@" "  withString:@""];
+           //     return YES;
+           // }
         }else if ([[dict valueForKey:@"dk"]integerValue]==27) {
             if([string isEqualToString:@" "]){
                 return NO;
@@ -1456,6 +1488,10 @@ BOOL isThousandFormat = NO;
             if([newString intValue] > 999){
                 return NO;
             }else {
+                //**added below code for saving total weight- Bugnet No- 27951 by M. start
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                //by M End
                 return YES;
             }
         }
@@ -1463,6 +1499,10 @@ BOOL isThousandFormat = NO;
             if(newString.length > 15){
                 return NO;
             }else {
+                //** added code for bug 27924 by M.
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                //end of by M.
                 return YES;
             }
         }
@@ -1506,11 +1546,17 @@ BOOL isThousandFormat = NO;
             }
         }else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
             if([string isEqualToString:@""]){
+               // NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+               // formatter.numberStyle = NSNumberFormatterDecimalStyle;
+               // NSNumber *updatednewString = [formatter numberFromString:newString];
+                
+               // if ([updatednewString floatValue] < 9999.9902){
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
                 return YES;
+                //}
             }
-            
+           
             if (([newString integerValue]>=0)&&([newString length]<8)) {
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890."];
@@ -1721,39 +1767,7 @@ BOOL isThousandFormat = NO;
                 }
                 else {
                     //[self notinRangeMessage:dict];
-                    if([[dict valueForKey:@"dk"] integerValue]==3) {
-                        
-                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-                                                                                                   message:@"Value entered for number of piglets is more than maximum allowed, 30"
-                                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                        UIAlertAction* yes = [UIAlertAction
-                                              actionWithTitle:strYes
-                                              style:UIAlertActionStyleDefault
-                                              handler:^(UIAlertAction * action){
-                            [self callEventSaveService];
-                        }];
-                        
-                        UIAlertAction* no = [UIAlertAction
-                                             actionWithTitle:strNo
-                                             style:UIAlertActionStyleDefault
-                                             handler:^(UIAlertAction * action){
-                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
-                        }];
-                        
-                        [myAlertController addAction: yes];
-                        [myAlertController addAction: no];
-                        
-                        [self presentViewController:myAlertController animated:YES completion:nil];
-                        
-                        
-                        return  NO;
-                    }else {
-                        return NO;
-                    }
-                    
-                    
-                    
-                   // return NO;
+                    return NO;
                 }
             }else{
                 return NO;
@@ -2039,6 +2053,13 @@ float animatedDistance;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2055,6 +2076,13 @@ float animatedDistance;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[self getTranslatedTextForString:@"Token not found"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2158,6 +2186,13 @@ float animatedDistance;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:strUnauthorised
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2175,6 +2210,13 @@ float animatedDistance;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[responseData valueForKey:@"Error"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2192,6 +2234,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[responseData valueForKey:@"Error"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -2209,6 +2258,13 @@ float animatedDistance;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strNoInternet
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            //** added Pigchamp logo on alert Bug-27920 by M.
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
+            
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -2437,7 +2493,7 @@ float animatedDistance;
 - (IBAction)btnSave_tapped:(id)sender {
     @try {
         [self.activeTextField resignFirstResponder];
-        NSString *strMustValue = @"You must enter value for ";
+       NSString *strMustValue = @"You must enter value for ";
         NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:@"You must enter a value for", @"Need to define range of numbers for the gilts that arrived.",nil]];
         
         NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
@@ -2507,6 +2563,13 @@ float animatedDistance;
                                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                           message:[[[[NSString stringWithFormat:@"%@ %@",@"Please enter Doses value more than",str] stringByAppendingString:[arrLableList componentsJoinedByString:@","]] stringByAppendingString:@""] stringByAppendingString:@"."]
                                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                               //** added Pigchamp logo on alert Bug-27920 by M.
+                               UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                               logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                               UIView *controllerView = myAlertController.view;
+                               [controllerView addSubview:logoImageView];
+                               [controllerView bringSubviewToFront:logoImageView];
+                               
                                UIAlertAction* ok = [UIAlertAction
                                                     actionWithTitle:strOk
                                                     style:UIAlertActionStyleDefault
@@ -2599,9 +2662,17 @@ float animatedDistance;
             //            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
             //                                                                                       message:[[[strMustValue stringByAppendingString:[arrLableList componentsJoinedByString:@","]] stringByAppendingString:strLastLbl] stringByAppendingString:@"."]
             //                                                                                preferredStyle:UIAlertControllerStyleAlert];
+            
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[[[[NSString stringWithFormat:@"%@ ",strMustValue] stringByAppendingString:[arrLableList componentsJoinedByString:@","]] stringByAppendingString:strLastLbl] stringByAppendingString:@"."]
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            //** added Pigchamp logo on alert Bug-27920 by M.
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
+            
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -2673,6 +2744,14 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[[strMustValue stringByAppendingString:barn] stringByAppendingString:@"."]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -2689,6 +2768,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[[strMustValue stringByAppendingString:room] stringByAppendingString:@"."]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -2705,6 +2791,14 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[[strMustValue stringByAppendingString:pen] stringByAppendingString:@"."]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -2763,6 +2857,13 @@ float animatedDistance;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strGiltMSg
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -2779,6 +2880,13 @@ float animatedDistance;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strGiltMSg
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -2829,37 +2937,18 @@ float animatedDistance;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strMsgTranspoder
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* yes = [UIAlertAction
                                       actionWithTitle:strYes
                                       style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * action){
                     [self callEventSaveService];
-                }];
-                
-                UIAlertAction* no = [UIAlertAction
-                                     actionWithTitle:strNo
-                                     style:UIAlertActionStyleDefault
-                                     handler:^(UIAlertAction * action){
-                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
-                }];
-                
-                [myAlertController addAction: yes];
-                [myAlertController addAction: no];
-                
-                [self presentViewController:myAlertController animated:YES completion:nil];
-            }else{
-                [self callEventSaveService];
-            }
-        }if ([[dictJson allKeys]containsObject:@"3"]) {
-            if ([[dictJson valueForKey:@"32"] length]==0) {
-                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-                                                                                           message:@"Value entered for number of piglets is less than the minimum allowed ,1.00"
-                                                                                    preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction* yes = [UIAlertAction
-                                      actionWithTitle:strYes
-                                      style:UIAlertActionStyleDefault
-                                      handler:^(UIAlertAction * action){
-                   // [self callEventSaveService];
                 }];
                 
                 UIAlertAction* no = [UIAlertAction
@@ -3776,6 +3865,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -3792,6 +3888,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[self getTranslatedTextForString:@"Token not found"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -3808,6 +3911,13 @@ float animatedDistance;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:NSLocalizedString(@"connection_lost", @"")
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -3842,6 +3952,13 @@ float animatedDistance;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:strNoInternet
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -3865,6 +3982,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[dict valueForKey:@"ResultString"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* yes = [UIAlertAction
                                           actionWithTitle:strYes
                                           style:UIAlertActionStyleDefault
@@ -3885,6 +4009,13 @@ float animatedDistance;
                                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                    message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
                                         UIAlertAction* ok = [UIAlertAction
                                                              actionWithTitle:strOk
                                                              style:UIAlertActionStyleDefault
@@ -3901,6 +4032,13 @@ float animatedDistance;
                                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                    message:[self getTranslatedTextForString:@"Token not found"]
                                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
                                         UIAlertAction* ok = [UIAlertAction
                                                              actionWithTitle:strOk
                                                              style:UIAlertActionStyleDefault
@@ -3973,6 +4111,13 @@ float animatedDistance;
                                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                    message:[dict valueForKey:@"ResultString"]
                                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
                                         UIAlertAction* ok = [UIAlertAction
                                                              actionWithTitle:strOk
                                                              style:UIAlertActionStyleDefault
@@ -4006,6 +4151,13 @@ float animatedDistance;
                                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                message:strUnauthorised
                                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                                    //** added Pigchamp logo on alert Bug-27920 by M.
+                                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                    UIView *controllerView = myAlertController.view;
+                                    [controllerView addSubview:logoImageView];
+                                    [controllerView bringSubviewToFront:logoImageView];
+                                    
                                     UIAlertAction* ok = [UIAlertAction
                                                          actionWithTitle:strOk
                                                          style:UIAlertActionStyleDefault
@@ -4020,6 +4172,13 @@ float animatedDistance;
                                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                message:responseData
                                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                                    //** added Pigchamp logo on alert Bug-27920 by M.
+                                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                    UIView *controllerView = myAlertController.view;
+                                    [controllerView addSubview:logoImageView];
+                                    [controllerView bringSubviewToFront:logoImageView];
+                                    
                                     UIAlertAction* ok = [UIAlertAction
                                                          actionWithTitle:strOk
                                                          style:UIAlertActionStyleDefault
@@ -4039,6 +4198,13 @@ float animatedDistance;
                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                        message:strNoInternet
                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            //** added Pigchamp logo on alert Bug-27920 by M.
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            
                             UIAlertAction* ok = [UIAlertAction
                                                  actionWithTitle:strOk
                                                  style:UIAlertActionStyleDefault
@@ -4119,6 +4285,13 @@ float animatedDistance;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:NSLocalizedString(@"connection_lost", @"")
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -4154,6 +4327,13 @@ float animatedDistance;
                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                        message:strNoInternet
                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            //** added Pigchamp logo on alert Bug-27920 by M.
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            
                             UIAlertAction* ok = [UIAlertAction
                                                  actionWithTitle:strOk
                                                  style:UIAlertActionStyleDefault
@@ -4174,9 +4354,22 @@ float animatedDistance;
                 }
                 else {
                     [_customIOS7AlertView close];
+                    
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[dict valueForKey:@"ResultString"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                   //** added code for Logo image on alert Bug-27920
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                  //  CGFloat offsetX = logoImageView.frame.size.width + 8.0;
+                    //UILabel *titleLabel = [controllerView valueForKey:@"ResultString"];
+                   // CGRect titleFrame = titleLabel.frame;
+                   // titleFrame.origin.x += offsetX;
+                   // titleLabel.frame  = titleFrame;
+                    //end of by M.
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -4617,17 +4810,18 @@ float animatedDistance;
                 }
             }
                 break;
+                
             case 13:{
-                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dT"
+                sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt"
                                                      ascending:YES];
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Tod" andPredicate:nil andSortDescriptors:sortDescriptors];
-                
+                //** changed the valueforkey from dT to dt and dK to dk Bug -27758 by M.
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dT"]?[[resultArray objectAtIndex:count] valueForKey:@"dT"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dK"]?[[resultArray objectAtIndex:count] valueForKey:@"dK"]:@"" forKey:@"dataTosend"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dt"]:@"" forKey:@"visible"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dk"]?[[resultArray objectAtIndex:count] valueForKey:@"dk"]:@"" forKey:@"dataTosend"];
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
@@ -4658,23 +4852,24 @@ float animatedDistance;
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
-               //     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
                     
-//                    if (_arrDropDown.count > 0) {
-//
-//                        NSDictionary *dic1 = [_arrDropDown objectAtIndex:count-1];
-//
-//                        if ([dict valueForKey:@"visible"]  == [dic1 valueForKey:@"visible"]) {
-//
-//
-//
-//                        }else {
-//                            [_arrDropDown addObject:dict];
-//                        }}else {
-//                                [_arrDropDown addObject:dict];
-//                            }
+                    ///*** added for Genetics are not getting saved in DB Bugnet No- 27969  by M. start
+                   [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
                     
-                    [_arrDropDown addObject:dict];
+                    if (_arrDropDown.count > 0) {
+
+                        NSDictionary *dic1 = [_arrDropDown objectAtIndex:count-1];
+
+                        if ([dict valueForKey:@"visible"]  == [dic1 valueForKey:@"visible"]) {
+                                [_arrDropDown addObject:dict];
+                            
+                        }else {
+                            [_arrDropDown addObject:dict];
+                        }}else {
+                                [_arrDropDown addObject:dict];
+                            }
+                     ///code added by M. End
+                    ///  //   [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
                     {
@@ -5348,6 +5543,8 @@ float animatedDistance;
         self.dtPicker.datePickerMode = UIDatePickerModeDate;
         if (@available(iOS 13.4, *)) {
             self.dtPicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+          //  self.dtPicker.datePickerMode = UIDatePickerModeDate;
+            
         } else {
             // Fallback on earlier versions
         }
@@ -5432,11 +5629,41 @@ float animatedDistance;
                 if ([[dict valueForKey:@"dk"] integerValue]==2){
                     [pref setObject:strSelectedDate forKey:@"PrevSelectedDate"];
                     [pref synchronize];
+                    NSDate *currentDate = [NSDate date];
+                    NSComparisonResult result = [currentDate compare:weakSelf.dtPicker.date];
+                    if (result == NSOrderedDescending || result == NSOrderedSame){
+                        NSLog(@"Date is within range");
+                    }
+                    else{
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                                          message:[self getTranslatedTextForString:@"You cannot enter future Date"]
+                                                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                                               //** added Pigchamp logo on alert Bug-27920 by M.
+                                               UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                               logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                               UIView *controllerView = myAlertController.view;
+                                               [controllerView addSubview:logoImageView];
+                                               [controllerView bringSubviewToFront:logoImageView];
+                                               
+                                              UIAlertAction* ok = [UIAlertAction
+                                                                    actionWithTitle:strOk
+                                                                    style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * action){
+                                                   [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                               }];
+
+                                               [myAlertController addAction: ok];
+                                               [self presentViewController:myAlertController animated:YES completion:nil];
+
+                                                    return;
+                    }
                 }
                 
                 NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
-                //[dateFormatterNew setDateFormat:@"YYYYMMdd"];//,MMMM dd
-                [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
+                //*** code changed dateformatter changed from dd-MM-yyyy to YYYY-MM-dd cause format required to sent to API --Bugnet No- 27974 by M.Start
+                [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
+               // [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
+                // code added by M. End
                 NSString *strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
                 strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                    withString:@""];
@@ -7391,7 +7618,10 @@ float animatedDistance;
             }
                 break;
             case 37:{
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dK=%@",Id];
+                //*** changed code predicateWithFormat:@"dK=%@" to predicateWithFormat:@"dk=%@"
+                //Bug 27950 added by M.
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dk=%@",Id];
+                //*** end of added by M.
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Halothane" andPredicate:predicate andSortDescriptors:nil];
                 
                 if (resultArray.count>0) {
