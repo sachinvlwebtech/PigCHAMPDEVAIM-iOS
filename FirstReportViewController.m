@@ -1059,7 +1059,8 @@ BOOL isOpenFisrReport = NO;
                          
                          if ([strEvnt isEqualToString:@"5"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_Pig"]];
-                            self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"pig(s) ("]]] stringByAppendingString:strActiveAnimalreportType] stringByAppendingString:@")"];//
+                             //**commented below for bug-27970 By M.
+                            //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"pig(s) ("]]] stringByAppendingString:strActiveAnimalreportType] stringByAppendingString:@")"];//
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"]; //Changed by priyanka
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------
@@ -1075,7 +1076,8 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"7"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_OpenSow"]];
-                             self.lblHeader.text = [strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"]]];
+                             //**commented below for bug-27970 By M.
+                            // self.lblHeader.text = [strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"]]];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------
@@ -1111,7 +1113,8 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"10"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_WarningPig"]];
-                             self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"weaned sow(s) not served by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceWean"]] stringByAppendingString:@" days"];//21
+                             //**commented below for bug-27970 By M.
+                             //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"weaned sow(s) not served by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceWean"]] stringByAppendingString:@" days"];//21
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------
@@ -1127,7 +1130,8 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"11"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_WarningPig"]];
-                             self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"lactating sow(s) not weaned by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceFarrow"]] stringByAppendingString:@" days"];//21
+                             //**commented below for bug-27970 By M.
+                             //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"lactating sow(s) not weaned by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceFarrow"]] stringByAppendingString:@" days"];//21
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------
@@ -1154,7 +1158,8 @@ BOOL isOpenFisrReport = NO;
                              NSString *strEnd = [formatter stringFromDate:dt3];
                              strStart = [self displayDate:strStart];
                              strEnd = [self displayDate:strEnd];
-                             self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
+                                //**commented below for bug-27970 By M.
+                             //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep 18------
@@ -1182,8 +1187,8 @@ BOOL isOpenFisrReport = NO;
                              
                             strStart = [self displayDate:strStart];
                              strEnd = [self displayDate:strEnd];
-
-                             self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
+                             //**commented below for bug-27970 By M.
+                             //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
                              [_arrSortTypeDisplay removeAllObjects]; //Added on 28th sep------

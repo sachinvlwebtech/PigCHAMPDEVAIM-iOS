@@ -696,8 +696,8 @@ BOOL isThousandFormat = NO;
             
             
             NSLog(@"dictionary in cell for row: %@",dict);
-            
-            if ([strFromDataEntry isEqualToString:@"1"] && ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==63)){
+            //***added below condition for dk=12 Bug-27966 By M.
+            if ([strFromDataEntry isEqualToString:@"1"] && ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==60)){
                 cell.userInteractionEnabled = NO;
             }
             else
@@ -1140,7 +1140,7 @@ BOOL isThousandFormat = NO;
         NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
         NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
         
-        if ([strFromDataEntry isEqualToString:@"1"] && ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==63)){
+        if ([strFromDataEntry isEqualToString:@"1"] && ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==60 ||[[dict valueForKey:@"dk"] integerValue]==12)){
             cell.userInteractionEnabled = NO;
         }
         else{
@@ -4629,7 +4629,9 @@ float animatedDistance;
                 for (int count=0; count<resultArray.count; count++){
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
-               //     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                    //***uncommented below line for Bug - 28027 by M.
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                    //***end By M.
                     [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0){
@@ -4993,7 +4995,6 @@ float animatedDistance;
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ds"]?[[resultArray objectAtIndex:count] valueForKey:@"ds"]:@"" forKey:@"visible"];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"sid"]?[[resultArray objectAtIndex:count] valueForKey:@"sid"]:@"" forKey:@"dataTosend"];
                         [_arrDropDown addObject:dict];
-                        
                         if (strPrevSelectedValue.length>0){
                             if ([strPrevSelectedValue integerValue] == [[[resultArray objectAtIndex:count] valueForKey:@"sid"] integerValue]){
                                 prevSelectedIndex = count;
@@ -5322,22 +5323,49 @@ float animatedDistance;
                                                      ascending:YES];
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Transport_Companies" andPredicate:nil andSortDescriptors:sortDescriptors];
-                
-                for (int count=0; count<resultArray.count; count++){
-                    NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
-                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
-                    [_arrDropDown addObject:dict];
-                    
-                    if (strPrevSelectedValue.length>0)
-                    {
-                        if ([strPrevSelectedValue integerValue] == [[[resultArray objectAtIndex:count] valueForKey:@"id"] integerValue])
+                //***below condition is added for Bug- 28011
+                if (resultArray.count>0){
+                    for (int count=0; count<resultArray.count; count++){
+                        NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                        [_arrDropDown addObject:dict];
+                        
+                        if (strPrevSelectedValue.length>0)
                         {
-                            prevSelectedIndex = count;
+                            if ([strPrevSelectedValue integerValue] == [[[resultArray objectAtIndex:count] valueForKey:@"id"] integerValue])
+                            {
+                                prevSelectedIndex = count;
+                            }
                         }
                     }
                 }
+                
+                else{
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                        message:[self getTranslatedTextForString:@"No Data Available"]preferredStyle:UIAlertControllerStyleAlert];
+                                           //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                           logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                           UIView *controllerView = myAlertController.view;
+                                           [controllerView addSubview:logoImageView];
+                                           [controllerView bringSubviewToFront:logoImageView];
+                                           
+                                          UIAlertAction* ok = [UIAlertAction
+                                                                actionWithTitle:strOk
+                                                                style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * action){
+                                               [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                           }];
+
+                                           [myAlertController addAction: ok];
+                                           [self presentViewController:myAlertController animated:YES completion:nil];
+
+                                                return;
+                }
+                //***end of by M.
             }
+                
                 break;
                 
             case 150:case 141:case 74:case 28:case 70:case 33:{
@@ -5625,8 +5653,8 @@ float animatedDistance;
                 
                 NSString *strSelectedDate = [formatter stringFromDate:weakSelf.dtPicker.date];
                 NSString *strBaseDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZD"];
-                
-                if ([[dict valueForKey:@"dk"] integerValue]==2){
+                //***added code for Bug-27818 by M
+                if ([[dict valueForKey:@"dk"] integerValue]==35){
                     [pref setObject:strSelectedDate forKey:@"PrevSelectedDate"];
                     [pref synchronize];
                     NSDate *currentDate = [NSDate date];
@@ -5658,7 +5686,7 @@ float animatedDistance;
                                                     return;
                     }
                 }
-                
+                //*** end by M.
                 NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
                 //*** code changed dateformatter changed from dd-MM-yyyy to YYYY-MM-dd cause format required to sent to API --Bugnet No- 27974 by M.Start
                 [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd

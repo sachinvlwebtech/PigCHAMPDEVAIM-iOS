@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PigCHAMP.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>673E0F25D6040AEEF4935ACFE538D073F62D306C</string>
+				<key>dateExpires</key>
+				<string>2023-08-26</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>Y44NMWY76J.com.venturelabour.pigchamp</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>Y44NMWY76J</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>PigChamp.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>9384d7fc-8d0b-4a0c-85e1-689a5c8c4fc2</string>
+				<key>dateExpires</key>
+				<string>2024-05-11</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.venturelabour.pigchamp</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>Y44NMWY76J</string>
+				<key>name</key>
+				<string>Farms Dot Com</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>4.9</string>
+		</dict>
+	</array>
+</dict>
+</plist>
