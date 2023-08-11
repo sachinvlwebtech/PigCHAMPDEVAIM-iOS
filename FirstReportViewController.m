@@ -1338,8 +1338,9 @@ BOOL isOpenFisrReport = NO;
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     @try{
-        [[self.pickerSortType.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerSortType.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+        //**code commented below for Bug 27975 By M.
+       // [[self.pickerSortType.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+        //[[self.pickerSortType.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         if (pickerView==self.pickerSortType) {
             return [_arrSortTypeDisplay objectAtIndex:row];
         }
@@ -1355,8 +1356,9 @@ BOOL isOpenFisrReport = NO;
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
 {
     @try {
-        [[self.pickerSortType.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
-        [[self.pickerSortType.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
+        //**code commented below for Bug 27975 By M.
+        //[[self.pickerSortType.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
+        //[[self.pickerSortType.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         UILabel *lblSortText = (id)view;
         
         if (!lblSortText)

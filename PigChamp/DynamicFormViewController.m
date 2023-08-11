@@ -334,14 +334,14 @@ BOOL isThousandFormat = NO;
                         
                         [_arrDynamic addObject:_dictDynamic];
                         
-                        // suppose to cooment for Bug-27856 by M.
+                        // suppose to comment for Bug-27856 and Bug-27788 by M.
                         //For removing 169 and piglet identities -------------------
-                        for (NSMutableDictionary *dict  in _arrDynamic){
+                        /*for (NSMutableDictionary *dict  in _arrDynamic){
                             if ([[dict valueForKey:@"dk"] integerValue] == 169 && [[dict valueForKey:@"Lb"]   isEqual: @"Piglet Identities"]){
                                 [_arrDynamic removeObject:dict];
                             }
                             //For removing 169 and piglet identities -------------------
-                        }
+                        } */
                         
                     }
                 }
@@ -1496,7 +1496,9 @@ BOOL isThousandFormat = NO;
             }
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-            if(newString.length > 15){
+            //*** changed below lenght based for Bug 28054 partial fix By M.
+            //if(newString.length > 15){
+            if(newString.length > 8){
                 return NO;
             }else {
                 //** added code for bug 27924 by M.
@@ -1544,7 +1546,8 @@ BOOL isThousandFormat = NO;
             else{
                 return YES;
             }
-        }else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
+        }//***commented below code for checking max value as per Bug-27823
+        /*else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
             if([string isEqualToString:@""]){
                // NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                // formatter.numberStyle = NSNumberFormatterDecimalStyle;
@@ -1570,6 +1573,32 @@ BOOL isThousandFormat = NO;
                 else {
                     return NO;
                 }
+            }
+            else
+                return NO;
+        }*/
+        //***added below condition for Bug-27823 by M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==10) {
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<8)) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"9999.9902"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
+                }
+                else
+                    return NO;
             }
             else
                 return NO;
@@ -5235,7 +5264,12 @@ float animatedDistance;
                     NSDictionary *dict = [[NSMutableDictionary alloc]init];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
                     [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
-                    [_arrDropDown addObject:dict];
+                    //***code added for Bug-28045 removing duplicate entry for Test_type By M.
+                    if (![_arrDropDown containsObject:dict]) {
+                        [_arrDropDown addObject:dict];
+                        }
+                    //*** by M. end
+                    // [_arrDropDown addObject:dict];
                     
                     if (strPrevSelectedValue.length>0)
                     {
@@ -5571,7 +5605,7 @@ float animatedDistance;
         self.dtPicker.datePickerMode = UIDatePickerModeDate;
         if (@available(iOS 13.4, *)) {
             self.dtPicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
-          //  self.dtPicker.datePickerMode = UIDatePickerModeDate;
+           // self.dtPicker.datePickerMode = UIDatePickerModeDate;
             
         } else {
             // Fallback on earlier versions
@@ -6278,7 +6312,7 @@ float animatedDistance;
                 }
             }
                 break;
-            case 8:{
+            case 8:{//***code - valueforkey is changed from capital to small letters for Bug-27764 By M.
                 if (flag == 1) {
                     NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
                     NSDictionary * dictDictDynamic = [pref objectForKey:@"lastSelectedDictDynamic"];
@@ -6286,19 +6320,19 @@ float animatedDistance;
                     [_dictDynamic setValue:[dictDictDynamic valueForKey:[dict valueForKey:@"Lb"]] forKey:[dict valueForKey:@"Lb"]];
                 }
                 else{
-                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"dT" ascending:YES];
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt" ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                     NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Pd_Results" andPredicate:nil andSortDescriptors:sortDescriptors];
                     
                     for (int count=0; count<resultArray.count; count++)  {
                         NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dT"] forKey:@"visible"];
-                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dK"] forKey:@"dataTosend"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"] forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dk"] forKey:@"dataTosend"];
                         [_arrDropDown addObject:dict];
                         
                         if (strPrevSelectedValue.length>0)
                         {
-                            if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dK"]] == NSOrderedSame){
+                            if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dk"]] == NSOrderedSame){
                                 prevSelectedIndex = count;
                             }
                         }
@@ -6848,7 +6882,12 @@ float animatedDistance;
                         NSDictionary *dict = [[NSMutableDictionary alloc]init];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
-                        [_arrDropDown addObject:dict];
+                        //***code added for Bug-28045 removing duplicate entry for Test_type By M.
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+                        //***By M. End
+                        // [_arrDropDown addObject:dict];
                         
                         if (strPrevSelectedValue.length>0)
                         {
@@ -7679,7 +7718,9 @@ float animatedDistance;
             }
                 break;
             case 73:{
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dK=%@",Id];
+                //***code commented below for Bug-27867 By M.
+                //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dK=%@",Id];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dk=%@",Id];
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Admin_Routes" andPredicate:predicate andSortDescriptors:nil];
                 
                 if (resultArray.count>0) {

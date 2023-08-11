@@ -840,6 +840,7 @@ BOOL isThousandFormatReport = NO;
         self.dtPickerReport.datePickerMode = UIDatePickerModeDate;
         
         if (@available(iOS 13.4, *)) {
+           // self.dtPickerReport.datePickerMode = UIDatePickerModeDate;
             self.dtPickerReport.preferredDatePickerStyle = UIDatePickerStyleWheels;
         } else {
             // Fallback on earlier versions
