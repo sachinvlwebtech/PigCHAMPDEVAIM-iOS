@@ -726,23 +726,44 @@ NSString *Success        = @"";
                     NSDictionary * myDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
                     
                 //    NSDictionary * myDictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"userParameterData"];
+                    
+                    //*** code added below to replace description key as per CoreData Model for New webservice by M.
+                    
+                    NSMutableArray *updatedFarms = [NSMutableArray array];
+                    // Iterate through each farm dictionary in the "farms" array
+                    for (NSDictionary *farm in myDictionary[@"farms"]) {
+                        NSMutableDictionary *updatedFarm = [NSMutableDictionary dictionaryWithDictionary:farm];
+                        NSString *originalDescription = farm[@"Description"];
+                        
+                        // Replace "Description" key with "des"
+                        if (originalDescription) {
+                            updatedFarm[@"des"] = originalDescription;
+                            [updatedFarm removeObjectForKey:@"Description"];
+                        }
+                        
+                        [updatedFarms addObject:updatedFarm];
+                    }
+                    
+                    // Create the final updated dictionary with the replaced key
+                    NSDictionary *updatedDictionary = @{@"farms": updatedFarms};
 
+                    //**code end by M.
                     
                     NSArray *farmsArray;
-                                        
-                    if (![[myDictionary objectForKey:@"_farms"] isKindOfClass:[NSNull class]]) {     //Commented by harikrishna
-                        farmsArray = [myDictionary objectForKey:@"_farms"];
+                     //***code key below changed as per new webservice old key = _farms and f_nm newKey = farms and farmname by M.
+                    if (![[updatedDictionary objectForKey:@"farms"] isKindOfClass:[NSNull class]]) {     //Commented by harikrishna
+                        farmsArray = [updatedDictionary objectForKey:@"farms"];
                     }
                     
                     NSMutableArray *arrFilteredFarms = [[NSMutableArray alloc]init];
                     
                     for (NSDictionary *myDictionary1 in farmsArray){
-                        if (![[myDictionary1 valueForKey:@"f_No"] isKindOfClass:[NSNull class]]){
+                        if (![[myDictionary1 valueForKey:@"farmname"] isKindOfClass:[NSNull class]]){
                             [arrFilteredFarms addObject:myDictionary1];
                         }
                     }
                     
-                    
+                    //*** end By M.
                     
                     
                     
@@ -1158,6 +1179,9 @@ NSString *Success        = @"";
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
+                              //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                                
+                              //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
                                 
                                 [user setValue:self.txtLogintextField.text forKey:@"userName"];
                                 NSLog(@"username=%@",self.txtLogintextField.text);
@@ -1176,6 +1200,8 @@ NSString *Success        = @"";
                                 [_pref setValue:@"" forKey:@"ZD"];
                                 [_pref setValue:@"" forKey:@"SSL"];
                                 [_pref setValue:@"" forKey:@"SSW"];
+                               // [_pref setValue:@"" forKey:@"tattoounique"];
+                               // [_pref setValue:@"" forKey:@"tattoolength"];
                             }
                             
                             [[NSUserDefaults standardUserDefaults] setObject:self.txtLogintextField.text forKey:@"userName"];

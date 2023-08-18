@@ -635,7 +635,8 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60){
+        //***code condition added for Litter Identity below 21 for Bug- 28110 By M.
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60 || [[dict valueForKey:@"dk"] integerValue]==21){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -1497,8 +1498,10 @@ BOOL isThousandFormat = NO;
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
             //*** changed below lenght based for Bug 28054 partial fix By M.
-            //if(newString.length > 15){
-            if(newString.length > 8){
+            NSInteger maxtattolenghth = 0;
+            maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
+            //if(newString.length > 8){
+            if(newString.length > maxtattolenghth){
                 return NO;
             }else {
                 //** added code for bug 27924 by M.
@@ -1547,17 +1550,17 @@ BOOL isThousandFormat = NO;
                 return YES;
             }
         }//***commented below code for checking max value as per Bug-27823
-        /*else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
+       /* else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
             if([string isEqualToString:@""]){
-               // NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-               // formatter.numberStyle = NSNumberFormatterDecimalStyle;
-               // NSNumber *updatednewString = [formatter numberFromString:newString];
+               NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                formatter.numberStyle = NSNumberFormatterDecimalStyle;
+                NSNumber *updatednewString = [formatter numberFromString:newString];
                 
-               // if ([updatednewString floatValue] < 9999.9902){
+                if ([updatednewString floatValue] < 9999.9902){
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
                 return YES;
-                //}
+                }
             }
            
             if (([newString integerValue]>=0)&&([newString length]<8)) {
@@ -1590,7 +1593,8 @@ BOOL isThousandFormat = NO;
             
             if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<8)) {
                 NSCharacterSet *characterSet = nil;
-                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"9999.9902"];
+                //added below code for Bug-28121 By M.
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
                 if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
                     [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
@@ -5014,6 +5018,8 @@ float animatedDistance;
                     }
                 }
                 else {
+                    //***code added below for Bug- 28030 By M.
+                    strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
                     sortBy = [[NSSortDescriptor alloc] initWithKey:@"ds"
                                                          ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
@@ -7708,7 +7714,9 @@ float animatedDistance;
                     }
                 }
                 else{
-                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"siteKey=%@",Id];
+                    //**commented below line for bug 28030 by M.
+                   // NSPredicate *predicate = [NSPredicate predicateWithFormat:@"siteKey=%@",Id];
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sid=%@",Id];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Destination" andPredicate:predicate andSortDescriptors:nil];
                     
                     if (resultArray.count>0) {

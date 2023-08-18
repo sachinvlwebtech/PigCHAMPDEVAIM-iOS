@@ -172,9 +172,10 @@ NSString *strFarms;
         self.btnFarmSelection.layer.borderColor =[[UIColor colorWithRed:206.0/255.0 green:208.0/255.0 blue:206.0/255.0 alpha:1] CGColor];
         self.navigationItem.hidesBackButton = YES;
         _arrFarms=[[NSMutableArray alloc]init];
-        
-        NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"f_nm"
+        //***code change for new webservice by M.
+        NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"farmname"
                                                                ascending:YES];
+        //***end By M.
         NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
         NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Farms" andPredicate:nil andSortDescriptors:sortDescriptors];
         // NSLog(@"resultArray=%@",resultArray);
@@ -182,13 +183,18 @@ NSString *strFarms;
         for (int count=0; count<resultArray.count; count++) {
             @autoreleasepool {
                 NSMutableDictionary *dictFarm = [[NSMutableDictionary alloc]init];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"f_no"] forKey:@"f_No"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"f_nm"] forKey:@"f_nm"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"] forKey:@"id"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"zd"] forKey:@"ZD"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"ssl"] forKey:@"SSL"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"ssw"] forKey:@"SSW"];
+                //***code change for new webservice by M.
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"farmcode"] forKey:@"f_No"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"farmname"] forKey:@"f_nm"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"sitekey"] forKey:@"id"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"zerodate"] forKey:@"ZD"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexliveborn"] forKey:@"SSL"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexweaned"] forKey:@"SSW"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
                 
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                
+                //*** end By M.
                 [_arrFarms addObject:dictFarm];
             }
         }
@@ -203,6 +209,11 @@ NSString *strFarms;
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
+                //*** code added below for new keys as per CoreData Model for New webservice by M.
+                
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                 //***end By M.
                 [_pref synchronize];
             }
 
@@ -396,6 +407,10 @@ NSString *strFarms;
                 [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"ZD"] forKey:@"ZD"];
                 [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"SSL"] forKey:@"SSL"];
                 [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"SSW"] forKey:@"SSW"];
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                              
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                              
                 [weakSelf.btnFarmSelection setTitle:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"f_nm"] forState:UIControlStateNormal];
                 
                 [weakSelf.pref synchronize];

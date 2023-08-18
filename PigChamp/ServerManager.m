@@ -219,13 +219,13 @@ static NSURLConnection *theConnection;
 {
     @try {
         NSString *serviceUrl = @"";
-        
-      //  serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
-        
-        
-        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        //*** below changes for new webservice by M.
+      serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/GetAccessibleFarms_J/?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
         
         
+      //  serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvLookups.svc/getMasterData?Token=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]]];
+        
+        //***end by M.
                 
         serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         
