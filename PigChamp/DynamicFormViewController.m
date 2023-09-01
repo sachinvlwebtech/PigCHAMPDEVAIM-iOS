@@ -635,7 +635,7 @@ BOOL isThousandFormat = NO;
         
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
-        //***code condition added for Litter Identity below 21 for Bug- 28110 By M.
+        ///***code condition added for Litter Identity below 21 for Bug- 28110 By M.
         if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60 || [[dict valueForKey:@"dk"] integerValue]==21){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
@@ -1489,7 +1489,7 @@ BOOL isThousandFormat = NO;
             if([newString intValue] > 999){
                 return NO;
             }else {
-                //**added below code for saving total weight- Bugnet No- 27951 by M. start
+                ///**added below code for saving total weight- Bugnet No- 27951 by M. start
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
                 //by M End
@@ -1497,7 +1497,7 @@ BOOL isThousandFormat = NO;
             }
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-            //*** changed below lenght based for Bug 28054 partial fix By M.
+           ///*** changed below lenght based for Bug 28054 partial fix By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
             //if(newString.length > 8){
@@ -1593,7 +1593,7 @@ BOOL isThousandFormat = NO;
             
             if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<8)) {
                 NSCharacterSet *characterSet = nil;
-                //added below code for Bug-28121 By M.
+                ///***added below code for Bug-28121 By M.
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
                 if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
@@ -5018,7 +5018,7 @@ float animatedDistance;
                     }
                 }
                 else {
-                    //***code added below for Bug- 28030 By M.
+                    ///***code added below for Bug- 28030 By M.
                     strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
                     sortBy = [[NSSortDescriptor alloc] initWithKey:@"ds"
                                                          ascending:YES];
