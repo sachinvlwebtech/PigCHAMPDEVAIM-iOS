@@ -541,7 +541,76 @@ NSString *Success        = @"";
         NSLog(@"Exception in btnSubmit_tapped =%@",exception.description);
     }
 }
+///*** added below method for getting User_Params data bug-27742 By M.
+/*
+-(void)getUsersData{
+    
+    @try {
+        //NSError *error = nil;
+        if ([[ControlSettings sharedSettings] isNetConnected ]) {
+            [ServerManager sendRequestForUsersData:^(NSString *responseData) {
+                [_customIOS7AlertView close];
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                
+                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""]) {
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:responseData
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                                             //[self.navigationController popToRootViewControllerAnimated:YES];
+                                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                         }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }else{
+                    
+                    
+                    NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
+                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dict];
+                    [currentDefaults setObject:data forKey:@"user_params"];
+                   
 
+//                    [[NSUserDefaults standardUserDefaults] setObject:[dict valueForKey:@"UPF"] forKey:@"user_params"];
+
+                    [self getFarmsData];
+    
+                }
+            } onFailure:^(NSString *responseData, NSError *error) {
+                [_customIOS7AlertView close];
+                
+                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                
+                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Simple Report"];
+                [tracker set:kGAIScreenName value:strErr];
+                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+            }];
+        }
+        else {
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                       message:@"You must be online for the app to function."
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+            
+            [myAlertController addAction: ok];
+            [self presentViewController:myAlertController animated:YES completion:nil];
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Exception in updateMasterDataBase=%@",exception.description);
+    }
+}*/
 // Added extra function to get Farms Data ...
 
 -(void)getFarmsData{

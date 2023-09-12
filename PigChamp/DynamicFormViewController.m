@@ -677,7 +677,7 @@ BOOL isThousandFormat = NO;
             cell.txtDetail.rightView = leftView;
             
             cell.txtDetail.text = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
-            strScan = [dict valueForKey:@"Lb"];
+           // strScan = [dict valueForKey:@"Lb"];
             NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
             NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
             if((strMinVal.length >0 && strMaxVal.length>0)||[[dict valueForKey:@"dk"]integerValue]==24 || [self getTextType:[dict valueForKey:@"dt"]]){
@@ -1458,6 +1458,8 @@ BOOL isThousandFormat = NO;
            //     return YES;
            // }
         }else if ([[dict valueForKey:@"dk"]integerValue]==27) {
+            //*** condition added for Bug-28148 by M.
+          //  if(newString.length > 15){
             if([string isEqualToString:@" "]){
                 return NO;
             }
@@ -1479,13 +1481,68 @@ BOOL isThousandFormat = NO;
                 return NO;
             }
         }
-        else if ([[dict valueForKey:@"dk"]integerValue]==20) {
+        /*else if ([[dict valueForKey:@"dk"]integerValue]==20) {
             if([newString intValue] > 999){
                 return NO;
             }else {
                 return YES;
             }
-        }else if ([[dict valueForKey:@"dk"]integerValue]==40) {
+        }*/
+        ///***code added below for litter weight was taking special character Bug- 28165 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==20) {
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<11)) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890."];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
+                }
+                else
+                    return NO;
+            }
+            else
+                return NO;
+        }///*** end By M.
+    
+        ///***code added below for litter weight was taking special character Bug- 28184 and 27951 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==40) {
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<11)) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890."];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
+                }
+                else
+                    return NO;
+            }
+            else
+                return NO;
+        }
+        //*** commented below code and added above modified code
+        /*else if ([[dict valueForKey:@"dk"]integerValue]==40) {
             if([newString intValue] > 999){
                 return NO;
             }else {
@@ -1495,7 +1552,7 @@ BOOL isThousandFormat = NO;
                 //by M End
                 return YES;
             }
-        }
+        }*/
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
            ///*** changed below lenght based for Bug 28054 partial fix By M.
             NSInteger maxtattolenghth = 0;
@@ -2580,7 +2637,85 @@ float animatedDistance;
                     }
                 }
             }
-            //*******Code change on 16th May by Priyanka bugnet 20927***********//
+           
+           ///***added for checking DOB Bug-27777 By M.
+        /*
+            if ([[dict valueForKey:@"dk"] integerValue] == 35)
+            {
+                NSString *str  = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
+                NSString *dobString,*tmpdateStr1,*tmpdateStr2;
+                NSDate *newDob,*newtmpDate1,*newtmpDate2;
+                NSDateFormatter *inputFormatter = [[NSDateFormatter alloc]init];
+                [inputFormatter setDateFormat:@"MM-dd-yyyy"];
+                NSDateFormatter *inputFormatter1 = [[NSDateFormatter alloc]init];
+                [inputFormatter1 setDateFormat:@"yyyy-MM-dd"];
+                for (NSString *key in _dictDynamic) {
+                    if ([key isEqualToString:@"Date of Birth"]) {
+                        dobString = _dictDynamic[key];
+                        newDob = [inputFormatter dateFromString:dobString];
+                        if (newDob){
+                            
+                            dobString = [inputFormatter1 stringFromDate:newDob];
+                        }
+                    }else if ([key isEqualToString:@"Date Last Weaned"]) {
+                        tmpdateStr1 = _dictDynamic[key];
+                        newtmpDate1 = [inputFormatter dateFromString:tmpdateStr1];
+                        if (newtmpDate1){
+                            
+                            tmpdateStr1 = [inputFormatter1 stringFromDate:newtmpDate1];
+                        }
+                        
+                        
+                    }else if ([key isEqualToString:@"Date Last Served"]) {
+                        tmpdateStr2 = _dictDynamic[key];
+                        newtmpDate2 = [inputFormatter dateFromString:tmpdateStr2];
+                        if (newtmpDate2){
+                            
+                            tmpdateStr2 = [inputFormatter1 stringFromDate:newtmpDate2];
+                        }
+                    }
+                }
+                
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                NSDate *dobDate = [dateFormatter dateFromString: dobString];
+                NSDate *date1 = [dateFormatter dateFromString: tmpdateStr1];
+                NSDate *date2 = [dateFormatter dateFromString: tmpdateStr2];
+
+                BOOL isDOBOlder = [self isDOB:dobDate olderThanDate:date1 andDate:date2];
+
+                if (!isDOBOlder)
+                    {
+                    NSLog(@"DOB is Not older than date1 and date2");
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:[self getTranslatedTextForString:@" Date of Birth Can't be earlier than Last weaned or Last served date"]
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action){
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+
+                         return;
+                }
+                 else {
+                    NSLog(@"DOB is  older than date1 and date2");
+                }
+               
+                                        
+            }*/
+             //*******Code change on 16th May by Priyanka bugnet 20927***********//
             
             
             // Code change done by hari 9thMay2023
@@ -4861,7 +4996,9 @@ float animatedDistance;
                     
                     if (strPrevSelectedValue.length>0)
                     {
-                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dK"]] == NSOrderedSame){
+                        ///*** valueforkey corrected for Bu - 27758  by M.
+                        if( [strPrevSelectedValue caseInsensitiveCompare:[[resultArray objectAtIndex:count] valueForKey:@"dk"]] == NSOrderedSame){
+                            ///*** end By M.
                             prevSelectedIndex = count;
                         }
                     }
@@ -7923,6 +8060,14 @@ float animatedDistance;
 
 - (IBAction)btnSnnerType_tapped:(id)sender {
     @try {
+        ///*** added code below for  bug- 27755    By M.
+        UITableViewCell* cell = (UITableViewCell*)[[sender superview] superview];
+        NSIndexPath* indexPath = [self.tblDynamic indexPathForCell:cell];
+        NSDictionary *dict = [_arrDynamic objectAtIndex:indexPath.row];
+        
+        strScan = [dict valueForKey:@"Lb"];
+        strScandk = [dict valueForKey:@"dk"];
+        ///*** End By M.
         pref = [NSUserDefaults standardUserDefaults];
         // NSString *strRFID = [pref valueForKey:@"isRFID"];
         NSString *strBar = [pref valueForKey:@"isBarcode"];
@@ -7930,8 +8075,10 @@ float animatedDistance;
         if ([strBar isEqualToString:@"1"]){
             barcodeScannerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"segueBarcode"];
             barcodeScannerViewController.delegate = self;
-            
-            [self.navigationController pushViewController:barcodeScannerViewController animated:NO];
+            ///*** added code below for  bug- 27755    By M.
+            [self presentViewController:barcodeScannerViewController animated:NO completion:nil];
+            ///*** end by M.
+            //[self.navigationController pushViewController:barcodeScannerViewController animated:NO];
         }else{
         }
     }
@@ -7961,9 +8108,18 @@ float animatedDistance;
         //        [dictJson setValue:barcode forKey:@"1"];
         //        [self.tblDynamic reloadData];
         
-        [_dictDynamic setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"Lb"]];
-        [dictJson setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"dk"]];
+                //[_dictDynamic setValue:barcode forKey:strScan];
+                //[dictJson setValue:barcode forKey:@"1"];
+        ///*** added code below for  bug- 27755    By M.
+        [_dictDynamic setValue:barcode forKey:strScan];
+        [dictJson setValue:barcode forKey:strScandk];
+        ///***end By M.
         [self.tblDynamic reloadData];
+    
+       // [_dictDynamic setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"Lb"]];
+     //   [dictJson setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"dk"]];
+        
+       // [self.tblDynamic reloadData];
     }
     @catch (NSException *exception) {
         
@@ -7980,7 +8136,15 @@ float animatedDistance;
         NSLog(@"Exception in btnBack_tapped=%@",exception.description);
     }
 }
-
+- (BOOL)isDOB:(NSDate *)dobDate olderThanDate:(NSDate *)date1 andDate:(NSDate *)date2 {
+        // Compare the DOB date with date1 and date2
+        if ([dobDate compare:date1] == NSOrderedAscending && [dobDate compare:date2] == NSOrderedAscending) {
+            // DOB is older than date1 and date2
+            return YES;
+        }
+        // DOB is not older than date1 and date2
+        return NO;
+    }
 -(void)notinRangeMessage:(NSDictionary*)dict {
     @try {
         NSString *strMustValue = @"Value entered for #1 is more than the maximum allowed, #2";
@@ -8205,6 +8369,7 @@ float animatedDistance;
     //        [subview removeFromSuperview];
     
 }
+  
 -(void)sendDataToDynamicForm:(NSMutableArray *)arrDropSelectedData :(NSDictionary*)dictData{
     if (arrDropSelectedData ==nil) {
         strFromDropDownView = @"fromDropDownView";

@@ -185,7 +185,10 @@ NSString *strFarms;
                 NSMutableDictionary *dictFarm = [[NSMutableDictionary alloc]init];
                 //***code change for new webservice by M.
                 [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"farmcode"] forKey:@"f_No"];
-                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"farmname"] forKey:@"f_nm"];
+                //[dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"f_nm"] forKey:@"f_nm"];
+                ///*** code below changed --key changed from "f_nm" dex for Bug- 27354 By M.
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"des"] forKey:@"f_nm"];
+                ///*** end by M.
                 [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"sitekey"] forKey:@"id"];
                 [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"zerodate"] forKey:@"ZD"];
                 [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexliveborn"] forKey:@"SSL"];
@@ -233,7 +236,15 @@ NSString *strFarms;
 //
 //            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
 //        }
+        ///*** code below changed --key changed from "f_nm" des for Bug- 27354 By M.
+        // Create a sort descriptor
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"f_No" ascending:YES selector:@selector(localizedStandardCompare:)];
+
+        // Sort the array using the sort descriptor
+        NSMutableArray *sortedArray1 = _arrFarms;
+        _arrFarms = [sortedArray1 sortedArrayUsingDescriptors:@[sortDescriptor]];
         
+        ///*** end By M.
         NSLog(@"_arrFarms = %@",_arrFarms);
     }
     @catch (NSException *exception) {

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <Google/Analytics.h>
+#import <AVFoundation/AVFoundation.h>
+#import "AppDelegate.h"
 
 @protocol barcodeScanner <NSObject>
 -(void)scannedBarcode:(NSString*)barcode;
@@ -16,8 +18,13 @@
 @interface BarcodeScannerViewController : UIViewController
 {
    // id<barcodeScanner> delegate;
+    
 }
 
+
+@property (strong, nonatomic) AVCaptureSession *captureSession;
+@property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property(nonatomic,weak)id delegate;
+//@property(weak,nonatomic) id<PermissionSettingsDelegate> delegateapp;
 
 @end

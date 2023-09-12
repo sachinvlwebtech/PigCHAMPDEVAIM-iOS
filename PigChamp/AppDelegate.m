@@ -119,6 +119,23 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // Check if the user has returned from the Settings app
+     /* if (self.viewControllerBeforeSettings) {
+          // You can now access self.viewControllerBeforeSettings and take appropriate action.
+          // For example, you can push it onto the navigation stack or present it.
+          // Reset the stored view controller.
+         // self.viewControllerBeforeSettings = nil;
+          NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+          if ([[userDefault valueForKey:@"login_state"]  isEqual: @"logged_in"]){
+
+             // [self.window.rootViewController presentViewController:self animated:YES completion:nil];
+              NSLog(@"I am in stilll logged in just handle here redirection");
+         } else {
+             // User is not authenticated, show the login screen.
+             // Example:
+             // [self.window.rootViewController presentViewController:ViewController animated:YES completion:nil];
+         }
+      }*/
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -136,7 +153,10 @@
     [self saveContext];
     
 }
-
+/*- (void)viewControllerWillRedirectToSettings:(UIViewController *)viewController {
+    // Store the current view controller
+    self.viewControllerBeforeSettings = viewController;
+}*/
 #pragma mark - Core Data stack
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;

@@ -19,12 +19,16 @@
 #define API_BASE_URL @"https://pcmobile.pigchamp.com/"
 
 //#define API_BASE_URL @"https://dev-pc-mobile.farmsstaging.com/"
-
+/*@protocol PermissionSettingsDelegate <NSObject>
+- (void)viewControllerWillRedirectToSettings:(UIViewController *)viewController;
+@end*/
 @interface AppDelegate : UIResponder <UIApplicationDelegate,NSStreamDelegate>
 {
     NSTimer *idleTimer;
 }
 @property (strong, nonatomic) UIWindow *window;
+//@property (strong, nonatomic) UIViewController *viewControllerBeforeSettings;
+//@property (nonatomic, weak) id<PermissionSettingsDelegate> permissionDelegate; // Declare the property here
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19H2026" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22G90" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Admin_Routes" syncable="YES">
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="AI_STUDS" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Breeding_Companies" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -24,21 +23,21 @@
         <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Conditions" syncable="YES">
-        <attribute name="br" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="ds" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="gf" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="br" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ds" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gf" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="pg" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="sd" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="sg" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="sl" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sd" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="tr" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="sp" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tr" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ConditionScore" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -46,9 +45,11 @@
         <attribute name="ac" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cd" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="co" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="coe" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dft" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dfv" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dka" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lC" optional="YES" attributeType="String" syncable="YES"/>
@@ -89,35 +90,33 @@
         <attribute name="zerodate" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Flags" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sx" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Genetics" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sx" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Halothane" syncable="YES">
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="HerdCategory" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Leakage" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Lesion_Scores" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -127,18 +126,18 @@
     </entity>
     <entity name="Locations" syncable="YES">
         <attribute name="br" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rm" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="sid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Lock" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Operator" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -149,7 +148,7 @@
         <attribute name="zd" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Packing_Plants" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -158,7 +157,7 @@
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Quality" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -167,12 +166,12 @@
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Standing_Reflex" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Test_Type" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -181,50 +180,33 @@
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Transport_Companies" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contact" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="drivers" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fax" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="postalCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tractors" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="trailers" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="uniqueId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Treatments" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="synonym" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="User_Parameters" syncable="YES">
         <attribute name="nm" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="val" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <elements>
-        <element name="Admin_Routes" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="AI_STUDS" positionX="160" positionY="192" width="128" height="103"/>
-        <element name="Breeding_Companies" positionX="160" positionY="192" width="128" height="103"/>
-        <element name="Common_Lookups" positionX="160" positionY="192" width="128" height="118"/>
-        <element name="Conditions" positionX="160" positionY="192" width="128" height="223"/>
-        <element name="ConditionScore" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Data_Entry_Items" positionX="160" positionY="192" width="128" height="268"/>
-        <element name="Destination" positionX="160" positionY="192" width="128" height="103"/>
-        <element name="Farms" positionX="160" positionY="192" width="128" height="358"/>
-        <element name="Flags" positionX="160" positionY="192" width="128" height="118"/>
-        <element name="Genetics" positionX="160" positionY="192" width="128" height="118"/>
-        <element name="Halothane" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="HerdCategory" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Leakage" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Lesion_Scores" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="LngData" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="Locations" positionX="160" positionY="192" width="128" height="118"/>
-        <element name="Lock" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Operator" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Origin" positionX="160" positionY="192" width="128" height="103"/>
-        <element name="Packing_Plants" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Pd_Results" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="Quality" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Sex" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="Standing_Reflex" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Test_Type" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Tod" positionX="160" positionY="192" width="128" height="73"/>
-        <element name="Transport_Companies" positionX="160" positionY="192" width="128" height="88"/>
-        <element name="Treatments" positionX="160" positionY="192" width="128" height="103"/>
-        <element name="User_Parameters" positionX="160" positionY="192" width="128" height="73"/>
-    </elements>
 </model>

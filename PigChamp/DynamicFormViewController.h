@@ -24,7 +24,8 @@
 @interface DynamicFormViewController : UIViewController<barcodeScanner,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UITextViewDelegate,SlideNavigationControllerDelegate,NSStreamDelegate> {
     SettingsViewController *settingsViewController;
     BarcodeScannerViewController *barcodeScannerViewController;
-    NSString *strScan,*strYes,*strNo,*strOk,*strCancel,*strWait,*strNoInternet,*strStillLive,*strClear,*strServerErr,*strUnauthorised,*strSignOff,*strMsgTranspoder;
+    ////***added one string for bug- 27755
+    NSString *strScan,*strScandk,*strYes,*strNo,*strOk,*strCancel,*strWait,*strNoInternet,*strStillLive,*strClear,*strServerErr,*strUnauthorised,*strSignOff,*strMsgTranspoder;
     NSString *strSplitSex,*strSplitWex;
     MenuViewController *tlc;
 }

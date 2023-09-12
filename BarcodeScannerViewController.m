@@ -128,7 +128,12 @@
                                                         }]];
                             [alertController addAction:[UIAlertAction actionWithTitle:[self getTranslatedTextForString:@"Set up"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
                                                         {
+                                     //   if ([self.delegateapp respondsToSelector:@selector(viewControllerWillRedirectToSettings:)]) {
+                                       //     [self.delegateapp viewControllerWillRedirectToSettings:self];
+                                        //}
+                                
                                                             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                
                                                           //  [self dismissViewControllerAnimated:NO completion:nil];
                                                         }]];
 
@@ -155,6 +160,12 @@
 
         NSLog(@"Exception =%@",exception.description);
     }
+}
+-(void) viewDidAppear:(BOOL)animated{
+    //delegate
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+  //  appDelegate.permissionDelegate = self;
+    
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -215,10 +226,13 @@
             }
             
             if (detectionString != nil){
+                
                 lbel.text = detectionString;
+                lbel.text = @"Scanning Done";
                 [delegate scannedBarcode:detectionString];
-                // [self dismissViewControllerAnimated:YES completion:nil];
-                [self.navigationController popViewControllerAnimated:YES];
+               
+                 [self dismissViewControllerAnimated:YES completion:nil];
+                //[self.navigationController popViewControllerAnimated:YES];
                 
                 break;
             }
@@ -231,7 +245,6 @@
         NSLog(@"Exception =%@",exception.description);
     }
 }
-
 - (IBAction)btnCancle_tapped:(id)sender {
     @try {
         [self.navigationController popViewControllerAnimated:YES];
