@@ -38,6 +38,7 @@ BOOL isThousandFormat = NO;
     BOOL flag;
     NSUserDefaults *pref;
     NSInteger TapedDropDownTag;
+    NSString *detectedDateFormat;
 }
 @property(nonatomic, strong) IBOutlet EAAccessory *accessory;
 @property(nonatomic) uint32_t totalBytesRead;
@@ -869,6 +870,13 @@ BOOL isThousandFormat = NO;
             [cell.btnDetail setTitle:[_dictDynamic valueForKey:[dict valueForKey:@"Lb"]] forState:UIControlStateNormal];
             
             //
+            /*
+            NSString *newDateString = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
+            
+            NSString *formattedDateString11 = [self convertDateToStringWithDetectedFormat:newDateString];
+             
+            [cell.btnDetail setTitle:formattedDateString11 forState:UIControlStateNormal];*/
+            
             NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init];
             [dateFormatterr setDateFormat:@"dd/MM/yyyy"];//
             
@@ -1160,11 +1168,13 @@ BOOL isThousandFormat = NO;
 
 -(BOOL)isTwoText {
     @try {
-        if ([strSplitWex isEqualToString:@"-1"] && [strSplitWex isEqualToString:@"-1"]){
+        //below is changed cause of CSH Bug-28164 By M.
+       // if ([strSplitWex isEqualToString:@"-1"] && [strSplitWex isEqualToString:@"-1"]){
+         if (strSplitWex == 0 && strSplitWex == 0){
             return YES;
-        }else if ([strSplitSex isEqualToString:@"-1"]) {
+        }else if (strSplitSex == 0) {//if ([strSplitSex isEqualToString:@"-1"]) {
             return YES;
-        }else if ([strSplitWex isEqualToString:@"-1"]){
+        }else if (strSplitWex == 0){ //if ([strSplitWex isEqualToString:@"-1"]){
             return YES;
         }
         
@@ -1554,7 +1564,7 @@ BOOL isThousandFormat = NO;
             }
         }*/
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-           ///*** changed below lenght based for Bug 28054 partial fix By M.
+           ///*** changed below length based for Bug 28054 partial fix By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
             //if(newString.length > 8){
@@ -4764,33 +4774,35 @@ float animatedDistance;
         switch ([[dict valueForKey:@"dk"]integerValue]) {
             case 4: {
                 strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
-                // sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
-                //                                       ascending:YES];
-                sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+                //*** uncommented below line for Bug-28302 By M.
+                 sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
+                                                      ascending:YES];
+               // sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln" ascending:YES selector:@selector(caseInsensitiveCompare:)];
                 
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 
-                
+                //** code below changed cause of API response changed for key from bool to string Bug-28302 By M.
                 NSString *strPredicate;
                 if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
-                    strPredicate = @"br != 0 AND tr==1";
+                    strPredicate = @"br != 'false' AND tr == 'true'";// @"br != 0 AND tr == 1";
                 }
                 else if ([strEventCode isEqualToString:@"34"]||[strEventCode isEqualToString:@"49"]) {
-                    strPredicate = @"(sg != 0 OR sp != 0 or sd != 0 ) AND tr==1";
+                    strPredicate =@"(sg != 'false' OR sp != 'false' OR sd != 'false') AND tr == 'true'";//@"(sg != 0 OR sp != 0 OR sd != 0 ) AND tr == 1";
                 }
                 else if ([strEventCode isEqualToString:@"35"]) {
-                    strPredicate = @"pg != 0 AND tr==1";
+                    strPredicate =  @"pg != 'false' AND tr == 'true'";//@"pg != 0 AND tr == 1";
                 }
                 else if ([strEventCode isEqualToString:@"10"]||[strEventCode isEqualToString:@"12"]) {
-                    strPredicate = @"br != 0 AND ds==1";
+                    strPredicate =  @"br != 'false' AND ds == 'true'";//@"br != 0 AND ds == 1";
                 }
                 else if ([strEventCode isEqualToString:@"11"]||[strEventCode isEqualToString:@"13"]) {
-                    strPredicate = @"(sg != 0 OR sp != 0 or sd != 0 ) AND ds==1";
+                    //strPredicate = @"(sg != 0 OR sp != 0 OR sd != 0 ) AND ds==1";
+                    strPredicate = @"(sg != 'false' OR sp != 'false' OR sd != 'false') AND ds == 'true'";//@"(sg != 0 || sp != 0 || sd != 0) && ds == 1";
+
                 }
                 else if ([strEventCode isEqualToString:@"32"]) {
-                    strPredicate = @"pg != 0 AND ds==1";
+                    strPredicate = @"pg != 'false' AND ds == 'true'";//@"pg != 0 AND ds == 1";
                 }
-                
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:strPredicate];
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Conditions" andPredicate:predicate andSortDescriptors:sortDescriptors];
                 
@@ -5544,8 +5556,8 @@ float animatedDistance;
             }
                 
                 break;
-                
-            case 150:case 141:case 74:case 28:case 70:case 33:{
+                //***added below case 164 for Bug-28180 By M.
+            case 150:case 141:case 74:case 28:case 70:case 33:case 164:{
                 NSDictionary *dict = [[NSMutableDictionary alloc]init];
                 [dict setValue:strNo forKey:@"visible"];
                 [dict setValue:@"0" forKey:@"dataTosend"];
@@ -6341,6 +6353,8 @@ float animatedDistance;
                                                          ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                     NSString *strPredicate;
+                    //*** code changed below cause API response changed for key from Bool to string Bug-28302 By M.
+                    /*
                     if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
                         strPredicate = @"br != 0 AND tr==1";
                     }
@@ -6358,8 +6372,27 @@ float animatedDistance;
                     }
                     else if ([strEventCode isEqualToString:@"32"]) {
                         strPredicate = @"pg != 0 AND ds==1";
+                    }*/
+                    if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
+                        strPredicate = @"br != 'false' AND tr == 'true'";// @"br != 0 AND tr == 1";
                     }
-                    
+                    else if ([strEventCode isEqualToString:@"34"]||[strEventCode isEqualToString:@"49"]) {
+                        strPredicate =@"(sg != 'false' OR sp != 'false' OR sd != 'false') AND tr == 'true'";//@"(sg != 0 OR sp != 0 OR sd != 0 ) AND tr == 1";
+                    }
+                    else if ([strEventCode isEqualToString:@"35"]) {
+                        strPredicate =  @"pg != 'false' AND tr == 'true'";//@"pg != 0 AND tr == 1";
+                    }
+                    else if ([strEventCode isEqualToString:@"10"]||[strEventCode isEqualToString:@"12"]) {
+                        strPredicate =  @"br != 'false' AND ds == 'true'";//@"br != 0 AND ds == 1";
+                    }
+                    else if ([strEventCode isEqualToString:@"11"]||[strEventCode isEqualToString:@"13"]) {
+                        //strPredicate = @"(sg != 0 OR sp != 0 OR sd != 0 ) AND ds==1";
+                        strPredicate = @"(sg != 'false' OR sp != 'false' OR sd != 'false') AND ds == 'true'";//@"(sg != 0 || sp != 0 || sd != 0) && ds == 1";
+
+                    }
+                    else if ([strEventCode isEqualToString:@"32"]) {
+                        strPredicate = @"pg != 'false' AND ds == 'true'";//@"pg != 0 AND ds == 1";
+                    }
                     NSPredicate *predicate = [NSPredicate predicateWithFormat:strPredicate];
                     NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Conditions" andPredicate:predicate andSortDescriptors:sortDescriptors];
                     
@@ -7144,8 +7177,8 @@ float animatedDistance;
                 }
             }
                 break;
-                
-            case 150:case 141:case 74:case 28:case 70:case 33:{
+                //***added below case 164 for Bug-28180 By M.
+            case 150:case 141:case 74:case 28:case 70:case 33:case 164:{
                 if (flag == 1) {
                     NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
                     NSDictionary * dictDictDynamic = [pref objectForKey:@"lastSelectedDictDynamic"];
@@ -7684,7 +7717,11 @@ float animatedDistance;
         
         switch ([[dict valueForKey:@"dk"]integerValue]){
             case 4:{
-                NSString *strPredicate;
+                
+                //*** code commented to show same value which previsouly saved Bug-28302 By M.
+                NSLog(@"id=%@",Id);
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ln != null AND id=%@",Id];
+               /* NSString *strPredicate;
                 if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
                     strPredicate = [NSString stringWithFormat:@"br != 0 AND tr==1 AND id=%@",Id];
                 }
@@ -7704,7 +7741,7 @@ float animatedDistance;
                     strPredicate = [NSString stringWithFormat:@"pg != 0 AND ds==1 AND id=%@",Id];
                 }
                 
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:strPredicate];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:strPredicate];*/
                 NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Conditions" andPredicate:predicate andSortDescriptors:nil];
                 
                 if (resultArray.count>0) {
@@ -8007,8 +8044,8 @@ float animatedDistance;
                 }
             }
                 break;
-                
-            case 150:case 141:case 74:case 28:case 70:case 33:{
+               //***added below case 164 for Bug-28180 By M.
+            case 150:case 141:case 74:case 28:case 70:case 33:case 164:{
                 if ([Id isEqualToString:@"0"]){
                     [_dictDynamic setValue:@"NO" forKey:[dict valueForKey:@"Lb"]];
                 }
@@ -8145,6 +8182,46 @@ float animatedDistance;
         // DOB is not older than date1 and date2
         return NO;
     }
+- (NSString *)getDateFromString:(NSString *)dateString {
+    NSArray *dateFormats = @[@"yyyyMMdd", @"yyyy-MM-dd", @"MM/dd/yyyy", @"dd/MM/yyyy"]; // Add more formats if needed
+    
+    for (NSString *dateFormat in dateFormats) {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:dateFormat];
+        NSDate *date = [dateFormatter dateFromString:dateString];
+        
+        if (date) {
+            NSLog(@"Successfully detected date format: %@", dateFormat);
+            return dateFormat;
+        }
+    }
+    
+    NSLog(@"Unable to detect date format for string: %@", dateString);
+    return nil;
+    }
+- (NSString *)convertDateToStringWithDetectedFormat:(NSString *)newDateString {
+    // Assuming you have a global variable or property to store the detected date format
+    //NSString *detectedDateFormat = @"yyyy-MM-dd"; // Example detected date format
+
+    NSString *strBaseDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZD"];
+
+    detectedDateFormat = [self getDateFromString:strBaseDate];
+    
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+       [outputFormatter setDateFormat:detectedDateFormat];
+       
+       NSDate *newDate = [outputFormatter dateFromString:newDateString];
+    
+    NSString *newDate11 = [outputFormatter stringFromDate: newDate];
+       if (newDate11) {
+           //[outputFormatter setDateFormat:@"dd MMM yyyy"]; // Change to desired output format
+          //ce NSString *formattedDateString = [outputFormatter stringFromDate:newDate];
+           return newDate11;
+       } else {
+           return @"Invalid date format";
+       }
+}
+
 -(void)notinRangeMessage:(NSDictionary*)dict {
     @try {
         NSString *strMustValue = @"Value entered for #1 is more than the maximum allowed, #2";
