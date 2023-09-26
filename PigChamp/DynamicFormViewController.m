@@ -1168,7 +1168,7 @@ BOOL isThousandFormat = NO;
 
 -(BOOL)isTwoText {
     @try {
-        //below is changed cause of CSH Bug-28164 By M.
+        //***below is changed cause of CSH Bug-28164 By M.
        // if ([strSplitWex isEqualToString:@"-1"] && [strSplitWex isEqualToString:@"-1"]){
          if (strSplitWex == 0 && strSplitWex == 0){
             return YES;
@@ -1564,7 +1564,7 @@ BOOL isThousandFormat = NO;
             }
         }*/
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-           ///*** changed below length based for Bug 28054 partial fix By M.
+           ///**** changed below length based for Bug 28054 partial fix By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
             //if(newString.length > 8){
@@ -5556,7 +5556,7 @@ float animatedDistance;
             }
                 
                 break;
-                //***added below case 164 for Bug-28180 By M.
+                ///***added below case 164 for Bug-28180 By M.
             case 150:case 141:case 74:case 28:case 70:case 33:case 164:{
                 NSDictionary *dict = [[NSMutableDictionary alloc]init];
                 [dict setValue:strNo forKey:@"visible"];
@@ -8044,7 +8044,7 @@ float animatedDistance;
                 }
             }
                 break;
-               //***added below case 164 for Bug-28180 By M.
+               ///***added below case 164 for Bug-28180 By M.
             case 150:case 141:case 74:case 28:case 70:case 33:case 164:{
                 if ([Id isEqualToString:@"0"]){
                     [_dictDynamic setValue:@"NO" forKey:[dict valueForKey:@"Lb"]];
