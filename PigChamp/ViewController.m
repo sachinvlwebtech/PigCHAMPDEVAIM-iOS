@@ -377,9 +377,10 @@ NSString *Success        = @"";
                         [_pref setObject:@"logged_in" forKey:@"login_state"]; //Code added by priyanka 2nd july//
                         [_pref synchronize];
                         [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"token"];
-                        
+                        //** code changed below instead of calling farmsData called userdata  Bug-27742 By M.
                         [self getFarmsData];
-                        
+                        //[self getUsersData];
+                        //*** end by M
                        // [self updateMasterDataBase];
                         
                     }else if ([message isEqualToString:@"Incorrect Password, Please note passwords are case sensitive."]){
@@ -441,7 +442,9 @@ NSString *Success        = @"";
                                                  [_customIOS7AlertView showLoaderWithMessage:NSLocalizedString(@"Loading...", "")];
                                                  
                                                //  [self updateMasterDataBase];
+                            //** code changed below instead of calling farmsData called userdata  Bug-27742 By M.
                             [self getFarmsData];
+                           // [self getUsersData];
                             
                                                  [myAlertController dismissViewControllerAnimated:YES completion:nil];
                                              }];
@@ -542,7 +545,7 @@ NSString *Success        = @"";
     }
 }
 ///*** added below method for getting User_Params data bug-27742 By M.
-/*
+
 -(void)getUsersData{
     
     @try {
@@ -575,9 +578,6 @@ NSString *Success        = @"";
                    
 
 //                    [[NSUserDefaults standardUserDefaults] setObject:[dict valueForKey:@"UPF"] forKey:@"user_params"];
-
-                    [self getFarmsData];
-    
                 }
             } onFailure:^(NSString *responseData, NSError *error) {
                 [_customIOS7AlertView close];
@@ -610,7 +610,7 @@ NSString *Success        = @"";
     } @catch (NSException *exception) {
         NSLog(@"Exception in updateMasterDataBase=%@",exception.description);
     }
-}*/
+}
 // Added extra function to get Farms Data ...
 
 -(void)getFarmsData{
@@ -642,7 +642,8 @@ NSString *Success        = @"";
                     NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
                     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dict];
                     [currentDefaults setObject:data forKey:@"frmsData"];
-                    
+                    //** call the function of getUsersData for new User_Parameters By M.
+                    [self getUsersData];
                     
 //                    NSArray *frmArray = [dict valueForKey:@"_farms"];
 //
@@ -765,13 +766,13 @@ NSString *Success        = @"";
                     {
                         dataEntryItemsArray = [dict objectForKey:@"_DATA_ENTRY_ITEMS"];
                     }
-                    
-                    NSArray *userParametersArray;
+                    //$$$$$$$$$$$$$$$$$$$$$#######
+                  /*  NSArray *userParametersArray;
                     if (![[dict objectForKey:@"_User_Parameters"] isKindOfClass:[NSNull class]])
                     {
                         userParametersArray = [dict objectForKey:@"_User_Parameters"];
                         
-                        //******Code Change By Priyanka on 11th May 2018********//
+                       / //******Code Change By Priyanka on 11th May 2018******* *
                         NSString *findKey = @"GHSDY4TTYG4123edfgfyi67";
                         NSArray *array = [userParametersArray valueForKey:@"nm"];
                         NSArray *array1 = [userParametersArray valueForKey:@"val"];
@@ -783,11 +784,13 @@ NSString *Success        = @"";
                             NSString * strValue = [array1 objectAtIndex:[array indexOfObject:findKey]];
                             [[NSUserDefaults standardUserDefaults] setObject:strValue forKey:@"user_para_fostering_value"];
                             [[NSUserDefaults standardUserDefaults] synchronize];
-                            //******Code Change By Priyanka on 11th May 2018********//
+                            //******Code Change By Priyanka on 11th May 2018********
                         } else {
                             NSLog(@"%@ is not present in the array", findKey);
                         }
-                    }
+                    }*/
+                    //$$$$$$$$$$$$$$$$$$$$$#######
+                  
                     
         // Adding additional functional call for Getting Farms list ..... Gudipti harikrishna.
                     
@@ -852,6 +855,7 @@ NSString *Success        = @"";
 //                        }
 //                    }
                     
+
                     NSArray *geneticsArray;
                     if (![[dict objectForKey:@"_GENETICS"] isKindOfClass:[NSNull class]])
                     {
@@ -1016,7 +1020,30 @@ NSString *Success        = @"";
                             NSLog(@"Exception =%@",exception.description);
                         }
                     }
+                    NSArray *userParametersArray;
+                    NSData *userdata = [[NSUserDefaults standardUserDefaults] objectForKey:@"user_params"];
+                    NSDictionary *myuserDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:userdata];
+
+                    NSMutableDictionary *originalMutableDictionary = [myuserDictionary mutableCopy];
+                    NSMutableDictionary *upfMutableDictionary = [originalMutableDictionary[@"UPF"] mutableCopy];
                     
+                    NSMutableDictionary *lowercaseDictionary = [NSMutableDictionary dictionary];
+                    for (NSString *key in upfMutableDictionary) {
+                        id value = upfMutableDictionary[key];
+                        NSString *lowercaseKey = [key lowercaseString];
+                       
+                            lowercaseDictionary[lowercaseKey] = value;
+                        
+                    }
+
+                    // Update the UPF dictionary in the original dictionary
+                    originalMutableDictionary[@"UPF"] = lowercaseDictionary;
+
+                    // Convert the mutable dictionary to an immutable array of dictionaries
+                    userParametersArray = @[lowercaseDictionary];
+
+                    NSLog(@"userParametersArray: %@", userParametersArray);
+
                     [[CoreDataHandler sharedHandler] removeAllmanagedObject];
                     {
                         BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:commonLookupsArray andFarmsArray:arrFilteredFarms andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:userParametersArray andLocations:locationsArray andOperatorArray:arrOperatorArray andBreedingComapniesArray:breeedingCompaniesArray andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds  andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:_arrayEnglish conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];

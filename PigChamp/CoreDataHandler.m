@@ -347,12 +347,78 @@ this function updates sqllite entries via core data
       //  [farmsManagedObject setValuesForKeysWithDictionary:dict];
     }
     
-    // user parameters
-        for (int counter=0; counter<userParametersArray.count; counter++) {
-        NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
-        NSDictionary* dict = [userParametersArray objectAtIndex:counter];
-        [userParametersManagedObject setValuesForKeysWithDictionary:dict];
+    //***** user parameters- added below code for saving data from api in User_Paramaters DB by M.
+    if ([userParametersArray count] > 0){
+    NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
+        for (NSDictionary *dict in userParametersArray) {
+            
+            // Assuming your entity has properties like "upFarrowingGestationLengthMax", etc.
+            [userParametersManagedObject setValue:dict[@"af_can_edit_data"] forKey:@"af_can_edit_data"];
+            [userParametersManagedObject setValue:dict[@"up_date_settings_fast_entry"] forKey:@"up_date_settings_fast_entry"];
+            [userParametersManagedObject setValue:dict[@"up_date_settings_input_format"] forKey:@"up_date_settings_input_format"];
+            [userParametersManagedObject setValue:dict[@"up_date_settings_output_format"] forKey:@"up_date_settings_output_format"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_error_gestation_length"] forKey:@"up_farrowing_error_gestation_length"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_gestation_length_max"] forKey:@"up_farrowing_gestation_length_max"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_gestation_length_min"] forKey:@"up_farrowing_gestation_length_min"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_max_liveborn"] forKey:@"up_farrowing_max_liveborn"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_preg_check_validation"] forKey:@"up_farrowing_preg_check_validation"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_warn_gestation_length"] forKey:@"up_farrowing_warn_gestation_length"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_warn_when_born_max"] forKey:@"up_farrowing_warn_when_born_max"];
+            [userParametersManagedObject setValue:dict[@"up_farrowing_warn_when_born_zero"] forKey:@"up_farrowing_warn_when_born_zero"];
+            [userParametersManagedObject setValue:dict[@"up_fosterings_double_identity"] forKey:@"up_fosterings_double_identity"];
+            [userParametersManagedObject setValue:dict[@"up_list_reports_header_first_page_only"] forKey:@"up_list_reports_header_first_page_only"];
+            [userParametersManagedObject setValue:dict[@"up_list_reports_sort_order_left_to_right"] forKey:@"up_list_reports_sort_order_left_to_right"];
+            [userParametersManagedObject setValue:dict[@"up_movement_optimization"] forKey:@"up_movement_optimization"];
+            [userParametersManagedObject setValue:dict[@"up_open_cohort_list_farm_only"] forKey:@"up_open_cohort_list_farm_only"];
+            [userParametersManagedObject setValue:dict[@"up_other_settings_cycle_centric"] forKey:@"up_other_settings_cycle_centric"];
+            [userParametersManagedObject setValue:dict[@"up_period_offsets_pigs_year"] forKey:@"up_period_offsets_pigs_year"];
+            [userParametersManagedObject setValue:dict[@"up_period_offsets_service"] forKey:@"up_period_offsets_service"];
+            [userParametersManagedObject setValue:dict[@"up_piglet_deaths_warn_when_not_reconcile"] forKey:@"up_piglet_deaths_warn_when_not_reconcile"];
+            [userParametersManagedObject setValue:dict[@"up_piglet_tmts_warn_when_not_reconcile"] forKey:@"up_piglet_tmts_warn_when_not_reconcile"];
+            [userParametersManagedObject setValue:dict[@"up_placements_warning_before_est_empty"] forKey:@"up_placements_warning_before_est_empty"];
+            [userParametersManagedObject setValue:dict[@"up_report_settings_pedigree_semen"] forKey:@"up_report_settings_pedigree_semen"];
+            [userParametersManagedObject setValue:dict[@"up_report_settings_print_pages_warning"] forKey:@"up_report_settings_print_pages_warning"];
+            [userParametersManagedObject setValue:dict[@"up_reservations_allow_auto_adjust"] forKey:@"up_reservations_allow_auto_adjust"];
+            [userParametersManagedObject setValue:dict[@"up_reservations_period_length"] forKey:@"up_reservations_period_length"];
+            [userParametersManagedObject setValue:dict[@"up_reservations_period_style"] forKey:@"up_reservations_period_style"];
+            [userParametersManagedObject setValue:dict[@"up_semen_batches_warn_no_expiry_date"] forKey:@"up_semen_batches_warn_no_expiry_date"];
+            [userParametersManagedObject setValue:dict[@"up_semen_batches_warn_unlimited_doses"] forKey:@"up_semen_batches_warn_unlimited_doses"];
+            [userParametersManagedObject setValue:dict[@"up_shipments_auto_empty_threshold"] forKey:@"up_shipments_auto_empty_threshold"];
+            [userParametersManagedObject setValue:dict[@"up_shipments_extended_selection"] forKey:@"up_shipments_extended_selection"];
+            [userParametersManagedObject setValue:dict[@"up_uom_currency"] forKey:@"up_uom_currency"];
+            [userParametersManagedObject setValue:dict[@"up_uom_unit_of_measure"] forKey:@"up_uom_unit_of_measure"];
+            [userParametersManagedObject setValue:dict[@"up_warnings_errors_batch_entry_save_valid"] forKey:@"up_warnings_errors_batch_entry_save_valid"];
+            [userParametersManagedObject setValue:dict[@"up_warnings_errors_piglet_identity_match"] forKey:@"up_warnings_errors_piglet_identity_match"];
+            [userParametersManagedObject setValue:dict[@"up_warnings_errors_reconcile_to_farrow"] forKey:@"up_warnings_errors_reconcile_to_farrow"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_max_weaned_number"] forKey:@"up_weanings_max_weaned_number"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_warn_when_batch_reconcile"] forKey:@"up_weanings_warn_when_batch_reconcile"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_warn_when_not_reconcile_cw"] forKey:@"up_weanings_warn_when_not_reconcile_cw"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_warn_when_not_reconcile_no"] forKey:@"up_weanings_warn_when_not_reconcile_no"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_warn_when_wean_max"] forKey:@"up_weanings_warn_when_wean_max"];
+            [userParametersManagedObject setValue:dict[@"up_weanings_warn_when_wean_zero"] forKey:@"up_weanings_warn_when_wean_zero"];
+        }
+        // Set other properties similarly...
+        
+        //NSError *error = nil;
+       // if (![managedObjectContext save:&error]) {
+           // NSLog(@"Failed to save: %@", [error localizedDescription]);
+        //}
     }
+    //for (int counter=0; counter<userParametersArray.count; counter++) {
+      //  NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
+        //NSDictionary* dict = [userParametersArray objectAtIndex:counter];
+        //[userParametersManagedObject setValuesForKeysWithDictionary:dict];
+        /*    NSManagedObject* userParametersManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"User_Parameters" inManagedObjectContext:managedObjectContext];
+            NSDictionary* dict = [userParametersArray objectAtIndex:counter];
+            
+            
+            [dict enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent
+                                          usingBlock:^(id key, id object, BOOL *stop) {
+                NSLog(@"%@ = %@", key, object);
+                [userParametersManagedObject setValue:object forKey:[key lowercaseString]];
+
+            }];*/
+    //}
     
     // operator //Operator
     for (int counter=0; counter<operatorArray.count; counter++) {

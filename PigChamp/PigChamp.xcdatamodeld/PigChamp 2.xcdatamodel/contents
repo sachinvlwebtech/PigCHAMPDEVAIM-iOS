@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22G90" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22G91" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Admin_Routes" syncable="YES">
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
@@ -206,7 +206,48 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="User_Parameters" syncable="YES">
-        <attribute name="nm" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="val" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="af_can_edit_data" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_date_settings_fast_entry" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_date_settings_input_format" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_date_settings_output_format" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_farrowing_error_gestation_length" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_gestation_length_max" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_gestation_length_min" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_max_liveborn" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_preg_check_validation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_farrowing_warn_gestation_length" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_warn_when_born_max" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_farrowing_warn_when_born_zero" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_fosterings_double_identity" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_list_reports_header_first_page_only" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_list_reports_sort_order_left_to_right" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_movement_optimization" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_open_cohort_list_farm_only" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_other_settings_cycle_centric" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_period_offsets_pigs_year" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_period_offsets_service" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_piglet_deaths_warn_when_not_reconcile" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_piglet_tmts_warn_when_not_reconcile" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_placements_warning_before_est_empty" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_report_settings_pedigree_semen" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_report_settings_print_pages_warning" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_reservations_allow_auto_adjust" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_reservations_period_length" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_reservations_period_style" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_semen_batches_warn_no_expiry_date" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_semen_batches_warn_unlimited_doses" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_shipments_auto_empty_threshold" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_shipments_extended_selection" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_uom_currency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_uom_unit_of_measure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="up_warnings_errors_batch_entry_save_valid" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_warnings_errors_piglet_identity_match" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_warnings_errors_reconcile_to_farrow" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_max_weaned_number" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_warn_when_batch_reconcile" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_warn_when_not_reconcile_cw" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_warn_when_not_reconcile_no" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_warn_when_wean_max" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="up_weanings_warn_when_wean_zero" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
     </entity>
 </model>

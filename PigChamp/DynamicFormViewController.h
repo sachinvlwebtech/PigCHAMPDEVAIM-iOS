@@ -56,7 +56,8 @@
 @property (weak, nonatomic) IBOutlet UIView *vwOverlay;
 
 @property (weak, nonatomic) IBOutlet UITextField *txtReference;
-
+///***added for new API call for User_Paramters
+@property (nonatomic) NSNumber *boolVal;
 @property (weak, nonatomic) IBOutlet UIButton *btnConnectAccessory;
 - (IBAction)btnConnectAccessoryClicked:(id)sender;
 

@@ -24,6 +24,7 @@
 #import "DropDownSearchViewController.h"
 #import "PigletIdentitiesTableViewCell.h"
 
+
 BOOL isFromKeybord = NO;
 BOOL isRFIDCalled = NO;
 BOOL isOpenDynamic = NO;
@@ -291,14 +292,25 @@ BOOL isThousandFormat = NO;
             
             if ([strFromSetting isEqualToString:@"0"]) {
                 NSArray *arrUserParameter = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
+                //***commented below code for User_Parameters api changes By M.
                 
-                for (int count=0; count<arrUserParameter.count; count++) {
-                    if ([[[arrUserParameter objectAtIndex:count] valueForKey:@"nm"]  isEqualToString:@"DateUsageFormat"]) {
-                        _strDateFormat = [[arrUserParameter objectAtIndex:count] valueForKey:@"val"];
-                    }
+                //for (int count=0; count<arrUserParameter.count; count++) {
+                    //if ([[[arrUserParameter objectAtIndex:count] valueForKey:@"up_date_settings_input_format"]  isEqualToString:@"DateUsageFormat"]) {
+                //_strDateFormat = [arrUserParameter valueForKey:@"up_date_settings_input_format"];
+                    //}
+               // }
+              
+                for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                    NSManagedObject *managedObject = arrUserParameter[i];
+                
+                       NSNumber *dateFormatNumber = [managedObject valueForKey:@"up_date_settings_input_format"];
+                       
+                       // Convert the numerical value to a string
+                       _strDateFormat = [dateFormatNumber stringValue];
+                       
+                       NSLog(@"_strDateFormat: %@", _strDateFormat);
                 }
-                
-                if ([self.strDateFormat isEqualToString:@"7"]) {
+                if ([_strDateFormat isEqualToString:@"7"]) {
                     isThousandFormat = YES;
                 }else {
                     isThousandFormat = NO;
@@ -346,7 +358,23 @@ BOOL isThousandFormat = NO;
                         
                     }
                 }
-                
+                //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
+               /* if (strEventCode.integerValue == 27){
+                BOOL doubleIdentity=TRUE;
+                for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                    NSManagedObject *managedObject = arrUserParameter[i];
+                    NSNumber *doubleIdentityNumber = [managedObject valueForKey:@"up_fosterings_double_identity"];
+                        doubleIdentity = [doubleIdentityNumber boolValue];
+                }
+                if (!doubleIdentity){
+                        for (NSMutableDictionary *dict  in _arrDynamic){
+                            if ([[dict valueForKey:@"dk"] integerValue] == 63 && [[dict valueForKey:@"Lb"]   isEqual: @"Destination Sow (+)"]){
+                                [_arrDynamic removeObject:dict];
+                            }
+                        }
+                    }
+                }*/
+                //***end of  By M.
                 NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
                     
                     NSInteger position1 = [[obj1 valueForKey:@"ps"] integerValue];
@@ -1468,7 +1496,7 @@ BOOL isThousandFormat = NO;
            //     return YES;
            // }
         }else if ([[dict valueForKey:@"dk"]integerValue]==27) {
-            //*** condition added for Bug-28148 by M.
+            ///*** condition added for Bug-28148 by M.
           //  if(newString.length > 15){
             if([string isEqualToString:@" "]){
                 return NO;
@@ -4781,7 +4809,7 @@ float animatedDistance;
                 
                 sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                 
-                //** code below changed cause of API response changed for key from bool to string Bug-28302 By M.
+                //** code below changed cause of API response changed for key from bool to string Bug-28302 and 28307 By M.
                 NSString *strPredicate;
                 if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
                     strPredicate = @"br != 'false' AND tr == 'true'";// @"br != 0 AND tr == 1";
@@ -5913,8 +5941,9 @@ float animatedDistance;
                     NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[formatter stringFromDate:dtselectedDate]];
                     
                     [weakSelf.dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
-                }
-                else if([weakSelf.strDateFormat isEqualToString:@"6"]){
+                }//*** changed below code for strDateFormat due to User_Paramters APi changes By M.
+                //else if([weakSelf.strDateFormat isEqualToString:@"6"]){
+                else if([_strDateFormat isEqualToString:@"6"]){
                     [formatter setDateFormat:@"dd/MM/yyyy"];
                     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
                     NSDate *dtselectedDate = [formatter dateFromString:strSelectedDate];
@@ -6072,7 +6101,9 @@ float animatedDistance;
                     
                     NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
                     [_dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
-                }else if([self.strDateFormat isEqualToString:@"6"]){
+                    //*** changed below code for strDateFormat due to User_Paramters APi changes By M.
+                //}else if([self.strDateFormat isEqualToString:@"6"]){
+                }else if([_strDateFormat isEqualToString:@"6"]){
                     // NSString *strBaseDate = [pref valueForKey:@"ZD"];
                     [dateFormatterr setDateFormat:@"YYYYMMdd"];
                     [dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
@@ -6353,7 +6384,7 @@ float animatedDistance;
                                                          ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                     NSString *strPredicate;
-                    //*** code changed below cause API response changed for key from Bool to string Bug-28302 By M.
+                    //*** code changed below cause API response changed for key from Bool to string Bug-28302 and 28307 By M.
                     /*
                     if ([strEventCode isEqualToString:@"33"]||[strEventCode isEqualToString:@"48"]) {
                         strPredicate = @"br != 0 AND tr==1";
@@ -7535,7 +7566,9 @@ float animatedDistance;
                                             
                                             [_dictDynamic setValue:strSelectedDate100 forKey:[DictDynamic valueForKey:@"Lb"]];
                                         }
-                                        else if([self.strDateFormat isEqualToString:@"6"]){
+                                        //*** changed below code for strDateFormat due to User_Paramters APi changes By M.
+                                        //else if([self.strDateFormat isEqualToString:@"6"]){
+                                        else if([_strDateFormat isEqualToString:@"6"]){
                                             [formatter setDateFormat:@"YYYYMMdd"];
                                             [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
                                             
@@ -7718,7 +7751,7 @@ float animatedDistance;
         switch ([[dict valueForKey:@"dk"]integerValue]){
             case 4:{
                 
-                //*** code commented to show same value which previsouly saved Bug-28302 By M.
+                //*** code commented to show same value which previsouly saved Bug-28302 and 28307 By M.
                 NSLog(@"id=%@",Id);
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ln != null AND id=%@",Id];
                /* NSString *strPredicate;

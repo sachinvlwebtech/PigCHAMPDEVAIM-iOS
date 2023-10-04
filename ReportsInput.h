@@ -41,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIView *vwOverlay;
 @property(nonatomic,strong)NSString *strActiveAnimalReportType;
 @property (weak, nonatomic) NSString *strDateFormat;
+@property (nonatomic) NSNumber *boolVal;
 @property(strong,nonatomic)CustomIOS7AlertView *customIOS7AlertView;
 
 #pragma mark - Methods

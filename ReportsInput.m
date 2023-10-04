@@ -61,14 +61,33 @@ BOOL isThousandFormatReport = NO;
     dictDynamicCopyToSend = [[NSMutableDictionary alloc]init];
     
     NSArray *arrUserParameter = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
+    //*** code changed below ad per new API call for User_Paramters by M.
+    //_boolVal = [arrUserParameter valueForKey:@"up_date_settings_input_format"];
+   // for (int count=0; count<arrUserParameter.count; count++){
+        //if ([[[arrUserParameter objectAtIndex:count] valueForKey:@"up_date_settings_input_format"]  isEqualToString:@"DateUsageFormat"]){
+           //  _strDateFormat = [arrUserParameter valueForKey:@"up_date_settings_input_format"];
     
-    for (int count=0; count<arrUserParameter.count; count++){
+       // }
+   // }
+    /*for (int count=0; count<arrUserParameter.count; count++){
         if ([[[arrUserParameter objectAtIndex:count] valueForKey:@"nm"]  isEqualToString:@"DateUsageFormat"]){
             _strDateFormat = [[arrUserParameter objectAtIndex:count] valueForKey:@"val"];
         }
-    }
-    
-    if ([self.strDateFormat isEqualToString:@"1"]) {
+    }*/
+    for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+        NSManagedObject *managedObject = arrUserParameter[i];
+        
+               NSNumber *dateFormatNumber = [managedObject valueForKey:@"up_date_settings_input_format"];
+               
+               // Convert the numerical value to a string
+               _strDateFormat = [dateFormatNumber stringValue];
+               
+               NSLog(@"_strDateFormat: %@", _strDateFormat);
+     
+   
+    }  if ([_strDateFormat isEqualToString:@"1"]) {
+    //*** code changed below ad per new API call for User_Paramters By M.
+  //  if (_boolVal) {
         isThousandFormatReport = YES;
     }else {
         isThousandFormatReport = NO;

@@ -32,15 +32,16 @@ BOOL isOpenHelp = NO;
         NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
         
         NSString *strUrl;
-        for (int count=0; count<resultArray.count; count++) {
+        //***comented below code cause the reponsonse of User _Paramters doesn't contain HelpURL By M.
+    /*    for (int count=0; count<resultArray.count; count++) {
             if ([[[resultArray objectAtIndex:count] valueForKey:@"nm"] isEqualToString:@"HelpUrl"]) {
                 strUrl = [[resultArray objectAtIndex:count] valueForKey:@"val"];
             }
-        }
+        }*/
         
         NSLog(@"strUrl=%@",strUrl);
         
-        // strUrl = @"http://www.pigchamp.com";
+         strUrl = @"http://www.pigchamp.com";
         // http//www.pigchamp.com"
         
         if (strUrl.length != 0){
