@@ -135,6 +135,11 @@ BOOL isOpen = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOK
                                      style:UIAlertActionStyleDefault
@@ -151,6 +156,11 @@ BOOL isOpen = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"Token not found"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOK
                                      style:UIAlertActionStyleDefault
@@ -167,6 +177,11 @@ BOOL isOpen = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strUnauthorised
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOK
                                  style:UIAlertActionStyleDefault

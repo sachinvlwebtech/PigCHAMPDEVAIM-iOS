@@ -38,7 +38,9 @@
     
     // Override point for customization after application launch.
     //[[UINavigationBar appearance] setBarTintColor:[UIColor redColor]];
-    self.window.backgroundColor = [UIColor redColor];
+    //***code changed below for the bug raised by Matrin for bc color flickr By M.
+    self.window.backgroundColor = [UIColor blackColor];
+    //self.window.backgroundColor = [UIColor colorWithRed: 0.64 green: 0.25 blue: 0.22 alpha: 1.00];//A44139
     // Configure tracker from GoogleService-Info.plist.
     NSError *configureError;
     [[GGLContext sharedInstance] configureWithError:&configureError];
@@ -284,6 +286,11 @@
         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                    message:[self getTranslatedTextForString:@"Your session has been expired. Please login again."]
                                                                             preferredStyle:UIAlertControllerStyleAlert];
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+        UIView *controllerView = myAlertController.view;
+        [controllerView addSubview:logoImageView];
+        [controllerView bringSubviewToFront:logoImageView];
         UIAlertAction* ok = [UIAlertAction
                              actionWithTitle:[self getTranslatedTextForString:@"Ok"]
                              style:UIAlertActionStyleDefault

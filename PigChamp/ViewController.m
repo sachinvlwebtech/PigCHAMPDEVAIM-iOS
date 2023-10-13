@@ -115,6 +115,11 @@ NSString *Success        = @"";
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:responseData
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:@"OK"
                                      style:UIAlertActionStyleDefault
@@ -149,6 +154,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[responseData valueForKey:@"Error"]
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -165,6 +175,11 @@ NSString *Success        = @"";
         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                    message:@"You must be online for the app to function."
                                                                             preferredStyle:UIAlertControllerStyleAlert];
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+        UIView *controllerView = myAlertController.view;
+        [controllerView addSubview:logoImageView];
+        [controllerView bringSubviewToFront:logoImageView];
         UIAlertAction* ok = [UIAlertAction
                              actionWithTitle:@"OK"
                              style:UIAlertActionStyleDefault
@@ -251,6 +266,7 @@ NSString *Success        = @"";
     @catch (NSException *exception) {
         NSLog(@"Exception in numberOfRowsInComponent- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -266,6 +282,7 @@ NSString *Success        = @"";
     @catch (NSException *exception){
         NSLog(@"Exception in titleForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -296,6 +313,7 @@ NSString *Success        = @"";
     {
         NSLog(@"Exception in viewForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 #pragma mark - AlertView Delegate
@@ -314,6 +332,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"Please enter Account Number."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -329,6 +352,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"Please enter User Name."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -344,6 +372,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"Please enter Password."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -388,6 +421,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:message
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -405,6 +443,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:message
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -433,6 +476,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:message
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -464,6 +512,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:message
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -494,6 +547,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[dict valueForKey:[responseData valueForKey:@"code"]]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -509,6 +567,11 @@ NSString *Success        = @"";
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[responseData valueForKey:@"Error"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:@"OK"
                                              style:UIAlertActionStyleDefault
@@ -527,6 +590,11 @@ NSString *Success        = @"";
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:@"You must be online for the app to function."
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:@"OK"
                                      style:UIAlertActionStyleDefault
@@ -559,6 +627,11 @@ NSString *Success        = @"";
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:responseData
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:@"OK"
                                          style:UIAlertActionStyleDefault
@@ -596,6 +669,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"You must be online for the app to function."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -626,6 +704,11 @@ NSString *Success        = @"";
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:responseData
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:@"OK"
                                          style:UIAlertActionStyleDefault
@@ -674,6 +757,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"You must be online for the app to function."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -708,6 +796,11 @@ NSString *Success        = @"";
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:responseData
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:@"OK"
                                          style:UIAlertActionStyleDefault
@@ -1053,6 +1146,11 @@ NSString *Success        = @"";
                                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                            message:@"User does not have access to any farm/Or problem loading data, Please try again."
                                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                UIView *controllerView = myAlertController.view;
+                                [controllerView addSubview:logoImageView];
+                                [controllerView bringSubviewToFront:logoImageView];
                                 UIAlertAction* ok = [UIAlertAction
                                                      actionWithTitle:@"OK"
                                                      style:UIAlertActionStyleDefault
@@ -1070,6 +1168,11 @@ NSString *Success        = @"";
                                                                      UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                                 message:responseData
                                                                                                                                          preferredStyle:UIAlertControllerStyleAlert];
+                                                                     UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                                     logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                                     UIView *controllerView = myAlertController.view;
+                                                                     [controllerView addSubview:logoImageView];
+                                                                     [controllerView bringSubviewToFront:logoImageView];
                                                                      UIAlertAction* ok = [UIAlertAction
                                                                                           actionWithTitle:@"OK"
                                                                                           style:UIAlertActionStyleDefault
@@ -1090,6 +1193,11 @@ NSString *Success        = @"";
                                                                      UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                                 message:@"Your session has been expired. Please login again."
                                                                                                                                          preferredStyle:UIAlertControllerStyleAlert];
+                                                                     UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                                     logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                                     UIView *controllerView = myAlertController.view;
+                                                                     [controllerView addSubview:logoImageView];
+                                                                     [controllerView bringSubviewToFront:logoImageView];
                                                                      UIAlertAction* ok = [UIAlertAction
                                                                                           actionWithTitle:@"OK"
                                                                                           style:UIAlertActionStyleDefault
@@ -1105,6 +1213,11 @@ NSString *Success        = @"";
                                                                      UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                                 message:@"Server Error"
                                                                                                                                          preferredStyle:UIAlertControllerStyleAlert];
+                                                                     UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                                     logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                                     UIView *controllerView = myAlertController.view;
+                                                                     [controllerView addSubview:logoImageView];
+                                                                     [controllerView bringSubviewToFront:logoImageView];
                                                                      UIAlertAction* ok = [UIAlertAction
                                                                                           actionWithTitle:@"OK"
                                                                                           style:UIAlertActionStyleDefault
@@ -1133,6 +1246,11 @@ NSString *Success        = @"";
                                                              UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                         message:@"You must be online for the app to function."
                                                                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                                             UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                             logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                             UIView *controllerView = myAlertController.view;
+                                                             [controllerView addSubview:logoImageView];
+                                                             [controllerView bringSubviewToFront:logoImageView];
                                                              UIAlertAction* ok = [UIAlertAction
                                                                                   actionWithTitle:@"OK"
                                                                                   style:UIAlertActionStyleDefault
@@ -1159,6 +1277,11 @@ NSString *Success        = @"";
                                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                            message:@"Please login again."
                                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                UIView *controllerView = myAlertController.view;
+                                [controllerView addSubview:logoImageView];
+                                [controllerView bringSubviewToFront:logoImageView];
                                 UIAlertAction* ok = [UIAlertAction
                                                      actionWithTitle:@"OK"
                                                      style:UIAlertActionStyleDefault
@@ -1248,6 +1371,11 @@ NSString *Success        = @"";
                                                              UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                         message:@"You must be online for the app to function."
                                                                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                                             UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                             logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                             UIView *controllerView = myAlertController.view;
+                                                             [controllerView addSubview:logoImageView];
+                                                             [controllerView bringSubviewToFront:logoImageView];
                                                              UIAlertAction* ok = [UIAlertAction
                                                                                   actionWithTitle:@"OK"
                                                                                   style:UIAlertActionStyleDefault
@@ -1327,6 +1455,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"You must be online for the app to function."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault
@@ -1720,6 +1853,11 @@ NSString *Success        = @"";
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:@"You must be online for the app to function."
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:@"OK"
                                  style:UIAlertActionStyleDefault

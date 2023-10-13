@@ -163,6 +163,11 @@ BOOL isOpenFisrReport = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strNoInternet
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -366,6 +371,11 @@ BOOL isOpenFisrReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -382,6 +392,11 @@ BOOL isOpenFisrReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"Token not found"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -398,6 +413,11 @@ BOOL isOpenFisrReport = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strUnauthorised
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -462,6 +482,7 @@ BOOL isOpenFisrReport = NO;
         
         NSLog(@"Exception in heightForRowAtIndexPath=%@",exception.description);
     }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -736,6 +757,11 @@ BOOL isOpenFisrReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:weakSelf.strNoInternet
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:weakSelf.strOk
                                          style:UIAlertActionStyleDefault
@@ -794,6 +820,11 @@ BOOL isOpenFisrReport = NO;
                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                        message:strNoInternet
                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
                             UIAlertAction* ok = [UIAlertAction
                                                  actionWithTitle:strOk
                                                  style:UIAlertActionStyleDefault
@@ -1001,6 +1032,11 @@ BOOL isOpenFisrReport = NO;
                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                        message:NSLocalizedString(@"connection_lost", @"")
                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
                             UIAlertAction* ok = [UIAlertAction
                                                  actionWithTitle:strOk
                                                  style:UIAlertActionStyleDefault
@@ -1036,6 +1072,11 @@ BOOL isOpenFisrReport = NO;
                                                          UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                                     message:strNoInternet
                                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                                                         UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                         logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                         UIView *controllerView = myAlertController.view;
+                                                         [controllerView addSubview:logoImageView];
+                                                         [controllerView bringSubviewToFront:logoImageView];
                                                          UIAlertAction* ok = [UIAlertAction
                                                                               actionWithTitle:strOk
                                                                               style:UIAlertActionStyleDefault
@@ -1059,6 +1100,10 @@ BOOL isOpenFisrReport = NO;
                          
                          if ([strEvnt isEqualToString:@"5"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_Pig"]];
+                             //**code added below for bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"pig(s) ("];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -%ld %@%@) ",maxCount,tmptranslated,strActiveAnimalreportType];
+                             self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                             //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"pig(s) ("]]] stringByAppendingString:strActiveAnimalreportType] stringByAppendingString:@")"];//
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"]; //Changed by priyanka
@@ -1076,6 +1121,10 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"7"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_OpenSow"]];
+                             //**code added below for bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ ",maxCount,tmptranslated];
+                             self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                             // self.lblHeader.text = [strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"]]];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
@@ -1097,6 +1146,11 @@ BOOL isOpenFisrReport = NO;
                              [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
                              NSString *strToday = [dateFormatterr stringFromDate:[NSDate date]];
                              strToday = [self displayDate:strToday];
+                             //***code added for Bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"gilt(s) in herd on"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ on %@",maxCount,tmptranslated,strToday];
+                             self.lblHeader.text =tmpHeader;
+                          //*** code commented below for 27970 By M.
                          //    self.lblHeader.text = [[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"gilt(s) in herd on"]]] stringByAppendingString:strToday];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
                              
@@ -1113,6 +1167,11 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"10"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_WarningPig"]];
+                             //***code added for Bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"weaned sow(s) not served by"];
+                             NSString *strDaysSinceWean = [dictHeaders valueForKey:@"DaysSinceWean"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -  %ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceWean];
+                             self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"weaned sow(s) not served by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceWean"]] stringByAppendingString:@" days"];//21
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
@@ -1130,6 +1189,11 @@ BOOL isOpenFisrReport = NO;
                              }
                          }else if ([strEvnt isEqualToString:@"11"]) {
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_WarningPig"]];
+                             //***code added for Bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"lactating sow(s) not weaned by"];
+                             NSString *strDaysSinceFarrow = [dictHeaders valueForKey:@"DaysSinceFarrow"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceFarrow];
+                             self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"lactating sow(s) not weaned by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceFarrow"]] stringByAppendingString:@" days"];//21
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
@@ -1158,6 +1222,10 @@ BOOL isOpenFisrReport = NO;
                              NSString *strEnd = [formatter stringFromDate:dt3];
                              strStart = [self displayDate:strStart];
                              strEnd = [self displayDate:strEnd];
+                             //***code added for Bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"sow(s) due between"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -  %ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
+                             self.lblHeader.text =tmpHeader;
                                 //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
@@ -1187,6 +1255,10 @@ BOOL isOpenFisrReport = NO;
                              
                             strStart = [self displayDate:strStart];
                              strEnd = [self displayDate:strEnd];
+                             //***code added for Bug-28008 By M.
+                             NSString *tmptranslated = [self getTranslatedTextForString:@"sow(s) due between"];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
+                             self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
                              self.dictTranslatedHeader = [dictResponse valueForKey:@"_translatedHeader"];
@@ -1210,6 +1282,11 @@ BOOL isOpenFisrReport = NO;
                              UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                         message:strNodataFound
                                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                             UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                             logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                             UIView *controllerView = myAlertController.view;
+                             [controllerView addSubview:logoImageView];
+                             [controllerView bringSubviewToFront:logoImageView];
                              UIAlertAction* ok = [UIAlertAction
                                                   actionWithTitle:strOk
                                                   style:UIAlertActionStyleDefault
@@ -1253,6 +1330,11 @@ BOOL isOpenFisrReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strUnauthorised
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1269,6 +1351,11 @@ BOOL isOpenFisrReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[responseData valueForKey:@"Error"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1288,6 +1375,11 @@ BOOL isOpenFisrReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[responseData valueForKey:[dict valueForKey:@"code"]]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1303,6 +1395,11 @@ BOOL isOpenFisrReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[responseData valueForKey:@"Error"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+              UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+              logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+              UIView *controllerView = myAlertController.view;
+              [controllerView addSubview:logoImageView];
+              [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -1332,6 +1429,7 @@ BOOL isOpenFisrReport = NO;
     @catch (NSException *exception) {
         NSLog(@"Exception in numberOfRowsInComponent- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1349,6 +1447,7 @@ BOOL isOpenFisrReport = NO;
     {
         NSLog(@"Exception in titleForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1379,6 +1478,7 @@ BOOL isOpenFisrReport = NO;
     @catch (NSException *exception) {
         NSLog(@"Exception in viewForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 #pragma mark - Other methods
@@ -1421,6 +1521,16 @@ BOOL isOpenFisrReport = NO;
         strSearchTitle = Checkstring;
     }
     return strSearchTitle;
+}
+- (void)updateReportHeaderWithtoRec1:(NSString *)toRec1 integer2:(NSInteger)integer2 stringParameter:(NSString *)stringParameter {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *combinedString = [NSString stringWithFormat:@"toRec: %@, Integer2: %ld, Header: %@", toRec1, (long)integer2, stringParameter];
+
+        // Assuming you have a UILabel named 'headerLabel' in your view controller
+        self.lblHeader.text = combinedString;
+        [_tblFirst reloadData];
+    });
+    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {

@@ -65,6 +65,11 @@
         else
         {
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP" message:[self getTranslatedTextForString:@"Please enter valid URL"] preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
                                  {
                                  }];
@@ -75,6 +80,11 @@
     else
     {
         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP" message:[self getTranslatedTextForString:@"Please enter valid URL"] preferredStyle:UIAlertControllerStyleAlert];
+        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+        UIView *controllerView = myAlertController.view;
+        [controllerView addSubview:logoImageView];
+        [controllerView bringSubviewToFront:logoImageView];
         UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
                              {
                              }];

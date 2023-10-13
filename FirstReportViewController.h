@@ -19,7 +19,7 @@
 @interface FirstReportViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIPickerViewDataSource,UIPickerViewDelegate,SlideNavigationControllerDelegate,UIPickerViewDataSource>{
     NSMutableArray *arrReports;    MenuViewController *tlc;
 
-    NSString *strPlzWait,*strNoInternet,*strOk,*strNodataFound,*strServerErr,*strUnauthorised,*strSignOff,*strCancel,*strSelectSortType;
+    NSString *strPlzWait,*strNoInternet,*strOk,*strNodataFound,*strServerErr,*strUnauthorised,*strSignOff,*strCancel,*strSelectSortType,*reportHeader;
 }
 
 #pragma mark - view life cycle

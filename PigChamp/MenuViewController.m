@@ -306,6 +306,11 @@
            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                       message:strSignOut
                                                                                preferredStyle:UIAlertControllerStyleAlert];
+           UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+           logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+           UIView *controllerView = myAlertController.view;
+           [controllerView addSubview:logoImageView];
+           [controllerView bringSubviewToFront:logoImageView];
            UIAlertAction *cancel = [UIAlertAction
                                     actionWithTitle:strCancel
                                     style:UIAlertActionStyleDefault
@@ -357,6 +362,11 @@
                                          UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                     message:strNoInternet
                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                                         UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                         logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                         UIView *controllerView = myAlertController.view;
+                                         [controllerView addSubview:logoImageView];
+                                         [controllerView bringSubviewToFront:logoImageView];
                                          UIAlertAction* ok = [UIAlertAction
                                                               actionWithTitle:strOK
                                                               style:UIAlertActionStyleDefault
@@ -381,6 +391,11 @@
            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                       message:@"You must be online for the app to function."
                                                                                preferredStyle:UIAlertControllerStyleAlert];
+           UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+           logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+           UIView *controllerView = myAlertController.view;
+           [controllerView addSubview:logoImageView];
+           [controllerView bringSubviewToFront:logoImageView];
            UIAlertAction* ok = [UIAlertAction
                                 actionWithTitle:@"OK"
                                 style:UIAlertActionStyleDefault

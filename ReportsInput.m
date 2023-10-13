@@ -395,6 +395,11 @@ BOOL isThousandFormatReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -411,6 +416,11 @@ BOOL isThousandFormatReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"Token not found"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -427,6 +437,11 @@ BOOL isThousandFormatReport = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strUnauthorised
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -564,7 +579,22 @@ BOOL isThousandFormatReport = NO;
             btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;//UILineBreakModeWordWrap
             btn.titleLabel.textAlignment = NSTextAlignmentCenter;//UITextAlignmentCenter
             btn.layer.borderColor =[[UIColor colorWithRed:206.0/255.0 green:208.0/255.0 blue:206.0/255.0 alpha:1] CGColor];
-            [btn setTitle:[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] forState:UIControlStateNormal];
+            //***added below code for removing wrong date format coming from reponse TEMPORARY FIX By M.
+            NSString *substringAfterNewline;
+            NSRange newlineRange = [[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] rangeOfString:@"\n"];
+
+            if (newlineRange.location != NSNotFound) {
+                // Extract the substring after the newline character
+                substringAfterNewline = [[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] substringFromIndex:newlineRange.location + 1];
+
+                NSLog(@"Substring after newline: %@", substringAfterNewline);
+            } else {
+                NSLog(@"Newline character not found.");
+            }
+            
+            [btn setTitle:substringAfterNewline forState:UIControlStateNormal];
+            //*** end by M.
+           // [btn setTitle:[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] forState:UIControlStateNormal];
             
             //
             NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init];
@@ -690,6 +720,7 @@ BOOL isThousandFormatReport = NO;
     @catch (NSException *exception){
         NSLog(@"Exception in numberOfRowsInComponent- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -705,6 +736,7 @@ BOOL isThousandFormatReport = NO;
     @catch (NSException *exception){
         NSLog(@"Exception in titleForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -736,6 +768,7 @@ BOOL isThousandFormatReport = NO;
     {
         NSLog(@"Exception in viewForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 
@@ -999,6 +1032,11 @@ BOOL isThousandFormatReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strIdentity
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -1070,6 +1108,11 @@ BOOL isThousandFormatReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strDateRangeMessage
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -1088,6 +1131,11 @@ BOOL isThousandFormatReport = NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strDateRange6Months
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -1295,6 +1343,11 @@ BOOL isThousandFormatReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strDateCompareMsg
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1352,6 +1405,11 @@ BOOL isThousandFormatReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strDateLessThanCurrentMsg
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1369,6 +1427,11 @@ BOOL isThousandFormatReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strDateGreaterMsg
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -1386,6 +1449,11 @@ BOOL isThousandFormatReport = NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strDateRange6Months
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -2575,6 +2643,11 @@ BOOL isThousandFormatReport = NO;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2591,6 +2664,11 @@ BOOL isThousandFormatReport = NO;
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:[self getTranslatedTextForString:@"Token not found"]
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -2618,6 +2696,11 @@ BOOL isThousandFormatReport = NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strNoInternet
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault

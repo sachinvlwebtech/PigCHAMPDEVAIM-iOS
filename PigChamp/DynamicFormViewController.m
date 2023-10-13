@@ -310,7 +310,10 @@ BOOL isThousandFormat = NO;
                        
                        NSLog(@"_strDateFormat: %@", _strDateFormat);
                 }
-                if ([_strDateFormat isEqualToString:@"7"]) {
+               
+               //*** codition changed as per the User_Params API response for date for Bug-27782 By M.
+                //if ([_strDateFormat isEqualToString:@"7"]) {
+                if ([_strDateFormat isEqualToString:@"1"]) {
                     isThousandFormat = YES;
                 }else {
                     isThousandFormat = NO;
@@ -359,7 +362,7 @@ BOOL isThousandFormat = NO;
                     }
                 }
                 //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
-               /* if (strEventCode.integerValue == 27){
+                if (strEventCode.integerValue == 27){
                 BOOL doubleIdentity=TRUE;
                 for (NSInteger i = 0; i < arrUserParameter.count; i++) {
                     NSManagedObject *managedObject = arrUserParameter[i];
@@ -373,7 +376,7 @@ BOOL isThousandFormat = NO;
                             }
                         }
                     }
-                }*/
+                }
                 //***end of  By M.
                 NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
                     
@@ -1241,6 +1244,7 @@ BOOL isThousandFormat = NO;
     @catch (NSException *exception) {
         NSLog(@"Exception in getViewType = %@",exception.description);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1268,6 +1272,7 @@ BOOL isThousandFormat = NO;
     {
         NSLog(@"Exception in numberOfRowsInComponent- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1286,6 +1291,7 @@ BOOL isThousandFormat = NO;
     @catch (NSException *exception) {
         NSLog(@"Exception in titleForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1314,6 +1320,7 @@ BOOL isThousandFormat = NO;
     @catch (NSException *exception)  {
         NSLog(@"Exception in viewForRow- %@",[exception description]);
     }
+    return 0;
 }
 
 #pragma mark -Textfield related  methods
@@ -1497,10 +1504,28 @@ BOOL isThousandFormat = NO;
            // }
         }else if ([[dict valueForKey:@"dk"]integerValue]==27) {
             ///*** condition added for Bug-28148 by M.
-          //  if(newString.length > 15){
-            if([string isEqualToString:@" "]){
+              
+            //if([string isEqualToString:@" "]){
+              //  return NO;
+            //}
+            NSString *stnumberofchars = [dict valueForKey:@"nC"]?[dict valueForKey:@"nC"]:@"";
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }else if([string isEqualToString:@" "]){
                 return NO;
             }
+            else if ([stnumberofchars length]>0) {
+                if (newString.length <=[[dict valueForKey:@"nC"] integerValue]) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return (newString.length <=[[dict valueForKey:@"nC"] integerValue]);
+                }else {
+                    return NO;
+                }
+            }
+        
         }else if ([[dict valueForKey:@"dk"]integerValue]==38) {
             if([string isEqualToString:@" "]){
                 return NO;
@@ -5916,10 +5941,11 @@ float animatedDistance;
                 [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];//change strSelectedDate to strSelectedDateMMM
                 
                 if (isThousandFormat) {
-                    [formatter setDateFormat:@"dd/MM/yyyy"];
-                    NSDate *dtselectedDate = [formatter dateFromString:strSelectedDate];
-                    [formatter setDateFormat:@"ddMMYYYY"];
-                    NSDate *BaseDate = [formatter dateFromString:strBaseDate];
+                    NSString *strBaseDate = [pref valueForKey:@"ZD"];
+                    [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDate];
+                    [dateFormatterr setDateFormat:@"YYYYMMdd"];
+                    NSDate *BaseDate = [dateFormatterr dateFromString:strBaseDate];
                     int days = [dtselectedDate timeIntervalSinceDate:BaseDate]/24/60/60;
                     
                     NSString *strDate = [NSString stringWithFormat:@"%05d",days];
@@ -5927,7 +5953,7 @@ float animatedDistance;
                     
                     if (strDate.length>=2) {
                         calFormat = [strDate substringToIndex:2];
-                    }else {
+                    }else{
                         calFormat = strDate;
                     }
                     
@@ -5936,11 +5962,11 @@ float animatedDistance;
                     }
                     
                     calFormat = [[calFormat stringByAppendingString:@"-"] stringByAppendingString:strFromString?strFromString:@""];
-                    [formatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+                    [dateFormatterr setDateFormat:@"EEE,dd-MMM-yyyy"];
                     
-                    NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[formatter stringFromDate:dtselectedDate]];
+                    NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
+                    [_dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
                     
-                    [weakSelf.dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
                 }//*** changed below code for strDateFormat due to User_Paramters APi changes By M.
                 //else if([weakSelf.strDateFormat isEqualToString:@"6"]){
                 else if([_strDateFormat isEqualToString:@"6"]){
@@ -5973,6 +5999,62 @@ float animatedDistance;
                     
                     /*[weakSelf.dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];*/
                     [weakSelf.dictDynamic setValue:strSelectedDateDayOFYear forKey:[dict valueForKey:@"Lb"]];
+                   //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"3"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"4"]){
+                    //4 = mm/dd/yy        e.g. 10/09/23
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"5"]){
+                    //5 = dd/mm/yy        e.g. 09/10/23
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"8"]){
+                    //8 = dd/mm/yyyy        e.g. 09/10/2023
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
                 }
                 else {
                     [weakSelf.dictDynamic setValue:strSelectedDate forKey:[dict valueForKey:@"Lb"]];
@@ -5995,7 +6077,39 @@ float animatedDistance;
         NSLog(@"Exception =%@",exception.description);
     }
 }
+-(NSString*)daysBetweenDateForThousand:(NSDate*)fromDateTime andDate:(NSDate*)toDateTime
+{
+    @try{
+        NSDate *fromDate;
+        NSDate *toDate;
+        NSString *formatted = @"";
+        
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        calendar.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        
+        unsigned long miliSecondForDate1=  [calendar rangeOfUnit:NSCalendarUnitDay startDate:&fromDate
+                     interval:NULL forDate:fromDateTime] * 1000;
+        unsigned long miliSecondForDate2 = [calendar rangeOfUnit:NSCalendarUnitDay startDate:&toDate
+                     interval:NULL forDate:toDateTime] * 1000;
+   
+          unsigned long diffInMilis = miliSecondForDate1 - miliSecondForDate2;
+          NSInteger diffInDays = diffInMilis / (24 * 60 * 60 * 1000);
 
+          if (diffInDays >= 0) {
+              formatted = [NSString stringWithFormat:@"%05ld", (long)diffInDays];
+              NSMutableString *buffer = [formatted mutableCopy];
+              [buffer insertString:@"-" atIndex:2];
+              formatted = [buffer copy];
+          }
+
+          NSLog(@"Formatted Date Difference: %@", formatted);
+
+          return formatted;
+        
+    } @catch (NSException *exception) {
+        NSLog(@"Exception in fillDefaultValuesForMandatoryFields=%@",exception.description);
+    }
+}
 -(NSInteger)daysBetweenDate:(NSDate*)fromDateTime andDate:(NSDate*)toDateTime
 {
     @try{
@@ -6003,7 +6117,7 @@ float animatedDistance;
         NSDate *toDate;
         
         NSCalendar *calendar = [NSCalendar currentCalendar];
-        calendar.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        calendar.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
         
         [calendar rangeOfUnit:NSCalendarUnitDay startDate:&fromDate
                      interval:NULL forDate:fromDateTime];
@@ -6106,7 +6220,7 @@ float animatedDistance;
                 }else if([_strDateFormat isEqualToString:@"6"]){
                     // NSString *strBaseDate = [pref valueForKey:@"ZD"];
                     [dateFormatterr setDateFormat:@"YYYYMMdd"];
-                    [dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
                     
                     //  [dateFormatterr setTimeZone:[NSTimeZone defaultTimeZone]];
                     NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDatee];
@@ -6131,6 +6245,63 @@ float animatedDistance;
                     // NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];6
                     //[_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
                     [_dictDynamic setValue:strSelectedDateDayOFYear forKey:[dict valueForKey:@"Lb"]];
+                }
+                //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                else if([_strDateFormat isEqualToString:@"3"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                else if([_strDateFormat isEqualToString:@"4"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                else if([_strDateFormat isEqualToString:@"5"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                else if([_strDateFormat isEqualToString:@"8"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
                 }
                 else{
                     
@@ -6340,7 +6511,7 @@ float animatedDistance;
     // currentYear=selecteddate
     
     NSDateFormatter *formatter1 = [[NSDateFormatter alloc] init];
-    [formatter1 setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+    [formatter1 setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     
     [formatter1 setDateFormat:@"yyyy"];
     NSString *currentYearString = [formatter1 stringFromDate:selecteddate];
@@ -7603,6 +7774,62 @@ float animatedDistance;
                                             
                                             
                                             // [_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
+                                        }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                                        else if([_strDateFormat isEqualToString:@"3"]){
+                                            
+                                            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                                            NSDate *inputDate = [inputDateFormatter dateFromString:str];
+
+                                            // Create a date formatter for the desired output format
+                                            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+                                            // Format the date to the desired output format
+                                            NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                                            [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                        }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                                        else if([_strDateFormat isEqualToString:@"4"]){
+                                            
+                                            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                                            NSDate *inputDate = [inputDateFormatter dateFromString:str];
+
+                                            // Create a date formatter for the desired output format
+                                            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+
+                                            // Format the date to the desired output format
+                                            NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                                            [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                        }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                                        else if([_strDateFormat isEqualToString:@"5"]){
+                                            
+                                            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                                            NSDate *inputDate = [inputDateFormatter dateFromString:str];
+
+                                            // Create a date formatter for the desired output format
+                                            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+
+                                            // Format the date to the desired output format
+                                            NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                                            [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                        }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                                        else if([_strDateFormat isEqualToString:@"8"]){
+                                            
+                                            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                                            NSDate *inputDate = [inputDateFormatter dateFromString:str];
+
+                                            // Create a date formatter for the desired output format
+                                            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                                            [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+                                            // Format the date to the desired output format
+                                            NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                                            [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
                                         }
                                         else{
                                             [_dictDynamic setValue:[[[[str substringWithRange:NSMakeRange(4, [str length]-6)] stringByAppendingString:@"/"] stringByAppendingString:[[str substringWithRange:NSMakeRange(6, [str length]-6)] stringByAppendingString:@"/"]] stringByAppendingString:[str substringToIndex:4]] forKey:[DictDynamic valueForKey:@"Lb"]];

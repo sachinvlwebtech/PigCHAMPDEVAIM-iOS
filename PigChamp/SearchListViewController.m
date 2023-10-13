@@ -204,6 +204,11 @@ BOOL isOpenList= NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[strIdentityMsg stringByReplacingOccurrencesOfString:@"#" withString:self.strIdentity]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -237,6 +242,11 @@ BOOL isOpenList= NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:strNoInternet
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -326,6 +336,11 @@ BOOL isOpenList= NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -342,6 +357,11 @@ BOOL isOpenList= NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[self getTranslatedTextForString:@"Token not found"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault
@@ -358,6 +378,11 @@ BOOL isOpenList= NO;
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:strUnauthorised
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
             UIAlertAction* ok = [UIAlertAction
                                  actionWithTitle:strOk
                                  style:UIAlertActionStyleDefault
@@ -417,6 +442,11 @@ BOOL isOpenList= NO;
                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                        message:strNoInternet
                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
                             UIAlertAction *ok = [UIAlertAction
                                                  actionWithTitle:strOk
                                                  style:UIAlertActionStyleDefault
@@ -527,6 +557,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -543,6 +578,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[self getTranslatedTextForString:@"Token not found"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -562,6 +602,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:NSLocalizedString(@"connection_lost", @"")
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -597,6 +642,11 @@ BOOL isOpenList= NO;
                                                  UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                                             message:strNoInternet
                                                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                                                 UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                                 logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                                 UIView *controllerView = myAlertController.view;
+                                                 [controllerView addSubview:logoImageView];
+                                                 [controllerView bringSubviewToFront:logoImageView];
                                                  UIAlertAction* ok = [UIAlertAction
                                                                       actionWithTitle:strOk
                                                                       style:UIAlertActionStyleDefault
@@ -662,6 +712,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[strIdentityMsg stringByReplacingOccurrencesOfString:@"#" withString:self.strIdentity]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -696,6 +751,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strUnauthorised
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -712,6 +772,11 @@ BOOL isOpenList= NO;
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:[responseData valueForKey:@"Error"]
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -729,6 +794,11 @@ BOOL isOpenList= NO;
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[responseData valueForKey:@"Error"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
                 UIAlertAction* ok = [UIAlertAction
                                      actionWithTitle:strOk
                                      style:UIAlertActionStyleDefault

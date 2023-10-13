@@ -273,6 +273,11 @@
     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                message:strMsg
                                                                         preferredStyle:UIAlertControllerStyleAlert];
+    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+    UIView *controllerView = myAlertController.view;
+    [controllerView addSubview:logoImageView];
+    [controllerView bringSubviewToFront:logoImageView];
     UIAlertAction* ok = [UIAlertAction
                          actionWithTitle:@"OK"
                          style:UIAlertActionStyleDefault
