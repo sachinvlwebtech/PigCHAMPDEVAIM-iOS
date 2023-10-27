@@ -2007,9 +2007,53 @@ NSString *strEditTitle;
         
         if (selecteditem.integerValue>=0) {
             DynamicFormViewController *newView = [self.storyboard instantiateViewControllerWithIdentifier:@"DynamicForm"];
+            //***code added below for Bug-27967 and27947 Bug-27947 By M.
+            NSString *tmpstrEvt = [dict valueForKey:@"EventCode"]?[dict valueForKey:@"EventCode"]:@"" ;
             newView.strEventCode = [dict valueForKey:@"EventCode"]?[dict valueForKey:@"EventCode"]:@"";
             newView.strTitle = strEditTitle;
-            newView.lblTitle = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+            if(tmpstrEvt.integerValue == 19){
+                newView.lblTitle = @"Mating";
+            }else if(tmpstrEvt.integerValue == 11){
+                newView.lblTitle = @"Female Death";
+            }else if(tmpstrEvt.integerValue == 10){
+                newView.lblTitle = @"Boar Death";
+            }else if(tmpstrEvt.integerValue == 12){
+                newView.lblTitle = @"Boar Sale";
+            }else if(tmpstrEvt.integerValue == 13){
+                newView.lblTitle = @"Female Sale";
+            }else if(tmpstrEvt.integerValue == 16){
+                newView.lblTitle = @"Female Mark for Culling";
+            }else if(tmpstrEvt.integerValue == 15){
+                newView.lblTitle = @"Boar Mark for Culling";
+            }else if(tmpstrEvt.integerValue == 39){
+                NSString *tmpHeader = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+                NSString *tmpTitle = [NSString stringWithFormat: @"Female %@",tmpHeader];
+                newView.lblTitle = tmpTitle;
+            }else if(tmpstrEvt.integerValue == 38){
+                NSString *tmpHeader = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+                NSString *tmpTitle = [NSString stringWithFormat: @"Boar %@",tmpHeader];
+                newView.lblTitle = tmpTitle;
+            }else if(tmpstrEvt.integerValue == 44){
+                newView.lblTitle = @"Female Transfer";
+            }else if(tmpstrEvt.integerValue == 41){
+                newView.lblTitle = @"Female Note";
+            }else if(tmpstrEvt.integerValue == 40){
+                newView.lblTitle = @"Boar Note";
+            }else if(tmpstrEvt.integerValue == 45){
+                newView.lblTitle = @"Boar Flag";
+            }else if(tmpstrEvt.integerValue == 46){
+                newView.lblTitle = @"Female Flag";
+            }else if(tmpstrEvt.integerValue == 51){
+                NSString *tmpHeader = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+                NSString *tmpTitle = [NSString stringWithFormat: @"Female %@",tmpHeader];
+                newView.lblTitle = tmpTitle;
+            }else if(tmpstrEvt.integerValue == 50){
+                NSString *tmpHeader = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+                NSString *tmpTitle = [NSString stringWithFormat: @"Boar %@",tmpHeader];
+                newView.lblTitle = tmpTitle;
+            }else{
+                newView.lblTitle = [dict valueForKey:@"Event"]?[dict valueForKey:@"Event"]:@"";
+            }
             newView.dict = dict;
             newView.strFromEditPage = @"fromEditPage";
             if (selecteditem.integerValue>=0)

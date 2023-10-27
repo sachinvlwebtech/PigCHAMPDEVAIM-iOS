@@ -358,9 +358,26 @@ BOOL isThousandFormat = NO;
                             }
                             //For removing 169 and piglet identities -------------------
                         } */
-                        
+                        //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
+                    /*    if (strEventCode.integerValue == 27){
+                        BOOL doubleIdentity=TRUE;
+                        for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                            NSManagedObject *managedObject = arrUserParameter[i];
+                            NSNumber *doubleIdentityNumber = [managedObject valueForKey:@"up_fosterings_double_identity"];
+                                //doubleIdentity = [doubleIdentityNumber boolValue];
+                        }
+                        if (!doubleIdentity){
+                                for (NSMutableDictionary *dict  in _arrDynamic){
+                                    if ([[dict valueForKey:@"dk"] integerValue] == 63 && [[dict valueForKey:@"Lb"]   isEqual: @"Destination Sow (+)"]){
+                                        [_arrDynamic removeObject:dict];
+                                    }
+                                }
+                            }
+                        }*/
+                        //***end of  By M.
                     }
                 }
+               /*
                 //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
                 if (strEventCode.integerValue == 27){
                 BOOL doubleIdentity=TRUE;
@@ -378,6 +395,7 @@ BOOL isThousandFormat = NO;
                     }
                 }
                 //***end of  By M.
+                */
                 NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
                     
                     NSInteger position1 = [[obj1 valueForKey:@"ps"] integerValue];
@@ -768,7 +786,9 @@ BOOL isThousandFormat = NO;
             __block NSDictionary *dictText;//= [_dictDynamic valueForKey:@"Lb"];
             
             [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
-                if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
+                //***removed condition for bug-27735 by M.
+               // if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
+                if ([key integerValue]==51  || [key integerValue]==3){
                     dictText = obj;
                 }
             }];
@@ -1439,7 +1459,8 @@ BOOL isThousandFormat = NO;
                 NSString *newString = [[textField.text stringByReplacingCharactersInRange:range withString:string] uppercaseString];
                 NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
-                if([[dict valueForKey:@"dk"] integerValue]==18){
+                //***condition added for Liveborn bug- 27735 by M.
+                if([[dict valueForKey:@"dk"] integerValue]==18 || [[dict valueForKey:@"dk"] integerValue]==15){
                     if ((location.location != NSNotFound) && ([newString length]<=2)) {
                         [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
@@ -2858,7 +2879,9 @@ float animatedDistance;
                         dictTextFieldData = obj;
                     }
                 }];
-            }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+            }//else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+            //***condition removed for Bug-27735 by M.
+            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
                 dictForPiglets = dict;
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
                     if ([key integerValue]==92){
@@ -3426,12 +3449,16 @@ float animatedDistance;
                 
                 reqStringFUll = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":\"%@\"",strKey,strValue]];
                 
-            }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
+            }//condition removed for Bug-27735 By m
+            //else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
+            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
                 __block NSDictionary *dictTextFieldData,*dictForGuilt;
                 strValue=(NSMutableString*)@"";
                 dictForGuilt = dict;
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
-                    if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3) {
+                    //condition removed for Bug-27735 By M.
+                    //if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3) {
+                    if ([key integerValue]==51 || [key integerValue]==3) {
                         dictTextFieldData = obj;
                     }
                 }];
