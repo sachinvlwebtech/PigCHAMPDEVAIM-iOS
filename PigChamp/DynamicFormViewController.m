@@ -1966,7 +1966,9 @@ BOOL isThousandFormat = NO;
             //Code changed by Priyanka for validating transponder field to 15 digits//
             if ([[dict valueForKey:@"dk"] integerValue]==32) {
                 NSCharacterSet *characterSet = nil;
-                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
+                //characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
+                //*** added code for alphanumeric values for Transponder Bug-28564 By M.
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
                 
                 if (((location.location != NSNotFound) && (newString.length <=15)) || [string isEqualToString:@""]) {

@@ -39,7 +39,8 @@
     // Override point for customization after application launch.
     //[[UINavigationBar appearance] setBarTintColor:[UIColor redColor]];
     //***code changed below for the bug raised by Matrin for bc color flickr By M.
-    self.window.backgroundColor = [UIColor blackColor];
+   // self.window.backgroundColor = [UIColor blackColor];
+    self.window.backgroundColor = [UIColor colorWithRed: 0.25 green: 0.25 blue: 0.25 alpha: 1.00];
     //self.window.backgroundColor = [UIColor colorWithRed: 0.64 green: 0.25 blue: 0.22 alpha: 1.00];//A44139
     // Configure tracker from GoogleService-Info.plist.
     NSError *configureError;
