@@ -35,7 +35,8 @@
     
     [defaults removeObjectForKey:@"login_state"];
     [defaults synchronize];
-    
+    //***added some delay for Splashscreen Bug-27339 By M.
+    sleep(4.0);
     // Override point for customization after application launch.
     //[[UINavigationBar appearance] setBarTintColor:[UIColor redColor]];
     //***code changed below for the bug raised by Matrin for bc color flickr By M.

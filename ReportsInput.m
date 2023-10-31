@@ -85,17 +85,15 @@ BOOL isThousandFormatReport = NO;
                NSLog(@"_strDateFormat: %@", _strDateFormat);
      
    
-    }  if ([_strDateFormat isEqualToString:@"1"]) {
+    }
+    if ([_strDateFormat isEqualToString:@"1"]) {
     //*** code changed below ad per new API call for User_Paramters By M.
   //  if (_boolVal) {
         isThousandFormatReport = YES;
     }else {
         isThousandFormatReport = NO;
     }
-    
-    NSLog(@"_strDateFormat=%@",_strDateFormat);
-    //
-    
+   
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     [pref setValue:@"0" forKey:@"reload"];
     [pref synchronize];
@@ -579,8 +577,8 @@ BOOL isThousandFormatReport = NO;
             btn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;//UILineBreakModeWordWrap
             btn.titleLabel.textAlignment = NSTextAlignmentCenter;//UITextAlignmentCenter
             btn.layer.borderColor =[[UIColor colorWithRed:206.0/255.0 green:208.0/255.0 blue:206.0/255.0 alpha:1] CGColor];
-            //***added below code for removing wrong date format coming from reponse TEMPORARY FIX By M.
-            NSString *substringAfterNewline;
+            //*** commented which was temorary fix and fix for Bug-28578 By M.
+           /* NSString *substringAfterNewline;
             NSRange newlineRange = [[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] rangeOfString:@"\n"];
 
             if (newlineRange.location != NSNotFound) {
@@ -594,7 +592,8 @@ BOOL isThousandFormatReport = NO;
             
             [btn setTitle:substringAfterNewline forState:UIControlStateNormal];
             //*** end by M.
-           // [btn setTitle:[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] forState:UIControlStateNormal];
+            */
+            [btn setTitle:[_dictJsonReport valueForKey:[dict valueForKey:@"visible"]] forState:UIControlStateNormal];
             
             //
             NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init];
@@ -991,7 +990,80 @@ BOOL isThousandFormatReport = NO;
                     [formatter setDateFormat:@"MM/dd/yyyy"];//Added by Priyanka
                     NSString *strSelectedDateDayOfyear1 = [formatter stringFromDate:dtselectedDate];//Added by Priyanka
                     [dictDynamicCopyToSend setValue:strSelectedDateDayOfyear1 forKey:[dict valueForKey:@"visible"]];//Added by Priyanka
-                } else {
+                } else if([_strDateFormat isEqualToString:@"3"]){
+                    
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+                    [weakSelf.dictJsonReport setValue:outputDateString forKey:[dict valueForKey:@"visible"]];
+                
+                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    NSString *strSelectedDateNew = [formatter stringFromDate:dtselectedDate];
+                    [dictDynamicCopyToSend setValue:strSelectedDateNew forKey:[dict valueForKey:@"visible"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"4"]){
+                    //4 = mm/dd/yy        e.g. 10/09/23
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+
+                    // Format the date to the desired output format
+                    
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+                    [weakSelf.dictJsonReport setValue:outputDateString forKey:[dict valueForKey:@"visible"]];
+                
+                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    NSString *strSelectedDateNew = [formatter stringFromDate:dtselectedDate];
+                    [dictDynamicCopyToSend setValue:strSelectedDateNew forKey:[dict valueForKey:@"visible"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"5"]){
+                    //5 = dd/mm/yy        e.g. 09/10/23
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+                    [weakSelf.dictJsonReport setValue:outputDateString forKey:[dict valueForKey:@"visible"]];
+                
+                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    NSString *strSelectedDateNew = [formatter stringFromDate:dtselectedDate];
+                    [dictDynamicCopyToSend setValue:strSelectedDateNew forKey:[dict valueForKey:@"visible"]];
+                    //*** codition added for response of User_Params API for Bug-27782 By M.
+                }else if([_strDateFormat isEqualToString:@"8"]){
+                    //8 = dd/mm/yyyy        e.g. 09/10/2023
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+                    [weakSelf.dictJsonReport setValue:outputDateString forKey:[dict valueForKey:@"visible"]];
+                
+                    [formatter setDateFormat:@"MM/dd/yyyy"];
+                    NSString *strSelectedDateNew = [formatter stringFromDate:dtselectedDate];
+                    [dictDynamicCopyToSend setValue:strSelectedDateNew forKey:[dict valueForKey:@"visible"]];
+                }//***end of date format conditions By M.
+                else {
                     [dictDynamicCopyToSend setValue:strSelectedDate forKey:[dict valueForKey:@"visible"]];//Added by Priyanka
                     [weakSelf.dictJsonReport setValue:strSelectedDate forKey:[dict valueForKey:@"visible"]];
                 }
@@ -2416,7 +2488,9 @@ BOOL isThousandFormatReport = NO;
         NSDate *toDate;
         
         NSCalendar *calendar = [NSCalendar currentCalendar];
-        calendar.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        //***commented below line By M for Dateformat issue on reports.
+        //calendar.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        calendar.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
 
         [calendar rangeOfUnit:NSCalendarUnitDay startDate:&fromDate
                      interval:NULL forDate:fromDateTime];

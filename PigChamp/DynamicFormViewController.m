@@ -1565,6 +1565,36 @@ BOOL isThousandFormat = NO;
                 return NO;
             }
         }
+        //***code added for Bug-28575 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==58) {
+            if([string isEqualToString:@""]){
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<=2)) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890."];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
+                }
+                else
+                    return NO;
+            }
+            else
+                return NO;
+            }else if ([[dict valueForKey:@"dk"]integerValue]==51) {
+                if([string isEqualToString:@""]){
+                    return NO;
+                }
+            }
+        //***end of by M.
         /*else if ([[dict valueForKey:@"dk"]integerValue]==20) {
             if([newString intValue] > 999){
                 return NO;
@@ -6390,7 +6420,9 @@ float animatedDistance;
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                     }//3 = 1 Batch weaning
                 }else if(strEventCode.integerValue ==31){
-                    if ([[dict valueForKey:@"dk"] integerValue]==51 || [[dict valueForKey:@"dk"] integerValue]==54 || [[dict valueForKey:@"dk"] integerValue]==58){
+                    if ([[dict valueForKey:@"dk"] integerValue]==54){
+                        //***condition changed below for Bug-28575 By M.
+                    //if ([[dict valueForKey:@"dk"] integerValue]==51 || [[dict valueForKey:@"dk"] integerValue]==54 || [[dict valueForKey:@"dk"] integerValue]==58){
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                     }else if ([[dict valueForKey:@"dk"] integerValue]==57){
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
