@@ -1007,7 +1007,11 @@ NSString *Success        = @"";
                     if (![[dict objectForKey:@"_ConditionScore"] isKindOfClass:[NSNull class]]){
                         conditionsScoreArray = [dict objectForKey:@"_ConditionScore"];
                     }
-                    
+                    //***added below for Piglet Defect data entry - Defects-List Bug- 28548 By M.
+                    NSArray* pigletDefectsArray;
+                    if (![[dict objectForKey:@"_PIGLET_DEFECTS"] isKindOfClass:[NSNull class]]){
+                        pigletDefectsArray = [dict objectForKey:@"_PIGLET_DEFECTS"];
+                    }
                     NSArray* _herdCategoryArray;
                     if (![[dict objectForKey:@"_HerdCategory"] isKindOfClass:[NSNull class]]){
                         _herdCategoryArray = [dict objectForKey:@"_HerdCategory"];
@@ -1139,7 +1143,7 @@ NSString *Success        = @"";
 
                     [[CoreDataHandler sharedHandler] removeAllmanagedObject];
                     {
-                        BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:commonLookupsArray andFarmsArray:arrFilteredFarms andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:userParametersArray andLocations:locationsArray andOperatorArray:arrOperatorArray andBreedingComapniesArray:breeedingCompaniesArray andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds  andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:_arrayEnglish conditionScore:conditionsScoreArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                        BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:commonLookupsArray andFarmsArray:arrFilteredFarms andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:userParametersArray andLocations:locationsArray andOperatorArray:arrOperatorArray andBreedingComapniesArray:breeedingCompaniesArray andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds  andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:_arrayEnglish conditionScore:conditionsScoreArray pigletDefects:(NSArray*)pigletDefectsArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
                         
                         if (arrFilteredFarms.count==0) {
                             {

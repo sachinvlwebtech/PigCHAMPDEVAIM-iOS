@@ -29,6 +29,7 @@ BOOL isFromKeybord = NO;
 BOOL isRFIDCalled = NO;
 BOOL isOpenDynamic = NO;
 BOOL isThousandFormat = NO;
+BOOL isGestationWarnLengthflg = 0;
 
 @interface DynamicFormViewController ()
 {
@@ -304,7 +305,8 @@ BOOL isThousandFormat = NO;
                     NSManagedObject *managedObject = arrUserParameter[i];
                 
                        NSNumber *dateFormatNumber = [managedObject valueForKey:@"up_date_settings_input_format"];
-                       
+                    //*** code added for Bug-28561 By M.
+                      isGestationWarnLengthflg = [[managedObject valueForKey:@"up_date_settings_input_format"] boolValue];
                        // Convert the numerical value to a string
                        _strDateFormat = [dateFormatNumber stringValue];
                        
@@ -359,12 +361,12 @@ BOOL isThousandFormat = NO;
                             //For removing 169 and piglet identities -------------------
                         } */
                         //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
-                    /*    if (strEventCode.integerValue == 27){
+                        if (strEventCode.integerValue == 27){
                         BOOL doubleIdentity=TRUE;
                         for (NSInteger i = 0; i < arrUserParameter.count; i++) {
                             NSManagedObject *managedObject = arrUserParameter[i];
                             NSNumber *doubleIdentityNumber = [managedObject valueForKey:@"up_fosterings_double_identity"];
-                                //doubleIdentity = [doubleIdentityNumber boolValue];
+                                doubleIdentity = [doubleIdentityNumber boolValue];
                         }
                         if (!doubleIdentity){
                                 for (NSMutableDictionary *dict  in _arrDynamic){
@@ -373,7 +375,7 @@ BOOL isThousandFormat = NO;
                                     }
                                 }
                             }
-                        }*/
+                        }
                         //***end of  By M.
                     }
                 }
@@ -1513,6 +1515,16 @@ BOOL isThousandFormat = NO;
                 }
             }
         }
+        //*** commeneted above code for Identity removing last number in all entry By M.
+       /* if ([[dict valueForKey:@"dk"]integerValue]==1) {
+            if([string isEqualToString:@""]){
+                return NO;
+            }else{
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+        }*/
         //**added below condition Bugnet - 27946 by M.
         else if (([[dict valueForKey:@"dk"]integerValue]==88) || ([[dict valueForKey:@"dk"]integerValue]==89) || ([[dict valueForKey:@"dk"]integerValue]==90) || ([[dict valueForKey:@"dk"]integerValue]==91)){
             if([string isEqualToString:@" "]){
@@ -1551,11 +1563,26 @@ BOOL isThousandFormat = NO;
             if([string isEqualToString:@" "]){
                 return NO;
             }
-        }else if ([[dict valueForKey:@"dk"]integerValue]==69) {
+        }/*else if ([[dict valueForKey:@"dk"]integerValue]==69) {
             if([string isEqualToString:@" "]){
                 return NO;
             }
-        }else if ([[dict valueForKey:@"dk"]integerValue]==68) {
+        }*/ //**code added for New Identity bug-28619 by M.
+        if ([[dict valueForKey:@"dk"] integerValue]==69) {
+            NSCharacterSet *characterSet = nil;
+            characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+            NSRange location = [string rangeOfCharacterFromSet:characterSet];
+            
+            if (((location.location != NSNotFound) && (newString.length <=15)) || [string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                
+                return (((location.location != NSNotFound) && (newString.length <=15)) || [string isEqualToString:@""]);
+            }
+            else
+                return NO;
+        }
+         else if ([[dict valueForKey:@"dk"]integerValue]==68) {
             if([string isEqualToString:@" "]){
                 return NO;
             }
@@ -1589,7 +1616,28 @@ BOOL isThousandFormat = NO;
             }
             else
                 return NO;
-            }else if ([[dict valueForKey:@"dk"]integerValue]==51) {
+            }
+        //***code added for Number of Piglet for Bug-
+        else if ([[dict valueForKey:@"dk"]integerValue]==3) {
+            if([string isEqualToString:@""]){
+                return NO;
+            }else{
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+        }
+        //***code added for Bug-28584 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==57) {
+            if([string isEqualToString:@""]){
+                return NO;
+            }else{
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+        }
+            else if ([[dict valueForKey:@"dk"]integerValue]==51) {
                 if([string isEqualToString:@""]){
                     return NO;
                 }
@@ -5630,7 +5678,12 @@ float animatedDistance;
                         NSDictionary *dict = [[NSMutableDictionary alloc]init];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
-                        [_arrDropDown addObject:dict];
+                       //*** code added below for Bug-28636 removing duplicate entry for Transport By M.
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                        // [_arrDropDown addObject:dict];
                         
                         if (strPrevSelectedValue.length>0)
                         {
@@ -5687,6 +5740,41 @@ float animatedDistance;
                         prevSelectedIndex = 0;
                     }
                 }
+            }
+                break;
+                //***case added for Piglet_Defects by M. Bug-28548 By M.
+            case 152: {
+                NSArray* resultArray;
+                NSPredicate *predicate;
+                NSString *strcategory;
+                
+                strPrevSelectedValue = [NSString stringWithFormat:@"%@",[dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@""];
+                
+                // predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"lookup_category ==%@",strcategory]];
+                
+                sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
+                                                     ascending:YES];
+                sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Piglet_Defects" andPredicate:nil andSortDescriptors:sortDescriptors];
+                
+                for (int count=0; count<resultArray.count; count++) {
+                    NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
+                    [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                    [_arrDropDown addObject:dict];
+                    
+                    if (strPrevSelectedValue.length>0)
+                    {
+                        if ([strPrevSelectedValue integerValue] == [[[resultArray objectAtIndex:count] valueForKey:@"id"] integerValue])
+                        {
+                            prevSelectedIndex = count;
+                        }
+                    }
+                    
+                }
+                NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:_arrDropDown];
+                _arrDropDown = [orderedSet mutableCopy];
+
             }
                 break;
             default:{
@@ -7427,7 +7515,12 @@ float animatedDistance;
                         NSDictionary *dict = [[NSMutableDictionary alloc]init];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"] forKey:@"visible"];
                         [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"] forKey:@"dataTosend"];
-                        [_arrDropDown addObject:dict];
+                        //**code added below for Bug-28636 removing duplicate entry for Transport By M.
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                        //[_arrDropDown addObject:dict];
                         
                         if (strPrevSelectedValue.length>0)
                         {

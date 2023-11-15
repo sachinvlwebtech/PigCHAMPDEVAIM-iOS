@@ -272,7 +272,7 @@ this function updates sqllite entries via core data
     return updateSuccess;
 }
 
--(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray{
+-(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore pigletDefects:(NSArray*)pigletDefectsArray herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray{
     BOOL response = YES;
     NSError* error;
 
@@ -446,7 +446,12 @@ this function updates sqllite entries via core data
         NSDictionary* dict = [conditionScore objectAtIndex:counter];
         [conditionsManagedObject setValuesForKeysWithDictionary:dict];
     }
-    
+    //***added below for Piglet Defect data entry - Defects-List Bug- 28548 By M.
+    for (int counter=0; counter<pigletDefectsArray.count; counter++) {
+        NSManagedObject* pigletdefectsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Piglet_Defects" inManagedObjectContext:managedObjectContext];
+        NSDictionary* dict = [pigletDefectsArray objectAtIndex:counter];
+        [pigletdefectsManagedObject setValuesForKeysWithDictionary:dict];
+    }
     for (int counter=0; counter<herdCategory.count; counter++) {
         NSManagedObject* conditionsManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"HerdCategory" inManagedObjectContext:managedObjectContext];
         NSDictionary* dict = [herdCategory objectAtIndex:counter];

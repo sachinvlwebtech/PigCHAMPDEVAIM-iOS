@@ -546,7 +546,7 @@ BOOL isOpen = NO;
             [arrMenu addObject:@"Nurse Sow Weaning"];
             [arrMenu addObject:@"Piglet Death"];
 //            [arrMenu addObject:@"Piglet Identification"];
-//            [arrMenu addObject:@"Piglet Defect"];
+            [arrMenu addObject:@"Piglet Defect"];
             
             
             NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:arrMenu];
@@ -624,6 +624,15 @@ BOOL isOpen = NO;
 //                            [arrMenu addObject:@"Piglet Defect"];
 //                        }
 //                    }
+                    //*** code added for Piglet Defects Event Bug-28548 By M.
+                    else  if (i==7){
+                        if ([dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                        [self addObject:[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]:@"" englishVersion:@"Piglet Defect"];
+                            }
+                        else{
+                        [arrMenu addObject:@"Piglet Defect"];
+                        }
+                    }
                 }
             }
             
@@ -637,6 +646,8 @@ BOOL isOpen = NO;
             [arrEventCode addObject:@"32"];
 //            [arrEventCode addObject:@"112"];
 //            [arrEventCode addObject:@"47"];
+            //***code added for Bug- 28548 By M.
+            [arrEventCode addObject:@"47"];
         }else if ([countMenu isEqualToString:@"4"])
         {
             [arrMenu removeAllObjects];

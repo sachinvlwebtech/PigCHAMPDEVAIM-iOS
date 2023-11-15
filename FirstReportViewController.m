@@ -1102,7 +1102,7 @@ BOOL isOpenFisrReport = NO;
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_Pig"]];
                              //**code added below for bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"pig(s) ("];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -%ld %@%@) ",maxCount,tmptranslated,strActiveAnimalreportType];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@%@) ",maxCount,tmptranslated,strActiveAnimalreportType];
                              self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                             //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"pig(s) ("]]] stringByAppendingString:strActiveAnimalreportType] stringByAppendingString:@")"];//
@@ -1123,7 +1123,7 @@ BOOL isOpenFisrReport = NO;
                              [arrReports addObjectsFromArray:[dictResponse objectForKey:@"_OpenSow"]];
                              //**code added below for bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ ",maxCount,tmptranslated];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ ",maxCount,tmptranslated];
                              self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                             // self.lblHeader.text = [strRec stringByAppendingString:[NSString stringWithFormat:@" %@",[self getTranslatedTextForString:@"open gilt(s)/sow(s) in herd"]]];
@@ -1148,7 +1148,7 @@ BOOL isOpenFisrReport = NO;
                              strToday = [self displayDate:strToday];
                              //***code added for Bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"gilt(s) in herd on"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ on %@",maxCount,tmptranslated,strToday];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ on %@",maxCount,tmptranslated,strToday];
                              self.lblHeader.text =tmpHeader;
                           //*** code commented below for 27970 By M.
                          //    self.lblHeader.text = [[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"gilt(s) in herd on"]]] stringByAppendingString:strToday];
@@ -1170,7 +1170,7 @@ BOOL isOpenFisrReport = NO;
                              //***code added for Bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"weaned sow(s) not served by"];
                              NSString *strDaysSinceWean = [dictHeaders valueForKey:@"DaysSinceWean"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -  %ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceWean];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceWean];
                              self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"weaned sow(s) not served by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceWean"]] stringByAppendingString:@" days"];//21
@@ -1192,7 +1192,7 @@ BOOL isOpenFisrReport = NO;
                              //***code added for Bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"lactating sow(s) not weaned by"];
                              NSString *strDaysSinceFarrow = [dictHeaders valueForKey:@"DaysSinceFarrow"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceFarrow];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ on %@ days",maxCount,tmptranslated,strDaysSinceFarrow];
                              self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"lactating sow(s) not weaned by"]]] stringByAppendingString:[dictHeaders valueForKey:@"DaysSinceFarrow"]] stringByAppendingString:@" days"];//21
@@ -1224,7 +1224,7 @@ BOOL isOpenFisrReport = NO;
                              strEnd = [self displayDate:strEnd];
                              //***code added for Bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"sow(s) due between"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total -  %ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
                              self.lblHeader.text =tmpHeader;
                                 //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
@@ -1257,7 +1257,7 @@ BOOL isOpenFisrReport = NO;
                              strEnd = [self displayDate:strEnd];
                              //***code added for Bug-28008 By M.
                              NSString *tmptranslated = [self getTranslatedTextForString:@"sow(s) due between"];
-                             NSString *tmpHeader = [NSString stringWithFormat: @"Total - %ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
+                             NSString *tmpHeader = [NSString stringWithFormat: @"%ld %@ %@ and %@",maxCount,tmptranslated,strStart,strEnd];
                              self.lblHeader.text =tmpHeader;
                              //**commented below for bug-27970 By M.
                              //self.lblHeader.text = [[[[strRec stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"sow(s) due between"]]] stringByAppendingString:strStart] stringByAppendingString:[NSString stringWithFormat:@" %@ ",[self getTranslatedTextForString:@"and"]]] stringByAppendingString:strEnd];
