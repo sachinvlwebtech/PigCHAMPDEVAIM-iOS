@@ -30,6 +30,8 @@ BOOL isRFIDCalled = NO;
 BOOL isOpenDynamic = NO;
 BOOL isThousandFormat = NO;
 BOOL isGestationWarnLengthflg = 0;
+BOOL dateDelFlg = FALSE;
+NSString* dateDeliveredValue;
 
 @interface DynamicFormViewController ()
 {
@@ -2663,7 +2665,9 @@ float animatedDistance;
             
             NSLog(@"_dictDynamic %@",_dictDynamic);
             NSLog(@"dictJson %@",dictJson);
-            
+            //***code added below for Bug-28446 and 28145 By M.
+            dateDeliveredValue = [_dictDynamic objectForKey:@"Date Delivered"];
+            dateDelFlg = TRUE;
             [_dictDynamic removeAllObjects];
             [dictJson removeAllObjects];
             
@@ -2711,6 +2715,7 @@ float animatedDistance;
             }
             
             [self fillDefaultValuesForMandatoryFields];
+            dateDelFlg = FALSE;
         }else{
             [_dictDynamic removeAllObjects];
             [dictJson removeAllObjects];
@@ -2803,81 +2808,88 @@ float animatedDistance;
             }
            
            ///***added for checking DOB Bug-27777 By M.
-        /*
-            if ([[dict valueForKey:@"dk"] integerValue] == 35)
-            {
-                NSString *str  = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
-                NSString *dobString,*tmpdateStr1,*tmpdateStr2;
-                NSDate *newDob,*newtmpDate1,*newtmpDate2;
-                NSDateFormatter *inputFormatter = [[NSDateFormatter alloc]init];
-                [inputFormatter setDateFormat:@"MM-dd-yyyy"];
-                NSDateFormatter *inputFormatter1 = [[NSDateFormatter alloc]init];
-                [inputFormatter1 setDateFormat:@"yyyy-MM-dd"];
-                for (NSString *key in _dictDynamic) {
-                    if ([key isEqualToString:@"Date of Birth"]) {
-                        dobString = _dictDynamic[key];
-                        newDob = [inputFormatter dateFromString:dobString];
-                        if (newDob){
+          /*  if (strEventCode.integerValue == 6){
+                if ([[dict valueForKey:@"dk"] integerValue] == 35)
+                {
+                    NSString *str  = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
+                    NSString *dobString,*tmpdateStr1,*tmpdateStr2;
+                    NSDate *newDob,*newtmpDate1,*newtmpDate2;
+                    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc]init];
+                    [inputFormatter setDateFormat:@"dd/MM/yy"];//@"MM-dd-yyyy"];
+                    //NSDateFormatter *inputFormatter1 = [[NSDateFormatter alloc]init];
+                    //[inputFormatter1 setDateFormat:@"yyyy-MM-dd"];
+                    for (NSString *key in _dictDynamic) {
+                        if ([key isEqualToString:@"Date of Birth"]) {
+                            dobString = _dictDynamic[key];
+                            if(dobString){
+                                newDob = [inputFormatter dateFromString:dobString];
+                            }
+                           // if (newDob){
+                                
+                             //   dobString = [inputFormatter stringFromDate:newDob];
+                            //}
+                        }else if ([key isEqualToString:@"Date Last Weaned"]) {
+                            tmpdateStr1 = _dictDynamic[key];
+                            if(tmpdateStr1){
+                                newtmpDate1 = [inputFormatter dateFromString:tmpdateStr1];
+                            }
+                           // if (newtmpDate1){
+                                
+                               // tmpdateStr1 = [inputFormatter stringFromDate:newtmpDate1];
+                           // }
                             
-                            dobString = [inputFormatter1 stringFromDate:newDob];
-                        }
-                    }else if ([key isEqualToString:@"Date Last Weaned"]) {
-                        tmpdateStr1 = _dictDynamic[key];
-                        newtmpDate1 = [inputFormatter dateFromString:tmpdateStr1];
-                        if (newtmpDate1){
                             
-                            tmpdateStr1 = [inputFormatter1 stringFromDate:newtmpDate1];
-                        }
-                        
-                        
-                    }else if ([key isEqualToString:@"Date Last Served"]) {
-                        tmpdateStr2 = _dictDynamic[key];
-                        newtmpDate2 = [inputFormatter dateFromString:tmpdateStr2];
-                        if (newtmpDate2){
-                            
-                            tmpdateStr2 = [inputFormatter1 stringFromDate:newtmpDate2];
+                        }else if ([key isEqualToString:@"Date Last Served"]) {
+                            tmpdateStr2 = _dictDynamic[key];
+                            if(tmpdateStr2){
+                                newtmpDate2 = [inputFormatter dateFromString:tmpdateStr2];
+                            }
+                            //if (newtmpDate2){
+                                
+                               // tmpdateStr2 = [inputFormatter stringFromDate:newtmpDate2];
+                            //}
                         }
                     }
-                }
-                
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                NSDate *dobDate = [dateFormatter dateFromString: dobString];
-                NSDate *date1 = [dateFormatter dateFromString: tmpdateStr1];
-                NSDate *date2 = [dateFormatter dateFromString: tmpdateStr2];
-
-                BOOL isDOBOlder = [self isDOB:dobDate olderThanDate:date1 andDate:date2];
-
-                if (!isDOBOlder)
-                    {
-                    NSLog(@"DOB is Not older than date1 and date2");
-                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-                                                                                               message:[self getTranslatedTextForString:@" Date of Birth Can't be earlier than Last weaned or Last served date"]
-                                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                    //** added Pigchamp logo on alert Bug-27920 by M.
-                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
-                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
-                    UIView *controllerView = myAlertController.view;
-                    [controllerView addSubview:logoImageView];
-                    [controllerView bringSubviewToFront:logoImageView];
                     
-                    UIAlertAction* ok = [UIAlertAction
-                                         actionWithTitle:strOk
-                                         style:UIAlertActionStyleDefault
-                                         handler:^(UIAlertAction * action){
-                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
-                    }];
-
-                    [myAlertController addAction: ok];
-                    [self presentViewController:myAlertController animated:YES completion:nil];
-
-                         return;
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                   // [dateFormatter setDateFormat:@"dd/MM/yy"];//@"yyyy-MM-dd"];
+                    //NSDate *dobDate = [dateFormatter dateFromString: dobString];
+                   // NSDate *date1 = [dateFormatter dateFromString: tmpdateStr1];
+                   // NSDate *date2 = [dateFormatter dateFromString: tmpdateStr2];
+                    
+                    BOOL isDOBOlder = [self isDOB:newDob olderThanDate:newtmpDate1 andDate:newtmpDate2];
+                    
+                    if (!isDOBOlder)
+                    {
+                        NSLog(@"DOB is Not older than date1 and date2");
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                   message:[self getTranslatedTextForString:@" Date of service must be after date of Birth."]
+                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
+                        UIAlertAction* ok = [UIAlertAction
+                                             actionWithTitle:strOk
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action){
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                        
+                        [myAlertController addAction: ok];
+                        [self presentViewController:myAlertController animated:YES completion:nil];
+                        
+                        return;
+                    }
+                    else {
+                        NSLog(@"DOB is older than date1 and date2");
+                    }
+                    
+                    
                 }
-                 else {
-                    NSLog(@"DOB is  older than date1 and date2");
-                }
-               
-                                        
             }*/
              //*******Code change on 16th May by Priyanka bugnet 20927***********//
             
@@ -3570,21 +3582,38 @@ float animatedDistance;
                 }];
                 
                 NSPredicate  *predicate;
-                
+                NSArray *resultArray;
+                NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
                 if (strBarn.length>0 && strRoom.length>0 && strPen.length>0) {
-                    predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND pn=%@",strBarn?strBarn:@"", strRoom?strRoom:@"",strPen?strPen:@""];
+                   // predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND pn=%@",strBarn?strBarn:@"", strRoom?strRoom:@"",strPen?strPen:@""];
+                    //***commented above condition for Bug-27877 By M.
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:[NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND pn=%@",strBarn,strRoom,strPen] andSortDescriptors:@[sortBy]];
                 }else if (strRoom.length>0 && strBarn.length>0){
-                    predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND pn=nil",strBarn?strBarn:@"", strRoom?strRoom:@""];
+                    //predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND pn=nil",strBarn?strBarn:@"", strRoom?strRoom:@""];
+                    //***commented above condition for Bug-27877 By M.
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:[NSPredicate predicateWithFormat:@"br = %@ AND rm = %@ AND (pn = nil OR pn = '')", strBarn, strRoom] andSortDescriptors:@[sortBy]];
+
                 }else {
-                    predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = nil AND pn=nil",strBarn?strBarn:@""];
+                    //predicate= [NSPredicate predicateWithFormat:@"br = %@ AND rm = nil AND pn=nil",strBarn];//,strBarn?strBarn:@""];
+                    //***commented above condition for Bug-27877 By M.
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:[NSPredicate predicateWithFormat:@"br = %@ AND (rm == nil OR rm == '' OR rm = NULL) AND (pn == nil OR pn == '' OR pn = NULL)", strBarn]
+                                                                     andSortDescriptors:@[sortBy]];
                 }
                 
                 NSLog(@"strRoom=%@",strPen);
                 NSLog(@"strRoom=%@",strRoom);
+                NSLog(@"Predicate: %@", predicate);
+              /*  NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+                NSArray *resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:predicate andSortDescriptors:[[NSArray alloc] initWithObjects:sortBy, nil]]; */
+               //***predicate is changed as the resultArray should get some value for bug-27877 By M.
+                //NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+
+               // NSArray *resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:[NSPredicate predicateWithFormat:@"br = %@", strBarn] andSortDescriptors:@[sortBy]];
                 
-                NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
-                NSArray *resultArray = [[CoreDataHandler sharedHandler] getValuesBarnRoomPen:@"Locations" column:@"id" andPredicate:predicate andSortDescriptors:[[NSArray alloc] initWithObjects:sortBy, nil]];
-                
+
+                NSLog(@"All records for br %@: %@", strBarn, resultArray);
+
+                NSLog(@"Result Array: %@", resultArray);
                 for (int count=0; count<resultArray.count; count++) {
                     strValue = [[resultArray objectAtIndex:count] valueForKey:@"id"];
                 }
@@ -6306,153 +6335,160 @@ float animatedDistance;
                 [self fillDropDn:0 dict:dict];
             }
             else if ([strDataType isEqualToString:@"Date"] && [[dict valueForKey:@"dk"] integerValue]==2){
-                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                
-                NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init] ;
-                [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
-                
-                NSString *prevDate=[pref valueForKey:@"PrevSelectedDate"];
-                NSString *strSelectedDate;
-                NSString *strSelectedDatee;
-                
-                // prevDate=@"24/4/2017";
-                
-                if (prevDate.length==0) {
-                    strSelectedDate = [dateFormatterr stringFromDate:[NSDate date]];
-                }else{
-                    strSelectedDate = prevDate;
-                }
-                //SDate *dt2=[NSDate date];;
-                [dateFormatterr setDateFormat:@"YYYYMMdd"];
-                if (prevDate.length==0) {
-                    strSelectedDatee = [dateFormatterr stringFromDate:[NSDate date]];
-                    // dt2=[NSDate date];
-                }else{
-                    [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
-                    NSDate *dt2 = [dateFormatterr dateFromString:prevDate];
-                    [dateFormatterr setDateFormat:@"YYYYMMdd"];
-                    strSelectedDatee = [dateFormatterr stringFromDate:dt2];
-                }
-                
-                [dictJson setValue:strSelectedDatee forKey:[dict valueForKey:@"dk"]];
-                
-                if (isThousandFormat) {
-                    NSString *strBaseDate = [pref valueForKey:@"ZD"];
-                    [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
-                    NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDate];
-                    [dateFormatterr setDateFormat:@"YYYYMMdd"];
-                    NSDate *BaseDate = [dateFormatterr dateFromString:strBaseDate];
-                    int days = [dtselectedDate timeIntervalSinceDate:BaseDate]/24/60/60;
-                    
-                    NSString *strDate = [NSString stringWithFormat:@"%05d",days];
-                    NSString *calFormat,*strFromString;
-                    
-                    if (strDate.length>=2) {
-                        calFormat = [strDate substringToIndex:2];
-                    }else{
-                        calFormat = strDate;
-                    }
-                    
-                    if (strDate.length>=3){
-                        strFromString = [strDate substringFromIndex:2];
-                    }
-                    
-                    calFormat = [[calFormat stringByAppendingString:@"-"] stringByAppendingString:strFromString?strFromString:@""];
-                    [dateFormatterr setDateFormat:@"EEE,dd-MMM-yyyy"];
-                    
-                    NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
-                    [_dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
-                    //*** changed below code for strDateFormat due to User_Paramters APi changes By M.
-                //}else if([self.strDateFormat isEqualToString:@"6"]){
-                }else if([_strDateFormat isEqualToString:@"6"]){
-                    // NSString *strBaseDate = [pref valueForKey:@"ZD"];
-                    [dateFormatterr setDateFormat:@"YYYYMMdd"];
-                    [dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-                    
-                    //  [dateFormatterr setTimeZone:[NSTimeZone defaultTimeZone]];
-                    NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDatee];
-                    NSDate *Firstdate= [self getFirstDateOfCurrentYear:dtselectedDate];
-                    // NSTimeZone *tz = [NSTimeZone defaultTimeZone];
-                    //[dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
-                    
-                    NSInteger days=[self daysBetweenDate:Firstdate andDate:dtselectedDate];
-                    NSLog(@"days:%ld",days);
-                    
-                    NSString *strDate = [NSString stringWithFormat:@"%03li",days];
-                    [dateFormatterr setDateFormat:@"yy"];
-                    NSString *strSelectedDateyearformat = [[[dateFormatterr stringFromDate:dtselectedDate] stringByAppendingString:@"-"] stringByAppendingString:strDate];
-                    [dateFormatterr setDateFormat:@"EEE,dd-MMM-yyyy"];
-                    
-                    /***************/
-                    
-                    NSString *strSelectedDateDayOFYear = [[strSelectedDateyearformat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
-                    
-                    /*****************/
-                    
-                    // NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];6
-                    //[_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
-                    [_dictDynamic setValue:strSelectedDateDayOFYear forKey:[dict valueForKey:@"Lb"]];
-                }
-                //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
-                else if([_strDateFormat isEqualToString:@"3"]){
-                    
-                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
-                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
-
-                    // Create a date formatter for the desired output format
-                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
-                    [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
-
-                    // Format the date to the desired output format
-                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
-                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
-                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
-                else if([_strDateFormat isEqualToString:@"4"]){
-                    
-                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
-                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
-
-                    // Create a date formatter for the desired output format
-                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
-                    [outputDateFormatter setDateFormat:@"MM/dd/yy"];
-
-                    // Format the date to the desired output format
-                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
-                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
-                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
-                else if([_strDateFormat isEqualToString:@"5"]){
-                    
-                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
-                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
-
-                    // Create a date formatter for the desired output format
-                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
-                    [outputDateFormatter setDateFormat:@"dd/MM/yy"];
-
-                    // Format the date to the desired output format
-                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
-                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
-                }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
-                else if([_strDateFormat isEqualToString:@"8"]){
-                    
-                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"yyyyMMdd"];
-                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
-
-                    // Create a date formatter for the desired output format
-                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
-                    [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
-
-                    // Format the date to the desired output format
-                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
-                    [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                //***code added below with if condition and keep all other logic of dateformat in else for Bug-28446 and 28145 By M.
+                if (dateDelFlg){
+                    [_dictDynamic setValue:dateDeliveredValue forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:dateDeliveredValue forKey:[dict valueForKey:@"dk"]];
                 }
                 else{
+                    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
                     
-                    [_dictDynamic setValue:strSelectedDate forKey:[dict valueForKey:@"Lb"]];
+                    NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init] ;
+                    [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+                    
+                    NSString *prevDate=[pref valueForKey:@"PrevSelectedDate"];
+                    NSString *strSelectedDate;
+                    NSString *strSelectedDatee;
+                    
+                    // prevDate=@"24/4/2017";
+                    
+                    if (prevDate.length==0) {
+                        strSelectedDate = [dateFormatterr stringFromDate:[NSDate date]];
+                    }else{
+                        strSelectedDate = prevDate;
+                    }
+                    //SDate *dt2=[NSDate date];;
+                    [dateFormatterr setDateFormat:@"YYYYMMdd"];
+                    if (prevDate.length==0) {
+                        strSelectedDatee = [dateFormatterr stringFromDate:[NSDate date]];
+                        // dt2=[NSDate date];
+                    }else{
+                        [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+                        NSDate *dt2 = [dateFormatterr dateFromString:prevDate];
+                        [dateFormatterr setDateFormat:@"YYYYMMdd"];
+                        strSelectedDatee = [dateFormatterr stringFromDate:dt2];
+                    }
+                    
+                    [dictJson setValue:strSelectedDatee forKey:[dict valueForKey:@"dk"]];
+                    
+                    if (isThousandFormat) {
+                        NSString *strBaseDate = [pref valueForKey:@"ZD"];
+                        [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+                        NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDate];
+                        [dateFormatterr setDateFormat:@"YYYYMMdd"];
+                        NSDate *BaseDate = [dateFormatterr dateFromString:strBaseDate];
+                        int days = [dtselectedDate timeIntervalSinceDate:BaseDate]/24/60/60;
+                        
+                        NSString *strDate = [NSString stringWithFormat:@"%05d",days];
+                        NSString *calFormat,*strFromString;
+                        
+                        if (strDate.length>=2) {
+                            calFormat = [strDate substringToIndex:2];
+                        }else{
+                            calFormat = strDate;
+                        }
+                        
+                        if (strDate.length>=3){
+                            strFromString = [strDate substringFromIndex:2];
+                        }
+                        
+                        calFormat = [[calFormat stringByAppendingString:@"-"] stringByAppendingString:strFromString?strFromString:@""];
+                        [dateFormatterr setDateFormat:@"EEE,dd-MMM-yyyy"];
+                        
+                        NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
+                        [_dictDynamic setValue:strSelectedDate100 forKey:[dict valueForKey:@"Lb"]];
+                        //*** changed below code for strDateFormat due to User_Paramters APi changes By M.
+                        //}else if([self.strDateFormat isEqualToString:@"6"]){
+                    }else if([_strDateFormat isEqualToString:@"6"]){
+                        // NSString *strBaseDate = [pref valueForKey:@"ZD"];
+                        [dateFormatterr setDateFormat:@"YYYYMMdd"];
+                        [dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+                        
+                        //  [dateFormatterr setTimeZone:[NSTimeZone defaultTimeZone]];
+                        NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDatee];
+                        NSDate *Firstdate= [self getFirstDateOfCurrentYear:dtselectedDate];
+                        // NSTimeZone *tz = [NSTimeZone defaultTimeZone];
+                        //[dateFormatterr setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                        
+                        NSInteger days=[self daysBetweenDate:Firstdate andDate:dtselectedDate];
+                        NSLog(@"days:%ld",days);
+                        
+                        NSString *strDate = [NSString stringWithFormat:@"%03li",days];
+                        [dateFormatterr setDateFormat:@"yy"];
+                        NSString *strSelectedDateyearformat = [[[dateFormatterr stringFromDate:dtselectedDate] stringByAppendingString:@"-"] stringByAppendingString:strDate];
+                        [dateFormatterr setDateFormat:@"EEE,dd-MMM-yyyy"];
+                        
+                        /***************/
+                        
+                        NSString *strSelectedDateDayOFYear = [[strSelectedDateyearformat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
+                        
+                        /*****************/
+                        
+                        // NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];6
+                        //[_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
+                        [_dictDynamic setValue:strSelectedDateDayOFYear forKey:[dict valueForKey:@"Lb"]];
+                    }
+                    //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                    else if([_strDateFormat isEqualToString:@"3"]){
+                        
+                        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+                        
+                        // Create a date formatter for the desired output format
+                        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                        [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+                        
+                        // Format the date to the desired output format
+                        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                        [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                    else if([_strDateFormat isEqualToString:@"4"]){
+                        
+                        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+                        
+                        // Create a date formatter for the desired output format
+                        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                        [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+                        
+                        // Format the date to the desired output format
+                        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                        [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                    else if([_strDateFormat isEqualToString:@"5"]){
+                        
+                        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+                        
+                        // Create a date formatter for the desired output format
+                        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                        [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+                        
+                        // Format the date to the desired output format
+                        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                        [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
+                    else if([_strDateFormat isEqualToString:@"8"]){
+                        
+                        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
+                        
+                        // Create a date formatter for the desired output format
+                        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                        [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+                        
+                        // Format the date to the desired output format
+                        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                        [_dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                    }
+                    else{
+                        
+                        [_dictDynamic setValue:strSelectedDate forKey:[dict valueForKey:@"Lb"]];
+                    }
                 }
             }
             else if ([strDataType isEqualToString:@"TextField"] && [strFromDataEntry isEqualToString:@"0"]){
@@ -8589,7 +8625,7 @@ float animatedDistance;
 }
 - (BOOL)isDOB:(NSDate *)dobDate olderThanDate:(NSDate *)date1 andDate:(NSDate *)date2 {
         // Compare the DOB date with date1 and date2
-        if ([dobDate compare:date1] == NSOrderedAscending && [dobDate compare:date2] == NSOrderedAscending) {
+        if ([dobDate compare:date1] == NSOrderedAscending || [dobDate compare:date2] == NSOrderedAscending) {
             // DOB is older than date1 and date2
             return YES;
         }
