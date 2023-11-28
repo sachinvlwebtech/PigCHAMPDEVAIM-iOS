@@ -940,7 +940,34 @@ BOOL isOpenSearch = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     });
-    [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+    //***commented below code by M for showing the alert if the bluetooth device already connected bug-27371
+   /* [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"error :%@", error);
+        }
+        else{
+            NSLog(@"You make it! Well done!!!");
+        }
+    }];*/
+    NSArray *accessories = [[EAAccessoryManager sharedAccessoryManager]
+                             connectedAccessories];
+    if (accessories)
+    {
+        for (EAAccessory *obj in accessories){
+            EADSessionController *sessionController = [EADSessionController  sharedController];
+            [sessionController setupControllerForAccessory:obj
+                                        withProtocolString:@""];
+            [sessionController openSession];
+            
+            UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP" message:[self getTranslatedTextForString:@"Bluetooth device is already connected"] preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
+                                        {
+            }]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+    }
+    else{
+        [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
         if (error) {
             NSLog(@"error :%@", error);
         }
@@ -948,6 +975,8 @@ BOOL isOpenSearch = NO;
             NSLog(@"You make it! Well done!!!");
         }
     }];
+    }
+    
 }
 
 - (void)accessoryConnectedOnSearch:(NSNotification *)notification

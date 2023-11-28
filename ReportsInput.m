@@ -2629,7 +2629,34 @@ BOOL isThousandFormatReport = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     });
-    [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+    //***commented below code by M for showing the alert if the bluetooth device already connected bug-27371
+   /* [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"error :%@", error);
+        }
+        else{
+            NSLog(@"You make it! Well done!!!");
+        }
+    }];*/
+    NSArray *accessories = [[EAAccessoryManager sharedAccessoryManager]
+                             connectedAccessories];
+    if (accessories)
+    {
+        for (EAAccessory *obj in accessories){
+            EADSessionController *sessionController = [EADSessionController  sharedController];
+            [sessionController setupControllerForAccessory:obj
+                                        withProtocolString:@""];
+            [sessionController openSession];
+            
+            UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP" message:[self getTranslatedTextForString:@"Bluetooth device is already connected"] preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
+                                        {
+            }]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+    }
+    else{
+        [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
         if (error) {
             NSLog(@"error :%@", error);
         }
@@ -2637,6 +2664,7 @@ BOOL isThousandFormatReport = NO;
             NSLog(@"You make it! Well done!!!");
         }
     }];
+    }
 }
 
 - (void)accessoryConnectedOnReports:(NSNotification *)notification
@@ -2704,8 +2732,8 @@ BOOL isThousandFormatReport = NO;
             NSMutableDictionary *dictHeaders = [[NSMutableDictionary alloc]init];
             //  [dict setValue:[[NSUserDefaults standardUserDefaults] objectForKey:@"token"] forKey:@"token"];
             //    [dict setValue:transponder forKey:@"transponder"];
-            
-            
+           // transponder = @"982000062204796";
+           // NSLog(@"The Token is ^^^^^^^^^^^^^^^^^^^^^^%@",dictHeaders);
             [ServerManager sendRequest:[NSString stringWithFormat:@"token=%@&transponder=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],transponder] idOfServiceUrl:15 headers:dictHeaders methodType:@"GET" onSucess:^(NSString *responseData) {
                 [_customIOS7AlertView close];
                 

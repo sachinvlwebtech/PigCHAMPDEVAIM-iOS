@@ -2292,10 +2292,11 @@ float animatedDistance;
             transponder = [transponder stringByTrimmingCharactersInSet:characterSet];
             
             NSMutableDictionary *dictHeaders = [[NSMutableDictionary alloc]init];
+            
             [dict setValue:[[NSUserDefaults standardUserDefaults] objectForKey:@"token"] forKey:@"token"];
             [dict setValue:transponder forKey:@"transponder"];
-            
-            
+            //transponder = @"982000062204796";//@"985152001342994";
+            //NSLog(@"The Token is ^^^^^^^^^^^^^^^^^^^^^^%@",dictHeaders);
             [ServerManager sendRequest:[NSString stringWithFormat:@"token=%@&transponder=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],transponder] idOfServiceUrl:15 headers:dictHeaders methodType:@"GET" onSucess:^(NSString *responseData) {
                 [_customIOS7AlertView close];
                 
@@ -6552,7 +6553,11 @@ float animatedDistance;
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
                     }//51 = 0,57 = 1 Nurse sow wean
-                    
+                    //***added below condition for Avg.Piglet Age default to 0 Bug- 28603
+                    else if ([[dict valueForKey:@"dk"] integerValue]==58){
+                        [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
+                    }
                     //For setting default value 0
                     if ([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]){
                         NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
@@ -8778,7 +8783,42 @@ float animatedDistance;
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     });
-    [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+   // NSArray *accessories = [[EAAccessoryManager sharedAccessoryManager]
+                            //connectedAccessories];
+    //EAAccessory *accessory = nil;
+
+    //for (EAAccessory *obj in accessories)
+    //{
+     //   NSLog(@"Found accessory named: %@", obj.name);
+    //}
+    //***commented below code by M for showing the alert if the bluetooth device already connected bug-27371
+   /* [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"error :%@", error);
+        }
+        else{
+            NSLog(@"You make it! Well done!!!");
+        }
+    }];*/
+    NSArray *accessories = [[EAAccessoryManager sharedAccessoryManager]
+                             connectedAccessories];
+    if (accessories)
+    {
+        for (EAAccessory *obj in accessories){
+            EADSessionController *sessionController = [EADSessionController  sharedController];
+            [sessionController setupControllerForAccessory:obj
+                                        withProtocolString:@""];
+            [sessionController openSession];
+            
+            UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP" message:[self getTranslatedTextForString:@"Bluetooth device is already connected"] preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
+                                        {
+            }]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+    }
+    else{
+        [[EAAccessoryManager sharedAccessoryManager] showBluetoothAccessoryPickerWithNameFilter:nil completion:^(NSError *error) {
         if (error) {
             NSLog(@"error :%@", error);
         }
@@ -8786,6 +8826,7 @@ float animatedDistance;
             NSLog(@"You make it! Well done!!!");
         }
     }];
+    }
 }
 
 - (void)accessoryConnected:(NSNotification *)notification
