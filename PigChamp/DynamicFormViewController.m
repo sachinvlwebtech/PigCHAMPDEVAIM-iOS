@@ -923,8 +923,10 @@ NSString* dateDeliveredValue;
             cell.btnDetail.titleLabel.textAlignment = NSTextAlignmentCenter;//UITextAlignmentCenter
             cell.btnDetail.layer.borderColor =[[UIColor colorWithRed:206.0/255.0 green:208.0/255.0 blue:206.0/255.0 alpha:1] CGColor];
             [cell.btnDetail setTitle:[_dictDynamic valueForKey:[dict valueForKey:@"Lb"]] forState:UIControlStateNormal];
-            
-            //
+            //***code added for getting value for date for bug -28145
+            if ([[dict valueForKey:@"dk"] integerValue] == 2) {
+                dateDeliveredValue = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
+            }//
             /*
             NSString *newDateString = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
             
@@ -1630,13 +1632,33 @@ NSString* dateDeliveredValue;
             }
         }
         //***code added for Bug-28584 By M.
-        else if ([[dict valueForKey:@"dk"]integerValue]==57) {
+        /*else if ([[dict valueForKey:@"dk"]integerValue]==57) {
             if([string isEqualToString:@""]){
                 return NO;
             }else{
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
                 return YES;
+            }
+        }*/
+        else if ([[dict valueForKey:@"dk"]integerValue]==57) {
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSCharacterSet *characterSet = nil;
+            characterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+            NSRange location = [string rangeOfCharacterFromSet:characterSet];
+            
+            if ((location.location != NSNotFound) && (newString.length < 3)){
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return ((location.location != NSNotFound) && (newString.length < 3));
+            }
+            else {
+                return NO;
             }
         }
             else if ([[dict valueForKey:@"dk"]integerValue]==51) {
@@ -2667,7 +2689,44 @@ float animatedDistance;
             NSLog(@"_dictDynamic %@",_dictDynamic);
             NSLog(@"dictJson %@",dictJson);
             //***code added below for Bug-28446 and 28145 By M.
-            dateDeliveredValue = [_dictDynamic objectForKey:@"Date Delivered"];
+           // dateDeliveredValue = [_dictDynamic objectForKey:@"Date Delivered"];
+          /*  NSString *tmpDate = [dictJson valueForKey:@"2"];
+            
+            // Create a date formatter for the input date format
+                   NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                   [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                   
+                   // Convert the input string to an NSDate
+                   NSDate *inputDate = [inputDateFormatter dateFromString:tmpDate];
+       
+                   // Create a date formatter for the output date format
+                   NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+           
+            if([_strDateFormat isEqualToString:@"3"]){
+                [outputDateFormatter setDateFormat:@"dd-MMM-yyyy"];
+                
+            }else if([_strDateFormat isEqualToString:@"4"]){
+                [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+                
+            }else if([_strDateFormat isEqualToString:@"5"]){
+                [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+                
+            }else if([_strDateFormat isEqualToString:@"7"]){
+                [outputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                
+            }else if([_strDateFormat isEqualToString:@"8"]){
+                [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+                
+            }else if([_strDateFormat isEqualToString:@"1"]){
+                [outputDateFormatter setDateFormat:@"dd-MMM-yyyy"];
+                
+            }else if([_strDateFormat isEqualToString:@"6"]){
+                [outputDateFormatter setDateFormat:@"mm/dd/yy"];
+            }
+                   // Convert the NSDate to the desired output format
+                //   dateDeliveredValue= [outputDateFormatter stringFromDate:inputDate];
+                
+            */
             dateDelFlg = TRUE;
             [_dictDynamic removeAllObjects];
             [dictJson removeAllObjects];
@@ -3496,6 +3555,11 @@ float animatedDistance;
             case 29:
                 strServiceName = @"/SrvEVTFarrowing.svc/SaveEVTCompleteWeaning?";
                 break;
+                //***code added for Bug-28548 By M.
+            case 47:
+                strServiceName = @"/SrvEVTCommon.svc/SaveEventJson?";
+                break;
+                //"/SrvEVTCommon.svc/SaveEventJson/";
             default:
                 break;
         }
@@ -3685,6 +3749,11 @@ float animatedDistance;
                 NSString *strDate = [dateformate stringFromDate:[NSDate date]];
                 //
                 reqStringFUll  = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"SD\":\"%@\"",strDate]];
+                //***code added below for Bug-28548 By M.
+                if (strEventCode.integerValue == 47){
+                    reqStringFUll  = [reqStringFUll stringByAppendingString:@","];
+                    reqStringFUll  = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"EventCode\":\"47\""]];
+                }
                 reqStringFUll  = [reqStringFUll stringByAppendingString:@"}"];
             }
         }
@@ -5772,7 +5841,7 @@ float animatedDistance;
                 }
             }
                 break;
-                //***case added for Piglet_Defects by M. Bug-28548 By M.
+                //***code added for Piglet_Defects by M. Bug-28548 By M.
             case 152: {
                 NSArray* resultArray;
                 NSPredicate *predicate;
@@ -7607,7 +7676,42 @@ float animatedDistance;
                 }
             }
                 break;
-                
+                //***code added for Piglet_defects Bug-28548 By M.
+            case 152:{
+                if (flag == 1) {
+                    NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
+                    NSDictionary * dictDictDynamic = [pref objectForKey:@"lastSelectedDictDynamic"];
+                    [dictJson setValue:[dictJSON valueForKey:@"152"] forKey:[dict valueForKey:@"dk"]];
+                    [_dictDynamic setValue:[dictDictDynamic valueForKey:[dict valueForKey:@"Lb"]] forKey:[dict valueForKey:@"Lb"]];
+                }
+                else
+                {
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln" ascending:YES];
+                    sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                    NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Piglet_Defects" andPredicate:nil andSortDescriptors:sortDescriptors];
+                    
+                    for (int count=0; count<resultArray.count; count++){
+                        NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"] forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"] forKey:@"dataTosend"];
+                        
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                        //[_arrDropDown addObject:dict];
+                        
+                        if (strPrevSelectedValue.length>0)
+                        {
+                            if ([strPrevSelectedValue integerValue] == [[[resultArray objectAtIndex:count] valueForKey:@"id"] integerValue])
+                            {
+                                prevSelectedIndex = count;
+                            }
+                        }
+                    }
+                }
+            }
+                break;
             default:
             {
                 NSString *strDataType  = [self getViewType:[dict valueForKey:@"dt"]];
@@ -8506,6 +8610,19 @@ float animatedDistance;
                 }
                 else if ([Id isEqualToString:@"1"]){
                     [_dictDynamic setValue:@"Yes" forKey:[dict valueForKey:@"Lb"]];
+                }
+            }
+                break;
+                //***code added for Piglet_Defects Bug-28548 By M.
+            case 152: {
+                NSArray* resultArray;
+                NSPredicate *predicate;
+               
+                predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"id==%@",Id]];
+                resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Piglet_Defects" andPredicate:predicate andSortDescriptors:nil];
+                
+                if (resultArray.count>0) {
+                    [_dictDynamic setValue:[[resultArray objectAtIndex:0] valueForKey:@"ln"]?[[resultArray objectAtIndex:0] valueForKey:@"ln"]:@"" forKey:[dict valueForKey:@"Lb"]];
                 }
             }
                 break;
