@@ -31,6 +31,7 @@ BOOL isOpenDynamic = NO;
 BOOL isThousandFormat = NO;
 BOOL isGestationWarnLengthflg = 0;
 BOOL dateDelFlg = FALSE;
+BOOL isDateSelected = FALSE;
 NSString* dateDeliveredValue;
 
 @interface DynamicFormViewController ()
@@ -953,15 +954,20 @@ NSString* dateDeliveredValue;
             NSDate *dtCheckIn = [dateFormatterr1 dateFromString:[dictJson valueForKey:[dict valueForKey:@"dk"]]];
             
             int days = [dtCheckIn timeIntervalSinceDate:todayDate]/24/60/60;
-            
-            if (days==0){
-                [cell.btnDetail setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-            }else if (days==1) {
-                [cell.btnDetail setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-            }else {
+            //***code added for Bug-28565 By M.
+            if (isDateSelected){
                 [cell.btnDetail setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+                isDateSelected = FALSE;
             }
-            
+            else{
+                if (days==0){
+                    [cell.btnDetail setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+                }else if (days==1) {
+                    [cell.btnDetail setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+                }else {
+                    [cell.btnDetail setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+                }
+            }
             return cell;
         }else if ([strDataType isEqualToString:@"DropDown"]) {
             if ([[dict valueForKey:@"dk"] integerValue] == 6){
@@ -6312,12 +6318,15 @@ float animatedDistance;
             
             NSLog(@"buttonIndex=%d",buttonIndex);
             NSLog(@"dictjson=%@",weakSelf.dictJson);
-            
+            //***code added for Bug-28565 By M.
+            isDateSelected = TRUE;
             [weakSelf.tblDynamic reloadData];
+           
             [alertView close];
         }];
         
         [weakSelf.alertForPickUpDate setUseMotionEffects:true];
+      
     }
     @catch (NSException *exception) {
         NSLog(@"Exception =%@",exception.description);
@@ -6604,7 +6613,11 @@ float animatedDistance;
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
                     }//3 = 1 Batch weaning
-                    
+                    //***condition added below for default value Bug-28761 By M.
+                    if ([[dict valueForKey:@"dk"] integerValue]==51){
+                        [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
+                    }
                     //For setting default value 0
                     if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
                         NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
@@ -6614,10 +6627,11 @@ float animatedDistance;
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                     }//3 = 1 Batch weaning
                 }else if(strEventCode.integerValue ==31){
-                    if ([[dict valueForKey:@"dk"] integerValue]==54){
+                   // if ([[dict valueForKey:@"dk"] integerValue]==54){
                         //***condition changed below for Bug-28575 By M.
-                    //if ([[dict valueForKey:@"dk"] integerValue]==51 || [[dict valueForKey:@"dk"] integerValue]==54 || [[dict valueForKey:@"dk"] integerValue]==58){
+                    if ([[dict valueForKey:@"dk"] integerValue]==51 || [[dict valueForKey:@"dk"] integerValue]==54 || [[dict valueForKey:@"dk"] integerValue]==58){
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
                     }else if ([[dict valueForKey:@"dk"] integerValue]==57){
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
@@ -6668,8 +6682,13 @@ float animatedDistance;
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
                     }
-                }
-                else if(strEventCode.integerValue == 19){
+                }//***condition added for Bug-28761 By M.
+                else if(strEventCode.integerValue ==47){
+                    if ([[dict valueForKey:@"dk"] integerValue]==3){
+                        [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
+                    }
+                }else if(strEventCode.integerValue == 19){
                     if ([[dict valueForKey:@"dk"] integerValue]==12){
                         if (flag == 1){
 //                            NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];

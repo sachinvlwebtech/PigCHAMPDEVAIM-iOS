@@ -1109,7 +1109,13 @@ NSString *strEditTitle;
                 
                 [self.clHistory reloadData];
             }
+            //***code added for Bug-27931 By M.
             else {
+                
+                 [self.navigationController popViewControllerAnimated:YES];
+            }
+            //***commented below popup which was coming extra Bug-27931 By M.
+          /*  else {
                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                            message:[response valueForKey:@"Msg"]
                                                                                     preferredStyle:UIAlertControllerStyleAlert];
@@ -1128,7 +1134,7 @@ NSString *strEditTitle;
                 [myAlertController addAction: ok];
                 [self presentViewController:myAlertController animated:YES completion:nil];
             }
-            
+            */
             if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
             {
                 if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""])
@@ -1391,7 +1397,9 @@ NSString *strEditTitle;
                             }
                             else {
                                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-                                                                                                           message:[response valueForKey:@"Msg"]
+                                                                        //**commented for Bug-27930 By M.
+                                                                                                          // message:[response valueForKey:@"Msg"]
+                                                                                                           message:[response valueForKey:@"results"]
                                                                                                     preferredStyle:UIAlertControllerStyleAlert];
                                 UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
                                 logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];

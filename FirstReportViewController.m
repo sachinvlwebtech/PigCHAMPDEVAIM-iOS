@@ -940,7 +940,73 @@ BOOL isOpenFisrReport = NO;
         [formatter setDateFormat:@"EEE,dd-MMM-yyyy"];
         NSString *strSelectedDateDayOfyear = [[strSelectedDateyearformat stringByAppendingString:@" "] stringByAppendingString:[formatter stringFromDate:dtselectedDate]];
         return strSelectedDateDayOfyear;
-    }else{
+    }//***added below code for the Bug-27782 By M.
+     if([_strDateFormat isEqualToString:@"3"]){
+        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+        [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+        // Create a date formatter for the desired output format
+        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+        [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+        // Format the date to the desired output format
+        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+        return outputDateString;
+    }else if([_strDateFormat isEqualToString:@"4"]){
+        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+        [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+        // Create a date formatter for the desired output format
+        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+        [outputDateFormatter setDateFormat:@"MM/dd/yy"];
+
+        // Format the date to the desired output format
+        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+        return  outputDateString;
+    }else if([_strDateFormat isEqualToString:@"5"]){
+        //5 = dd/mm/yy        e.g. 09/10/23
+        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+        [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+        // Create a date formatter for the desired output format
+        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+        [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+
+        // Format the date to the desired output format
+        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+        return  outputDateString;
+    }else if([_strDateFormat isEqualToString:@"7"]){
+        //8 = dd/mm/yyyy        e.g. 09/10/2023
+        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+        [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+        // Create a date formatter for the desired output format
+        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+        [outputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+
+        // Format the date to the desired output format
+        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+        return  outputDateString;
+        
+    }else if([_strDateFormat isEqualToString:@"8"]){
+        //8 = dd/mm/yyyy        e.g. 09/10/2023
+        NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+        [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+        // Create a date formatter for the desired output format
+        NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+        [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+        // Format the date to the desired output format
+        NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+        return  outputDateString;
+    }
+    else{
         return strSelectedDate;
     }
 }
