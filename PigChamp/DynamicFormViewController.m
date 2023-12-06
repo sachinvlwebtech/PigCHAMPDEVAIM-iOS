@@ -463,7 +463,8 @@ NSString* dateDeliveredValue;
                 if ([strFromDataEntry isEqualToString:@"1"]) {
                     [self callEdit];
                 }
-                
+                //***code added for Bug-28565 By M.
+                isDateSelected = FALSE;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tblDynamic reloadData];
                 });
@@ -957,7 +958,7 @@ NSString* dateDeliveredValue;
             //***code added for Bug-28565 By M.
             if (isDateSelected){
                 [cell.btnDetail setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-                isDateSelected = FALSE;
+               // isDateSelected = FALSE;
             }
             else{
                 if (days==0){
@@ -1629,7 +1630,8 @@ NSString* dateDeliveredValue;
             }
         //***code added for Number of Piglet for Bug-
         else if ([[dict valueForKey:@"dk"]integerValue]==3) {
-            if([string isEqualToString:@""]){
+            //*** added spacing for backspace key was not working Bug-28773 By M.
+            if([string isEqualToString:@" "]){
                 return NO;
             }else{
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
