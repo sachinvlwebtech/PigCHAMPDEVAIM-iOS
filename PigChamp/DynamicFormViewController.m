@@ -33,7 +33,7 @@ BOOL isGestationWarnLengthflg = 0;
 BOOL dateDelFlg = FALSE;
 BOOL isDateSelected = FALSE;
 NSString* dateDeliveredValue;
-
+NSString* strSelectedDateMMM;
 @interface DynamicFormViewController ()
 {
     NSString* fullDataString,*strFromDropDownView;
@@ -3575,8 +3575,26 @@ float animatedDistance;
         NSString *reqStringFUll=@"{";
         NSInteger x = 0;
         
+       
         for (NSDictionary *dict in _arrDynamic) {
-            
+            //***added code below for bug-28565 By M.
+            if ([[dict valueForKey:@"dk"] integerValue] == 2){
+                if (strSelectedDateMMM == nil){
+                    NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
+                        [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
+                      
+                        strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
+                        strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                           withString:@""];
+                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                    }
+               else if ([[dictJson valueForKey:[dict valueForKey:@"dk"]] rangeOfString:@"-"].location != NSNotFound){
+                   
+                   strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                      withString:@""];
+                   [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+               }
+         }
             x++;
             NSString *strKey = [dict valueForKey:@"dk"]?[dict valueForKey:@"dk"]:@"";
             NSMutableString *strValue = [dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@"";
@@ -3744,7 +3762,47 @@ float animatedDistance;
                 
             }else {
                 NSString *strFromDataEntry = [[NSUserDefaults standardUserDefaults] valueForKey:@"FromDataEntry"];
-                
+                //*** code added to check if on same event entry view if user try to create new data entry(issue raised by Martin Bug-28565 By M.
+                // Extract the date string from the JSON
+                    /*    NSRange dateRange = [reqStringFUll rangeOfString:@"\\\"2\\\":\\\"([^\\\"]+)\\\"" options:NSRegularExpressionSearch];
+                        if (dateRange.location != NSNotFound) {
+    
+                            NSString *dateString = [reqStringFUll substringWithRange:NSMakeRange(dateRange.location + 6, dateRange.length - 9)];
+                            // Check if the date string contains "-" or "/"
+                            if ([dateString rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-/"]].location != NSNotFound) {
+                                // Try to parse the date with different formats
+                                NSArray *dateFormats = @[@"dd-MMM-yyyy", @"yyyy-MM-dd", @"dd/MM/yyyy", @"dd-MM-yyyy", @"yy-DDD", @"yy-ddd"];
+
+                                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                                
+                                NSDate *date = nil;
+                                for (NSString *format in dateFormats) {
+                                   [dateFormatter setDateFormat:format];
+                                   date = [dateFormatter dateFromString:dateString];
+                                    if (date) {
+                                        break;
+                                    }
+                            }
+                                
+                                if (date) {
+                                    // Format the date as "yyyyMMdd"
+                                    [dateFormatter setDateFormat:@"yyyyMMdd"];
+                                    NSString *convertedDateString = [dateFormatter stringFromDate:date];
+                                    
+                                    // Replace the original date string with the converted date string
+                                    NSString *modifiedString = [reqStringFUll stringByReplacingCharactersInRange:dateRange withString:[NSString stringWithFormat:@"\\\"2\\\":\\\"%@\\\"", convertedDateString]];
+                                    
+                                    NSLog(@"Modified String: %@", modifiedString);
+                                } else {
+                                    NSLog(@"Failed to parse date.");
+                                }
+                            } else {
+                                NSLog(@"Date string does not contain '-' or '/'. No conversion needed.");
+                            }
+                        } else {
+                            NSLog(@"Date not found in the input string.");
+                        }*/
+                //*** end of code By M.
                 if ([strFromDataEntry isEqualToString:@"1"]){
                     reqStringFUll  = [reqStringFUll stringByAppendingString:@","];
                     reqStringFUll  = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"eventid\":\"%@\"",[_dict valueForKey:@"EventKey"]]];
@@ -6188,10 +6246,11 @@ float animatedDistance;
                 [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
                // [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
                 // code added by M. End
-                NSString *strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
+                strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
                 strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                    withString:@""];
-                [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                //***commented below line cause of duplication By M.
+                //[weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
                 [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];//change strSelectedDate to strSelectedDateMMM
                 
                 if (isThousandFormat) {

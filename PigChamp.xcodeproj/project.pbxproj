@@ -1069,7 +1069,7 @@
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.15;
+				MARKETING_VERSION = 5.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1094,7 +1094,7 @@
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.15;
+				MARKETING_VERSION = 5.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
