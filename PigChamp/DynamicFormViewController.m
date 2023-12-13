@@ -1627,18 +1627,104 @@ NSString* strSelectedDateMMM;
             }
             else
                 return NO;
+            }//**code added for Identity bug-28802 by M.
+        if ([[dict valueForKey:@"dk"] integerValue]==60) {
+            NSCharacterSet *characterSet = nil;
+            characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+            NSRange location = [string rangeOfCharacterFromSet:characterSet];
+            
+            if (((location.location != NSNotFound) && (newString.length <=15)) || [string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                
+                return (((location.location != NSNotFound) && (newString.length <=15)) || [string isEqualToString:@""]);
             }
-        //***code added for Number of Piglet for Bug-
-        else if ([[dict valueForKey:@"dk"]integerValue]==3) {
-            //*** added spacing for backspace key was not working Bug-28773 By M.
-            if([string isEqualToString:@" "]){
+            else
                 return NO;
-            }else{
+        }
+        //******************************** By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==3) {
+            if([string isEqualToString:@""]){
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
                 return YES;
             }
-        }
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<=2)) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
+                }
+                else
+                    return NO;
+            }
+            else
+                return NO;
+            }
+        //**************
+        //***code added for Number of Piglet for Bug-28773 By M.
+     /*   else if ([[dict valueForKey:@"dk"]integerValue]==3) {
+            //*** added spacing for backspace key was not working Bug-28773 and added validation for length bug-28791 By M.
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
+            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
+            
+            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<= [strMaxVal length])) {
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890-"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                if([newString  isEqual: @"-"]){
+                    if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) || [newString  isEqual: @"-"]) {
+                        [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                        return ((((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) || [newString  isEqual: @"-"]));
+                    }
+                }else{
+                    NSArray *components = [newString componentsSeparatedByString:@"-"];
+                    if (components.count == 2) {
+                        NSString *firstPart = components[0];
+                        NSString *secondPart = components[1];
+                        
+                        NSLog(@"First part: %@", firstPart);   // Output: (empty string if not present)
+                        NSLog(@"Second part: %@", secondPart); // Output: 1
+                        if ([firstPart isEqual:@""]){
+                            if ((location.location != NSNotFound) && ([secondPart integerValue] >= [strMinVal integerValue] && [secondPart integerValue] <= [strMaxVal integerValue])) {
+                                [self.dictDynamic setValue:secondPart forKey:[dict valueForKey:@"Lb"]];
+                                [dictJson setValue:secondPart forKey:[dict valueForKey:@"dk"]];
+                                
+                                return ((location.location != NSNotFound) && ([secondPart integerValue] >= [strMinVal integerValue] && [secondPart integerValue] <= [strMaxVal integerValue]));
+                            }
+                        } else if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) || [newString  isEqual: @"-"]) {
+                            [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                            [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                            if([newString  isEqual: @"-"]){
+                                return ((((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) || [newString  isEqual: @"-"]));
+                            }
+                        }
+                        else
+                            return NO;
+                            // return ((((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) || [newString  isEqual: @"-"]));
+                        }
+                    }
+                   
+                }
+            else
+                return NO;
+            }
+        */
+        
         //***code added for Bug-28584 By M.
         /*else if ([[dict valueForKey:@"dk"]integerValue]==57) {
             if([string isEqualToString:@""]){
@@ -1669,11 +1755,12 @@ NSString* strSelectedDateMMM;
                 return NO;
             }
         }
-            else if ([[dict valueForKey:@"dk"]integerValue]==51) {
+        //***commented by M. for Bug-28773
+            /*else if ([[dict valueForKey:@"dk"]integerValue]==51) {
                 if([string isEqualToString:@""]){
                     return NO;
                 }
-            }
+            }*/
         //***end of by M.
         /*else if ([[dict valueForKey:@"dk"]integerValue]==20) {
             if([newString intValue] > 999){
@@ -1748,7 +1835,7 @@ NSString* strSelectedDateMMM;
             }
         }*/
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-           ///**** changed below length based for Bug 28054 partial fix By M.
+           ///**** changed below length based for Bug 28054 By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
             //if(newString.length > 8){
