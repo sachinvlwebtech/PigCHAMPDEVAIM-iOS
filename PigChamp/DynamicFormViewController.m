@@ -1835,10 +1835,12 @@ NSString* strSelectedDateMMM;
             }
         }*/
         else if ([[dict valueForKey:@"dk"]integerValue]==29) {
-           ///**** changed below length based for Bug 28054 By M.
+           ////**** changed below length based for Bug 28054 By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
-            //if(newString.length > 8){
+           // //if(newString.length > 8){
+            //**code condition below added by M.
+            //if(newString.length > maxtattolenghth){
             if(newString.length > maxtattolenghth){
                 return NO;
             }else {
