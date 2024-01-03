@@ -1537,7 +1537,8 @@ NSString* strSelectedDateMMM;
             }
         }*/
         //**added below condition Bugnet - 27946 by M.
-        else if (([[dict valueForKey:@"dk"]integerValue]==88) || ([[dict valueForKey:@"dk"]integerValue]==89) || ([[dict valueForKey:@"dk"]integerValue]==90) || ([[dict valueForKey:@"dk"]integerValue]==91)){
+        //***commented for 89 to 91 below condition for bug-28847 By M.
+        else if (([[dict valueForKey:@"dk"]integerValue]==88)){ //|| ([[dict valueForKey:@"dk"]integerValue]==89) || ([[dict valueForKey:@"dk"]integerValue]==90) || ([[dict valueForKey:@"dk"]integerValue]==91)){
             if([string isEqualToString:@" "]){
                 return NO;
             } //end of code by M.
@@ -1642,7 +1643,7 @@ NSString* strSelectedDateMMM;
             else
                 return NO;
         }
-        //******************************** By M.
+        //******************************** code addded for Bug 28781 By M.
         else if ([[dict valueForKey:@"dk"]integerValue]==3) {
             if([string isEqualToString:@""]){
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
@@ -1889,7 +1890,29 @@ NSString* strSelectedDateMMM;
             else{
                 return YES;
             }
-        }//***commented below code for checking max value as per Bug-27823
+        }//***added below code for bug-28847 by M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==30 || [[dict valueForKey:@"dk"]integerValue]==89 || [[dict valueForKey:@"dk"]integerValue]==90 || [[dict valueForKey:@"dk"]integerValue]==91) {
+            
+            if([string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return YES;
+            }
+            
+            NSCharacterSet *characterSet = nil;
+            characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"];
+            NSRange location = [string rangeOfCharacterFromSet:characterSet];
+            if ((location.location != NSNotFound) && (newString.length <= 15)) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                return (location.location != NSNotFound);
+            }
+            else{
+                return NO;
+            }
+        }
+        
+        //***commented below code for checking max value as per Bug-27823
        /* else if (([[dict valueForKey:@"dk"]integerValue]==10)) {//as per android bug : 17759
             if([string isEqualToString:@""]){
                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
