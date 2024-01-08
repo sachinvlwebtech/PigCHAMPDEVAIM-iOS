@@ -107,6 +107,8 @@
         self.txtURL.text = @"https://pcmobile.pigchamp.com";
     }else if([self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"]){
         self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+    }else if([self.txtURL.text isEqualToString:@""] || [self.txtURL.text isEqual:nil] || self.txtURL.text == nil){
+        self.txtURL.text = @"https://pcmobile.pigchamp.com";
     }
     //
     
