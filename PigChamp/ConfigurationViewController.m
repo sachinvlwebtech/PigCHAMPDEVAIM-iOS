@@ -99,7 +99,16 @@
 }
 
 - (IBAction)btnResetClicked:(id)sender {
-    self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+    //*** commented below line for the bug-28795
+    //self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+    
+    //***code added for Bug-28795 By M.
+    if ([self.txtURL.text isEqualToString:@"https://dev-pc-mobile.farmsstaging.com"]){
+        self.txtURL.text = @"https://pcmobile.pigchamp.com";
+    }else if([self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"]){
+        self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+    }
+    //
     
  // self.txtURL.text = @"https://pcmobile.pigchamp.com";
     
