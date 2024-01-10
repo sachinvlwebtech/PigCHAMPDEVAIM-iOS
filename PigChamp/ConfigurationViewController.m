@@ -34,7 +34,9 @@
             self.txtURL.text = [NSString stringWithFormat:@"%@", API_BASE_URL];
         }
     }
-    
+    //*** code for NO autocorrect By M.
+    _txtURL.autocorrectionType = UITextAutocorrectionTypeNo;
+    _txtURL.autocapitalizationType = UITextAutocapitalizationTypeNone;
    // self.txtURL.text = [NSString stringWithFormat:@"%@", API_BASE_URL];
 }
 
@@ -107,7 +109,7 @@
         self.txtURL.text = @"https://pcmobile.pigchamp.com";
     }else if([self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"]){
         self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
-    }else if([self.txtURL.text isEqualToString:@""] || [self.txtURL.text isEqual:nil] || self.txtURL.text == nil){
+    }else if([self.txtURL.text isEqualToString:@""] || [self.txtURL.text isEqual:nil] || self.txtURL.text == nil || (![self.txtURL.text isEqualToString:@"https://dev-pc-mobile.farmsstaging.com"] || ![self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"])){
         self.txtURL.text = @"https://pcmobile.pigchamp.com";
     }
     //

@@ -34,6 +34,7 @@ BOOL dateDelFlg = FALSE;
 BOOL isDateSelected = FALSE;
 NSString* dateDeliveredValue;
 NSString* strSelectedDateMMM;
+NSString* strSelectedDateOTH;
 @interface DynamicFormViewController ()
 {
     NSString* fullDataString,*strFromDropDownView;
@@ -1682,7 +1683,6 @@ NSString* strSelectedDateMMM;
             NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
             
             if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<= [strMaxVal length])) {
-                
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890-"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
@@ -3693,18 +3693,21 @@ float animatedDistance;
             if ([[dict valueForKey:@"dk"] integerValue] == 2){
                 if (strSelectedDateMMM == nil){
                     NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
-                        [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
-                      
-                        strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
-                        strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
-                                                                                           withString:@""];
+                    [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
+                    
+                    strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
+                    strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                       withString:@""];
                     [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
-                    }
-               else if ([[dictJson valueForKey:[dict valueForKey:@"dk"]] rangeOfString:@"-"].location != NSNotFound){
-                   
-                   strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
-                                                                                      withString:@""];
-                   [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                }
+                else if ([[dictJson valueForKey:[dict valueForKey:@"dk"]] rangeOfString:@"-"].location != NSNotFound){
+                    
+                    strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                       withString:@""];
+                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                }//***else code added for bug-28889 By M.
+                else {
+                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
                }
          }
             x++;
@@ -6358,13 +6361,23 @@ float animatedDistance;
                 [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
                // [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
                 // code added by M. End
-                strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
-                strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
-                                                                                   withString:@""];
-                //***commented below line cause of duplication By M.
-                //[weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
-                [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];//change strSelectedDate to strSelectedDateMMM
-                
+                //***condition of else added below for bug - 28889 By M.
+                if ([[dict valueForKey:@"dk"] integerValue] == 2){
+                    strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
+                    strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                       withString:@""];
+                    //***commented below line cause of duplication By M.
+                    //[weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                    [weakSelf.dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];//change strSelectedDate to strSelectedDateMMM
+                }
+                //***code below added for bug - 28889 By M.
+                else{
+                    strSelectedDateOTH = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
+                    strSelectedDateOTH = [strSelectedDateOTH stringByReplacingOccurrencesOfString:@"-"
+                                                                                       withString:@""];
+                    
+                    [weakSelf.dictJson setValue:strSelectedDateOTH forKey:[dict valueForKey:@"dk"]];//change
+                }
                 if (isThousandFormat) {
                     NSString *strBaseDate = [pref valueForKey:@"ZD"];
                     [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
@@ -6480,7 +6493,21 @@ float animatedDistance;
                     // Format the date to the desired output format
                     NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
                     [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
-                }
+                }//***condition cause the 7 date format was not considered by M.
+                /*else if([_strDateFormat isEqualToString:@"7"] || [_strDateFormat isEqualToString:@"2"]){
+                    //7 = mm/dd/yyyy        e.g. 10/09/2023
+                    NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+                    // Create a date formatter for the desired output format
+                    NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+                    [outputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+
+                    // Format the date to the desired output format
+                    NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                    [weakSelf.dictDynamic setValue:outputDateString forKey:[dict valueForKey:@"Lb"]];
+                }*/
                 else {
                     [weakSelf.dictDynamic setValue:strSelectedDate forKey:[dict valueForKey:@"Lb"]];
                 }
