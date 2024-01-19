@@ -26,7 +26,9 @@
     BarcodeScannerViewController *barcodeScannerViewController;
     ////***added one string for bug- 27755
     NSString *strScan,*strScandk,*strYes,*strNo,*strOk,*strCancel,*strWait,*strNoInternet,*strStillLive,*strClear,*strServerErr,*strUnauthorised,*strSignOff,*strMsgTranspoder;
-    NSString *strSplitSex,*strSplitWex;
+    //NSString *strSplitSex,*strSplitWex;
+    //***code added for SplitSex Functionality Bug-27775 By M @@@@@
+    BOOL strSplitSex,strSplitWex,strSplitLosses,strSplitFostered,strSplitDefects,strSplitTreatments;
     MenuViewController *tlc;
 }
 

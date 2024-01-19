@@ -35,6 +35,13 @@ BOOL isDateSelected = FALSE;
 NSString* dateDeliveredValue;
 NSString* strSelectedDateMMM;
 NSString* strSelectedDateOTH;
+//***code added for SplitSex Functionality Bug-27775 By M @@@@@
+BOOL strSplitSex=NO;
+BOOL strSplitWex = NO;
+BOOL strSplitLosses = NO;
+BOOL strSplitFostered = NO;
+BOOL strSplitDefects = NO;
+BOOL strSplitTreatments = NO;
 @interface DynamicFormViewController ()
 {
     NSString* fullDataString,*strFromDropDownView;
@@ -289,11 +296,17 @@ NSString* strSelectedDateOTH;
             NSString * strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
             NSString *strFromSetting = [pref valueForKey:@"FromSetting"];
             
-            strSplitSex = [pref valueForKey:@"SSL"];
-            strSplitWex = [pref valueForKey:@"SSW"];
-            
-            NSLog(@"strSplitSex=%@",strSplitSex);
-            NSLog(@"strSplitWex=%@",strSplitWex);
+            /*strSplitSex = [pref valueForKey:@"SSL"];
+            strSplitWex = [pref valueForKey:@"SSW"];*/
+            //***code added for SplitSex Functionality Bug-27775 By M  @@@@@
+            strSplitSex = [[pref valueForKey:@"SSL"] boolValue];
+            strSplitWex = [[pref valueForKey:@"SSW"] boolValue];
+            strSplitLosses = [[pref valueForKey:@"splitsexlosses"] boolValue];
+            strSplitFostered = [[pref valueForKey:@"splitsexfostered"] boolValue];
+            strSplitDefects = [[pref valueForKey:@"splitsexdefects"] boolValue];
+            strSplitTreatments = [[pref valueForKey:@"splitsextreatments"] boolValue];
+            NSLog(@"strSplitSex=%d",strSplitSex);
+            NSLog(@"strSplitWex=%d",strSplitWex);
             
             if ([strFromSetting isEqualToString:@"0"]) {
                 NSArray *arrUserParameter = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
@@ -693,7 +706,8 @@ NSString* strSelectedDateOTH;
         
         //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
         ///***code condition added for Litter Identity below 21 for Bug- 28110 By M.
-        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60 || [[dict valueForKey:@"dk"] integerValue]==21){
+        //////***added for condition of 7 for Boar/Female Batch Identities Bug-28918 By M.
+        if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60 || [[dict valueForKey:@"dk"] integerValue]==21 || [[dict valueForKey:@"dk"] integerValue]==7){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
             
@@ -794,8 +808,9 @@ NSString* strSelectedDateOTH;
             
             [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
                 //***removed condition for bug-27735 by M.
-               // if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
-                if ([key integerValue]==51  || [key integerValue]==3){
+                //*** uncommented below condition for Bug-27775 By M @@@@@
+                if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
+                //if ([key integerValue]==51  || [key integerValue]==3){
                     dictText = obj;
                 }
             }];
@@ -1235,14 +1250,33 @@ NSString* strSelectedDateOTH;
     @try {
         //***below is changed cause of CSH Bug-28164 By M.
        // if ([strSplitWex isEqualToString:@"-1"] && [strSplitWex isEqualToString:@"-1"]){
-         if (strSplitWex == 0 && strSplitWex == 0){
+       /*  if (strSplitWex == 0 && strSplitWex == 0){
             return YES;
         }else if (strSplitSex == 0) {//if ([strSplitSex isEqualToString:@"-1"]) {
             return YES;
         }else if (strSplitWex == 0){ //if ([strSplitWex isEqualToString:@"-1"]){
             return YES;
+        }*/
+        //***code added for SplitSex Functionality Bug-27775 By M  @@@@@
+        if ((strSplitSex) && strEventCode.integerValue == 26){
+            return YES;
+            
+        }else if(((strSplitWex)) && (strEventCode.integerValue == 29 || strEventCode.integerValue == 31 || strEventCode.integerValue == 28)){
+            return YES;
+            
+        }else if((strSplitLosses) && strEventCode.integerValue == 32){
+            return YES;
+            
+        }else if((strSplitFostered) && (strEventCode.integerValue == 27 || strEventCode.integerValue == 93)){
+            return YES;
+            
+        }else if((strSplitDefects) && strEventCode.integerValue == 47){
+            return YES;
+            
+        } else if((strSplitTreatments) && strEventCode.integerValue == 35){
+            return YES;
+            
         }
-        
         return NO;
     }
     @catch (NSException *exception) {
@@ -1645,7 +1679,7 @@ NSString* strSelectedDateOTH;
                 return NO;
         }
         //******************************** code addded for Bug 28781 By M.
-        else if ([[dict valueForKey:@"dk"]integerValue]==3) {
+        else if ([[dict valueForKey:@"dk"]integerValue]==3 && (![self isTwoText])) { //added twotext condition for Bug-27775  by M @@@@@
             if([string isEqualToString:@""]){
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
@@ -1835,7 +1869,8 @@ NSString* strSelectedDateOTH;
                 return YES;
             }
         }*/
-        else if ([[dict valueForKey:@"dk"]integerValue]==29) {
+        //***commented below code for bug- 28930 By M.
+        /*else if ([[dict valueForKey:@"dk"]integerValue]==29) {
            ////**** changed below length based for Bug 28054 By M.
             NSInteger maxtattolenghth = 0;
             maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
@@ -1851,6 +1886,22 @@ NSString* strSelectedDateOTH;
                 //end of by M.
                 return YES;
             }
+        } */
+        //***code added below for Bug-28930 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==29) {
+            NSCharacterSet *characterSet = nil;
+            characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+            NSRange location = [string rangeOfCharacterFromSet:characterSet];
+            NSInteger maxtattolenghth = 0;
+            maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
+            if (((location.location != NSNotFound) && (newString.length <= maxtattolenghth)) || [string isEqualToString:@""]) {
+                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                
+                return (((location.location != NSNotFound) && (newString.length <= maxtattolenghth)) || [string isEqualToString:@""]);
+            }
+            else
+                return NO;
         }
         else if ([[dict valueForKey:@"dk"]integerValue]==24) {
             if([string isEqualToString:@""]) {
@@ -1871,7 +1922,8 @@ NSString* strSelectedDateOTH;
             else {
                 return NO;
             }
-        }else if ([[dict valueForKey:@"dk"]integerValue]==29) {
+        }//commented below code cause of duplication for tattoo By M Bug-28930
+         /* else if ([[dict valueForKey:@"dk"]integerValue]==29) {
             
             if([string isEqualToString:@""]) {
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
@@ -1890,7 +1942,8 @@ NSString* strSelectedDateOTH;
             else{
                 return YES;
             }
-        }//***added below code for bug-28847 by M.
+        }*/
+          //***added below code for bug-28847 by M.
         else if ([[dict valueForKey:@"dk"]integerValue]==30 || [[dict valueForKey:@"dk"]integerValue]==89 || [[dict valueForKey:@"dk"]integerValue]==90 || [[dict valueForKey:@"dk"]integerValue]==91) {
             
             if([string isEqualToString:@""]) {
@@ -2004,14 +2057,27 @@ NSString* strSelectedDateOTH;
                     dictText = obj;
                 }
             }];
-            
+            /* //commented below for Bug-27775 By M @@@@@
             if ([textField.placeholder isEqualToString:@"Male"]) {
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
-                if (((location.location != NSNotFound) && (newString.length <3)) || [string isEqualToString:@""]) {
-                    [dictText setValue:newString forKey:@"Male"];
+                //***added below code for backspace not workin for Bug -27775 By M @@@@@
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Male"];
+                    
                     [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                
+                    return YES;
+                }//@@@@@
+                if (((location.location != NSNotFound) && (newString.length <3)) || [string isEqualToString:@""]) {
+                    
+                   // [dictText setValue:newString forKey:@"Male"];
+                    //***code for Bug-27775 By M @@@@@
+                    [dictText setObject:newString forKey:@"Male"];
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    
                     return (((location.location != NSNotFound) && (newString.length <3)) || [string isEqualToString:@""]);
                 }
                 else{
@@ -2021,9 +2087,65 @@ NSString* strSelectedDateOTH;
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //By M @@@@@ Bug-27775
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Female"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                 
+                    return YES;
+                } //@@@@@
                 if (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@""]) {
-                    [dictText setValue:newString forKey:@"Female"];
+                    //[dictText setValue:newString forKey:@"Female"];
+                    //By M @@@@@ Bug-27775
+                    [dictText setObject:newString forKey:@"Female"];
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@""]);
+                }
+                else
+                    return NO;
+            }*/
+            
+            if ([textField.placeholder isEqualToString:@"Male"]) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Male"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && (newString.length <3))|| [string isEqualToString:@" "]) {
+                    //[dictText setValue:newString forKey:@"Male"];
+                    
+                        [dictText setObject:newString forKey:@"Male"];
+                        
+                        [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return (((location.location != NSNotFound) && (newString.length <3)) || [string isEqualToString:@""]);
+                }
+                else{
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"Female"]){
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M.
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Female"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@" "]) {
+                    //[dictText setValue:newString forKey:@"Female"];
+                    [dictText setObject:newString forKey:@"Female"];
                     [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                     
                     return (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@""]);
@@ -2031,7 +2153,8 @@ NSString* strSelectedDateOTH;
                 else
                     return NO;
             }
-            else if ([[dict valueForKey:@"dk"] integerValue]==51) {
+            //*** code commented below for Bug-27775 By M @@@@@
+          /*  else if ([[dict valueForKey:@"dk"] integerValue]==51) {
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
@@ -2044,7 +2167,7 @@ NSString* strSelectedDateOTH;
                 }
                 else
                     return NO;
-            }
+            }*/
         }
         //Added for not able to enter value in Piglet Weaned and Liveborn by priyanka on 23rdOct20
         else if ([[dict valueForKey:@"dk"]integerValue]==51 || [[dict valueForKey:@"dk"]integerValue]==15){
@@ -3151,12 +3274,15 @@ float animatedDistance;
                         dictTextFieldData = obj;
                     }
                 }];
-            }//else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+            }//*** uncommented below condition for Bug-27775 By M @@@@@
+            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
             //***condition removed for Bug-27735 by M.
-            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+            //else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
                 dictForPiglets = dict;
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
-                    if ([key integerValue]==92){
+                    //*** commented below condition for Bug-27775 By M @@@@@
+                   // if ([key integerValue]==92){
+                    if([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
                         dictPigletsData = obj;
                     }
                 }];
@@ -3748,15 +3874,17 @@ float animatedDistance;
                 reqStringFUll = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":\"%@\"",strKey,strValue]];
                 
             }//condition removed for Bug-27735 By m
-            //else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
-            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
+            //***uncommented below condition for Bug-27775 By M @@@@@
+            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
+            //else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
                 __block NSDictionary *dictTextFieldData,*dictForGuilt;
                 strValue=(NSMutableString*)@"";
                 dictForGuilt = dict;
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
                     //condition removed for Bug-27735 By M.
-                    //if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3) {
-                    if ([key integerValue]==51 || [key integerValue]==3) {
+                    //***uncommented below condition for Bug-27775 By M @@@@@
+                    if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3) {
+                    //if ([key integerValue]==51 || [key integerValue]==3) {
                         dictTextFieldData = obj;
                     }
                 }];
@@ -6849,7 +6977,8 @@ float animatedDistance;
                         [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                     }//51 = 0,57 = 1 Nurse sow wean
-                }else if(strEventCode.integerValue ==32){//3=1 piglet death
+                }
+                /*else if(strEventCode.integerValue ==32){//3=1 piglet death
                     if ([[dict valueForKey:@"dk"] integerValue]==3){
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
@@ -6877,18 +7006,67 @@ float animatedDistance;
                         [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                     }
-                }else if(strEventCode.integerValue ==6){
+                }*/
+                //***commented above and added below condition for Bug-27775 By M @@@@@
+                else if(strEventCode.integerValue ==32){//3=1 piglet death
+                    //For setting default value 0
+                    if ([[dict valueForKey:@"dk"] integerValue]==3) {
+                        if ([self isTwoText]){
+                            [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                            
+                            NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                            [dictText setValue:@"0" forKey:@"Male"];
+                            [dictText setValue:@"0" forKey:@"Female"];
+                            [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                        }else{
+                            [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
+                            [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
+                        }
+                    }
+                    
+                }else if(strEventCode.integerValue ==35){//3=1 piglet treatment
+                    //For setting default value 0
+                    if ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]){
+                        NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                        [dictText setValue:@"0" forKey:@"Male"];
+                        [dictText setValue:@"0" forKey:@"Female"];
+                        [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                        [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                    } else if ([[dict valueForKey:@"dk"] integerValue]==3){
+                        [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
+                    }
+                    
+                    
+                }
+                else if(strEventCode.integerValue ==6){
                     if ([[dict valueForKey:@"dk"] integerValue]==42){
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
                     }
                 }//***condition added for Bug-28761 By M.
-                else if(strEventCode.integerValue ==47){
+               /* else if(strEventCode.integerValue ==47){
                     if ([[dict valueForKey:@"dk"] integerValue]==3){
                         [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
                     }
-                }else if(strEventCode.integerValue == 19){
+                }*/
+                //*** added below code for Bug-27775 By M @@@@@
+                else if(strEventCode.integerValue ==47){
+                    if ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]){
+                        NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                        [dictText setValue:@"0" forKey:@"Male"];
+                        [dictText setValue:@"0" forKey:@"Female"];
+                        [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                        [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                    }
+                    //@@@@@ added for Splitsex By M.
+                    else if ([[dict valueForKey:@"dk"] integerValue]==3){
+                        [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
+                    }
+                }
+                else if(strEventCode.integerValue == 19){
                     if ([[dict valueForKey:@"dk"] integerValue]==12){
                         if (flag == 1){
 //                            NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];

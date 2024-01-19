@@ -116,6 +116,12 @@ static CoreDataHandler * coreDataHandlerInstance = nil;
             [context deleteObject:movie];
         }
         //NSError *saveError = nil;
+        //***added for logout changes Bug-27775 by M @@@@@
+        NSError *saveError = nil;
+        if (![context save:&saveError]) {
+            NSLog(@"Save Error: %@", saveError.localizedDescription);
+        }
+        //@@@@@
     }
     @catch (NSException *exception) {
         NSLog(@"Exception in deleteManagedObjectContexFromDefaultMOC =%@",exception.description);

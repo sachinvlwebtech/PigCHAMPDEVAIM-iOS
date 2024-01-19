@@ -70,6 +70,12 @@ BOOL isOpenSearch = NO;
         [self.btnPartialMatch setBackgroundImage:[UIImage imageNamed:@"Unchecked"] forState:UIControlStateNormal];
         [self.btnSow setBackgroundImage:[UIImage imageNamed:@"tickmark"] forState:UIControlStateNormal];
         [self.btnBoar setBackgroundImage:[UIImage imageNamed:@"Unchecked"] forState:UIControlStateNormal];
+        // disable autocorrect By M.
+        _txtIdentity.autocorrectionType = UITextAutocorrectionTypeNo;
+       
+        _txtIdentity.smartQuotesType = UITextSmartQuotesTypeNo;
+        _txtIdentity.smartDashesType = UITextSmartDashesTypeNo;
+        _txtIdentity.smartInsertDeleteType = UITextSmartInsertDeleteTypeNo;
     }
     @catch (NSException *exception) {
         

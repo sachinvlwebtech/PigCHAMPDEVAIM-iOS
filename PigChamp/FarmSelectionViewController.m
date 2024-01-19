@@ -198,6 +198,12 @@ NSString *strFarms;
                 [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
                 
                 //*** end By M.
+                //***code added for Splitsex funcationaly Bug-27775 by M @@@@@
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                //@@@@@
                 [_arrFarms addObject:dictFarm];
             }
         }
@@ -217,6 +223,12 @@ NSString *strFarms;
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
                  //***end By M.
+                //***code added for Splitsex funcationaly Bug-27775 by M @@@@@
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                //@@@@@
                 [_pref synchronize];
             }
 
@@ -429,7 +441,13 @@ NSString *strFarms;
                 [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
                               
                 [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                //***  added code for other values of farms Bug-27775 By M.@@@@@
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
                               
+                [weakSelf.pref setValue:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                    //@@@@@
                 [weakSelf.btnFarmSelection setTitle:[[weakSelf.arrFarms objectAtIndex:row] valueForKey:@"f_nm"] forState:UIControlStateNormal];
                 
                 [weakSelf.pref synchronize];
@@ -718,7 +736,9 @@ NSString *strFarms;
                             [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Locations"];
                             [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Treatments"];
                             [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Packing_Plants"];//Added as sandip told
-                            
+                            //***added for logout changes Bug-27775 by M @@@@@
+                               [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Farms"];
+                            //@@@@@
                             if (dataEntryItemsArray.count==0) {
                                 
                                 UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
