@@ -1402,6 +1402,8 @@ NSString *Success        = @"";
                                 NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
                                 NSLog(@"username=%@",[_pref valueForKey:@"userName"]);
                                 
+                                //^^^^^^^^^^ commented below code for Single farm issue Bug-28951 By M.
+                                /*
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
@@ -1410,13 +1412,31 @@ NSString *Success        = @"";
                               //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
                                 
                               //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                                */
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"farmcode"] forKey:@"f_No"];
+                               
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"des"] forKey:@"f_nm"];
+                                ///*** end by M.
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"sitekey"] forKey:@"id"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"zerodate"] forKey:@"ZD"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexliveborn"] forKey:@"SSL"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexweaned"] forKey:@"SSW"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                                
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                                [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
                                 
                                 [user setValue:self.txtLogintextField.text forKey:@"userName"];
                                 NSLog(@"username=%@",self.txtLogintextField.text);
                                 [user synchronize];
                                 
-                                if (isSucess){
-                                    [self performSegueWithIdentifier:@"segueFarmSelection" sender:self];
+                                if (isSucess){ //^^^^^ Bug- 28952 and bug-28962 for single farm by M.
+                                    //[self performSegueWithIdentifier:@"segueFarmSelection" sender:self];
+                                    [_customIOS7AlertView close];
+                                    [self performSegueWithIdentifier:@"SegueLogin" sender:self];
                                 }
                             }
                         }
