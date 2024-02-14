@@ -70,6 +70,12 @@ NSString *Success        = @"";
         [self callGetLanguageListAPI];
         
         [self registerForKeyboardNotifications];
+        //^^^^^ added below for Bug-29001 By M.
+        strOK =@"OK";
+        strSignOff = @"Signing off.";
+        strNoInternet = @"You must be online for the app to function.";
+        strUnauthorised =@"Your session has been expired. Please login again.";
+        strServerErr= @"Server Error.";
     }
     @catch (NSException *exception) {
         
@@ -1412,11 +1418,11 @@ NSString *Success        = @"";
                               //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
                                 
                               //  [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
-                                */
+                                //--------------------------
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"farmcode"] forKey:@"f_No"];
                                
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"des"] forKey:@"f_nm"];
-                                ///*** end by M.
+                            
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"sitekey"] forKey:@"id"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"zerodate"] forKey:@"ZD"];
                                 [user setValue:[[arrFilteredFarms objectAtIndex:0] valueForKey:@"splitsexliveborn"] forKey:@"SSL"];
@@ -1432,11 +1438,67 @@ NSString *Success        = @"";
                                 [user setValue:self.txtLogintextField.text forKey:@"userName"];
                                 NSLog(@"username=%@",self.txtLogintextField.text);
                                 [user synchronize];
+                                 */
+                                NSMutableArray *arrFarms=[[NSMutableArray alloc]init];
+                                //***code change for new webservice by M.
+                                NSSortDescriptor *sortBy = [[NSSortDescriptor alloc] initWithKey:@"farmname"
+                                                                                       ascending:YES];
+                                //***end By M.
+                                NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                                NSArray* resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Farms" andPredicate:nil andSortDescriptors:sortDescriptors];
+                                // NSLog(@"resultArray=%@",resultArray);
                                 
-                                if (isSucess){ //^^^^^ Bug- 28952 and bug-28962 for single farm by M.
+                                for (int count=0; count<resultArray.count; count++) {
+                                    @autoreleasepool {
+                                        NSMutableDictionary *dictFarm = [[NSMutableDictionary alloc]init];
+                                        //***code change for new webservice by M.
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"farmcode"] forKey:@"f_No"];
+                                        
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"des"] forKey:@"f_nm"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"sitekey"] forKey:@"id"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"zerodate"] forKey:@"ZD"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexliveborn"] forKey:@"SSL"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexweaned"] forKey:@"SSW"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                                        
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                                        
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                                        [dictFarm setValue:[[resultArray objectAtIndex:count] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                              
+                                        [arrFarms addObject:dictFarm];
+                                    }
+                                }
+                                if (arrFarms.count>=1) {
+                                  
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"f_No"] forKey:@"f_No"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"id"] forKey:@"id"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"f_nm"] forKey:@"f_nm"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"ZD"] forKey:@"ZD"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"SSL"] forKey:@"SSL"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"SSW"] forKey:@"SSW"];
+                                    //*** code added below for new keys as per CoreData Model for New webservice by M.
+                                    
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                                    [user setValue:[[arrFarms objectAtIndex:0] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                                    [user synchronize];
+                              
+                                }
+                                
+                                if (isSucess){ //^^^^^ commented below for Bug- 28952 and bug-28971 for single farm by M.
                                     //[self performSegueWithIdentifier:@"segueFarmSelection" sender:self];
-                                    [_customIOS7AlertView close];
-                                    [self performSegueWithIdentifier:@"SegueLogin" sender:self];
+                                    //^^^^^ added below for navigating to FarmSelection but when single farm is set then need to skip farmSelection view so calling new method updatesinglefarmdatabase
+                                   // [_customIOS7AlertView close];
+                                   // [self performSegueWithIdentifier:@"SegueLogin" sender:self];
+                                    //^^^^ added below method for Bug-29001 By M.
+                                    
+                                    [self updateSingleFarmDataBase];
                                 }
                             }
                         }
@@ -1500,7 +1562,600 @@ NSString *Success        = @"";
         NSLog(@"Exception in updateMasterDataBase=%@",exception.description);
     }
 }
+//^^^^^ for Bug 29001 By M.
+-(void)updateSingleFarmDataBase{
+    @try{
+        [ServerManager sendRequestForFarmSelection:[[NSUserDefaults standardUserDefaults] objectForKey:@"id"] onSucess:^(NSString *responseData)  {
+            //
+            
+            if ([responseData isEqualToString:@"\"Farm is changed\""]){
+                //_customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+                // [_customIOS7AlertView showLoaderWithMessage:strLoading];
+                
+                [ServerManager sendRequestForSysLookup:^(NSString *responseData) {
+                    [_customIOS7AlertView close];
+                    
+                    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+                    {
+                        if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""])
+                        {
+                            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                       message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
+                                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            UIAlertAction* ok = [UIAlertAction
+                                                 actionWithTitle:strOK
+                                                 style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {
+                                [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                            }];
+                            
+                            [myAlertController addAction: ok];
+                            [self presentViewController:myAlertController animated:YES completion:nil];
+                        }
+                        else if ([responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+                        {
+                            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                       message:[self getTranslatedTextForString:@"Token not found"]
+                                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            UIAlertAction* ok = [UIAlertAction
+                                                 actionWithTitle:strOK
+                                                 style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {
+                                [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                            }];
+                            
+                            [myAlertController addAction: ok];
+                            [self presentViewController:myAlertController animated:YES completion:nil];
+                        }
+                    }else{
+                        NSArray *adminRoutes;
+                        if (![[dict objectForKey:@"_ADMIN_ROUTES"] isKindOfClass:[NSNull class]])
+                        {
+                            adminRoutes = [dict objectForKey:@"_ADMIN_ROUTES"];
+                        }
+                        
+                        NSArray *aistuds;
+                        if (![[dict objectForKey:@"_AI_STUDS"] isKindOfClass:[NSNull class]])
+                        {
+                            aistuds= [dict objectForKey:@"_AI_STUDS"]?[dict objectForKey:@"_AI_STUDS"]:@"";
+                        }
+                        
+                        NSArray *halothane;
+                        if (![[dict objectForKey:@"_Halothane"] isKindOfClass:[NSNull class]])
+                        {
+                            halothane = [dict objectForKey:@"_Halothane"];
+                        }
+                        
+                        NSArray *pdResults;
+                        if (![[dict objectForKey:@"_PD_RESULTS"] isKindOfClass:[NSNull class]])
+                        {
+                            pdResults = [dict objectForKey:@"_PD_RESULTS"];
+                        }
+                        
+                        NSArray *sex;
+                        if (![[dict objectForKey:@"_SEX"] isKindOfClass:[NSNull class]])
+                        {
+                            sex = [dict objectForKey:@"_SEX"];
+                        }
+                        
+                        NSArray *tod;
+                        if (![[dict objectForKey:@"_TOD"] isKindOfClass:[NSNull class]])
+                        {
+                            tod = [dict objectForKey:@"_TOD"];
+                        }
+                        
+                        NSArray *dataEntryItemsArray;
+                        if (![[dict objectForKey:@"_DATA_ENTRY_ITEMS"] isKindOfClass:[NSNull class]])
+                        {
+                            dataEntryItemsArray = [dict objectForKey:@"_DATA_ENTRY_ITEMS"];
+                        }
+                        
+                        NSMutableArray *arrFilteredDestination = [[NSMutableArray alloc]init];
+                        NSArray* destinartionArray;
+                        if (![[dict objectForKey:@"_DESTINATION"] isKindOfClass:[NSNull class]])
+                        {
+                            destinartionArray = [dict objectForKey:@"_DESTINATION"];
+                            //
+                            @try {
+                                for (NSDictionary *dict in destinartionArray)
+                                {
+                                    NSMutableDictionary *dt  = [[NSMutableDictionary alloc]init];
+                                    [dt setValue:[dict objectForKey:@"Ds"] forKey:@"Ds"];
+                                    [dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                    [dt setValue:[dict valueForKey:@"sid"] forKey:@"sid"];
+                                    [dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                    
+                                    [arrFilteredDestination addObject:dt];
+                                }
+                            }
+                            @catch (NSException *exception) {
+                                NSLog(@"Exception =%@",exception.description);
+                            }
+                        }
+                        
+                        //discription
+                        NSMutableArray *arrFilteredOrigin = [[NSMutableArray alloc]init];
+                        
+                        NSArray* originArray;
+                        if (![[dict objectForKey:@"_ORIGIN"] isKindOfClass:[NSNull class]])
+                        {
+                            originArray = [dict objectForKey:@"_ORIGIN"];
+                            
+                            @try {
+                                for (NSDictionary *dict in originArray)
+                                {
+                                    NSMutableDictionary *dt  = [[NSMutableDictionary alloc]init];
+                                    [dt setValue:[dict objectForKey:@"Ds"] forKey:@"Ds"];
+                                    [dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                    [dt setValue:[dict valueForKey:@"sid"] forKey:@"sid"];
+                                    [dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                    
+                                    [arrFilteredOrigin addObject:dt];
+                                }
+                            }
+                            @catch (NSException *exception) {
+                                NSLog(@"Exception =%@",exception.description);
+                            }
+                        }
+                        
+                        NSArray *geneticsArray;
+                        if (![[dict objectForKey:@"_GENETICS"] isKindOfClass:[NSNull class]]) {
+                            geneticsArray = [dict objectForKey:@"_GENETICS"];
+                        }
+                        
+                        NSArray* conditionsArray;
+                        if (![[dict objectForKey:@"_CONDITIONS"] isKindOfClass:[NSNull class]]){
+                            conditionsArray = [dict objectForKey:@"_CONDITIONS"];
+                        }
+                        
+                        NSArray* conditionsScoreArray;
+                        if (![[dict objectForKey:@"_ConditionScore"] isKindOfClass:[NSNull class]]){
+                            conditionsScoreArray = [dict objectForKey:@"_ConditionScore"];
+                        }
+                        //***added below for Piglet Defect data entry - Defects-List Bug- 28548 By M.
+                        NSArray* pigletDefectsArray;
+                        if (![[dict objectForKey:@"_PIGLET_DEFECTS"] isKindOfClass:[NSNull class]]){
+                            pigletDefectsArray = [dict objectForKey:@"_PIGLET_DEFECTS"];
+                        }
+                        NSArray* _herdCategoryArray;
+                        if (![[dict objectForKey:@"_HerdCategory"] isKindOfClass:[NSNull class]]){
+                            _herdCategoryArray = [dict objectForKey:@"_HerdCategory"];
+                        }
+                        
+                        //
+                        NSArray* _LesionScoreArray;
+                        if (![[dict objectForKey:@"_LESION_SCORES"] isKindOfClass:[NSNull class]]){
+                            _LesionScoreArray = [dict objectForKey:@"_LESION_SCORES"];
+                        }
+                        
+                        NSArray* _LockArray;
+                        if (![[dict objectForKey:@"_MATINGLOCK"] isKindOfClass:[NSNull class]]){
+                            _LockArray = [dict objectForKey:@"_MATINGLOCK"];
+                        }
+                        
+                        NSArray* _LeakageArray;
+                        if (![[dict objectForKey:@"_MATINGLEAK"] isKindOfClass:[NSNull class]]){
+                            _LeakageArray = [dict objectForKey:@"_MATINGLEAK"];
+                        }
+                        
+                        NSArray* _QualityArray;
+                        if (![[dict objectForKey:@"_MATINGQUALITY"] isKindOfClass:[NSNull class]]){
+                            _QualityArray = [dict objectForKey:@"_MATINGQUALITY"];
+                        }
+                        
+                        NSArray* _StandingReflexArray;
+                        if (![[dict objectForKey:@"_MATINGSTANDREFLEX"] isKindOfClass:[NSNull class]]){
+                            _StandingReflexArray = [dict objectForKey:@"_MATINGSTANDREFLEX"];
+                        }
+                        
+                        NSArray* _TestTypeArray;
+                        if (![[dict objectForKey:@"_TESTTYPE"] isKindOfClass:[NSNull class]]){
+                            _TestTypeArray = [dict objectForKey:@"_TESTTYPE"];
+                        }
+                        //
+                        
+                        NSArray* flagsArray;
+                        if (![[dict objectForKey:@"_FLAGS"] isKindOfClass:[NSNull class]]){
+                            flagsArray = [dict objectForKey:@"_FLAGS"];
+                        }
+                        
+                        NSArray* transportCompaniesArray;
+                        if (![[dict objectForKey:@"_TRANSPORT_COMPANIES"] isKindOfClass:[NSNull class]]){
+                            transportCompaniesArray = [dict objectForKey:@"_TRANSPORT_COMPANIES"];
+                        }
+                        // new additions
+                        NSArray* operatorArray;
+                        if (![[dict objectForKey:@"_Operators"] isKindOfClass:[NSNull class]]){
+                            operatorArray = [dict objectForKey:@"_Operators"];
+                        }
+                        
+                        NSArray *locationsArray;
+                        if (![[dict objectForKey:@"_LOCATIONS"] isKindOfClass:[NSNull class]]){
+                            locationsArray = [dict objectForKey:@"_LOCATIONS"];
+                        }
+                        
+                        NSArray* treatmentsArray;
+                        if (![[dict objectForKey:@"_TREATMENTS"] isKindOfClass:[NSNull class]]){
+                            treatmentsArray = [dict objectForKey:@"_TREATMENTS"];
+                        }
+                        
+                        NSArray* packingPlantsArray;
+                        
+                        if (![[dict objectForKey:@"_PACKING_PLANTS"] isKindOfClass:[NSNull class]]){
+                            packingPlantsArray = [dict objectForKey:@"_PACKING_PLANTS"];//Added as sandip told
+                        }
+                        
+                        //[[CoreDataHandler sharedHandler] removeAllmanagedObject];
+                        
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Data_Entry_Items"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Admin_Routes"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Halothane"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Pd_Results"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Sex"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Tod"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Origin"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Destination"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"ConditionScore"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Operator"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Locations"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Treatments"];
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Packing_Plants"];//Added as sandip told
+                        //***added for logout changes Bug-27775 by M @@@@@
+                        [[CoreDataHandler sharedHandler] deleteManagedObjectContexFromDefaultMOC:@"Farms"];
+                        //@@@@@
+                        if (dataEntryItemsArray.count==0) {
+                            
+                            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                       message:@"Please login again."
+                                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            UIAlertAction* ok = [UIAlertAction
+                                                 actionWithTitle:strOK
+                                                 style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {
+                                //[[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];                                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                {
+                                    if ([[ControlSettings sharedSettings] isNetConnected ]){
+                                        _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+                                        [_customIOS7AlertView showLoaderWithMessage:strSignOff];
+                                        
+                                        [ServerManager sendRequestForLogout:^(NSString *responseData) {
+                                            NSLog(@"%@",responseData);
+                                            [_customIOS7AlertView close];
+                                            
+                                            if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])  {
+                                                //[[NSNotificationCenter defaultCenter]postNotificationName:@"CloseAlert" object:responseData];
+                                                
+                                                //                                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                //                                                                                                                        message:responseData
+                                                //                                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                                                //                                             UIAlertAction* ok = [UIAlertAction
+                                                //                                                                  actionWithTitle:strOK
+                                                //                                                                  style:UIAlertActionStyleDefault
+                                                //                                                                  handler:^(UIAlertAction * action)                                                              {
+                                                //
+                                                //
+                                                //                                                                      [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                                //                                                                      //[self.navigationController popToRootViewControllerAnimated:YES];
+                                                //                                                                      [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                                //                                                                  }];
+                                                //
+                                                //                                             [myAlertController addAction: ok];
+                                                //                                             [self presentViewController:myAlertController animated:YES completion:nil];
+                                            }else if ([responseData isEqualToString:@"\"Loged out\""] || [responseData isEqualToString:@""]){
+                                                [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                            }
+                                        } onFailure:^(NSString *responseData, NSError *error) {
+                                            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                                            NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                                            [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                                            NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                                            
+                                            NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,On log out=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate, self.title];
+                                            [tracker set:kGAIScreenName value:strErr];
+                                            [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                                            
+                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"CloseAlert" object:responseData];
+                                            
+                                            /*
+                                             if (responseData.integerValue ==401) {
+                                             
+                                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                             message:strUnauthorised
+                                             preferredStyle:UIAlertControllerStyleAlert];
+                                             UIAlertAction* ok = [UIAlertAction
+                                             actionWithTitle:strOK
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action) {
+                                             [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                             }];
+                                             
+                                             [myAlertController addAction: ok];
+                                             [self presentViewController:myAlertController animated:YES completion:nil];
+                                             
+                                             }else {
+                                             // [self.navigationController popToRootViewControllerAnimated:YES];
+                                             
+                                             //                                             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                             //                                                                                                                        message:strServerErr
+                                             //                                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                                             //                                             UIAlertAction* ok = [UIAlertAction
+                                             //                                                                  actionWithTitle:strOK
+                                             //                                                                  style:UIAlertActionStyleDefault
+                                             //                                                                  handler:^(UIAlertAction * action) {
+                                             //                                                                      [self.navigationController popToRootViewControllerAnimated:YES];
+                                             //                                                                      [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                             //                                                                  }];
+                                             //
+                                             //                                             [myAlertController addAction: ok];
+                                             //                                             [self presentViewController:myAlertController animated:YES completion:nil];
+                                             }
+                                             */
+                                            
+                                            [_customIOS7AlertView close];
+                                        }];
+                                    }
+                                    else {
+                                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                                   message:strNoInternet
+                                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        UIAlertAction* ok = [UIAlertAction
+                                                             actionWithTitle:strOK
+                                                             style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action)
+                                                             {
+                                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+                                        
+                                        [myAlertController addAction: ok];
+                                        [self presentViewController:myAlertController animated:YES completion:nil];
+                                    }
+                                    
+                                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                }
+                            }];
+                            
+                            [myAlertController addAction: ok];
+                            [self presentViewController:myAlertController animated:YES completion:nil];
+                        }else{
+                            
+                            @try {
+                                BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:nil andFarmsArray:nil andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:nil andLocations:locationsArray andOperatorArray:operatorArray andBreedingComapniesArray:nil andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:nil conditionScore:conditionsScoreArray pigletDefects:pigletDefectsArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                                //_LesionScoreArray; _LockArray _LeakageArray _QualityArray _StandingReflexArray _TestTypeArray
+                                
+                                if (isSucess){
+                                    [self performSegueWithIdentifier:@"segueFarmSelection" sender:self];
+                                }
+                            }
+                            @catch (NSException *exception) {
+                                
+                                NSLog(@"Exception =%@",exception.description);
+                            }
+                        }
+                    }
+                } onFailure:^(NSString *responseData, NSError *error) {
+                    [_customIOS7AlertView close];
+                    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                    //
+                    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                    [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                    NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                    
+                    NSString *strErr = [NSString stringWithFormat:@"User Name = %@,,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Farm Selection"];
+                    [tracker set:kGAIScreenName value:strErr];
+                    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                    
+                    if (responseData.integerValue ==401) {
+                        
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                   message:strUnauthorised
+                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        UIAlertAction* ok = [UIAlertAction
+                                             actionWithTitle:strOK
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action) {
+                            [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                        
+                        [myAlertController addAction: ok];
+                        [self presentViewController:myAlertController animated:YES completion:nil];
+                        
+                        // [self.navigationController popToRootViewControllerAnimated:YES];
+                    }else{
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                   message:responseData
+                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        UIAlertAction* ok = [UIAlertAction
+                                             actionWithTitle:strOK
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action) {
+                            //[self.navigationController popToRootViewControllerAnimated:YES];
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                        
+                        [myAlertController addAction: ok];
+                        [self presentViewController:myAlertController animated:YES completion:nil];
+                    }
+                    
+                }];
+            }
+            if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""])
+            {
+                [_customIOS7AlertView close];
+                
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:strOK
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action)
+                                     {
+                    [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }
+            else if ([responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+            {
+                [_customIOS7AlertView close];
+                
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:[self getTranslatedTextForString:@"Token not found"]
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:strOK
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action)
+                                     {
+                    [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }
+        } onFailure:^(NSString *responseData, NSError *error) {
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            //
+            NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+            [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+            
+            NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate,@"Farm Selection SCreen"];
+            [tracker set:kGAIScreenName value:strErr];
+            [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+            
+            if (responseData.integerValue ==401) {
+                
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:strUnauthorised
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:strOK
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action) {
+                    [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+                
+                //[self.navigationController popToRootViewControllerAnimated:YES];
+            }else{
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:strServerErr
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:strOK
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action) {
+                    //[self.navigationController popToRootViewControllerAnimated:YES];
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }
+            
+            [_customIOS7AlertView close];
+        }];
 
+    }
+    @catch(NSException *exception){
+        NSLog(@"Exception in UpdateSingleFarm DataBase=%@", exception.description);
+    }
+    
+}
+//^^^^^ for bug-29001 By M.
+-(NSString*)getTranslatedTextForString:(NSString*)Checkstring
+{
+NSString *strSearchTitle;
+NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:Checkstring,nil]];
+NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
+if (resultArray1.count!=0){
+for (int i=0; i<resultArray1.count; i++){
+    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+}
+for (int i=0; i<1; i++) {
+    if (i==0)
+    {
+        if ([dictMenu objectForKey:[Checkstring uppercaseString]] && ![[dictMenu objectForKey:[Checkstring uppercaseString]] isKindOfClass:[NSNull class]]) {
+            if ([[dictMenu objectForKey:[Checkstring uppercaseString]] length]>0) {
+                strSearchTitle = [dictMenu objectForKey:[Checkstring uppercaseString]]?[dictMenu objectForKey:[Checkstring uppercaseString]]:@"";
+            }
+            else
+            {
+                strSearchTitle = Checkstring;
+            }
+        }
+    }
+}
+}
+else
+{
+strSearchTitle = Checkstring;
+}
+return strSearchTitle;
+}
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     @try {

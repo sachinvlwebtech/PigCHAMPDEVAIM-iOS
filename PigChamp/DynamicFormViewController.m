@@ -6339,8 +6339,31 @@ float animatedDistance;
             [self.navigationController presentViewController:ivc animated:YES completion:nil];
             //            }
         }
+        //added below alert when Any dropdown doesn't have values By M.
         else {
-            NSLog(@"no data");
+            //NSLog(@"no data");
+            
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                    message:[self getTranslatedTextForString:@"No Data Available"]preferredStyle:UIAlertControllerStyleAlert];
+                                       //** added Pigchamp logo on alert Bug-27920 by M.
+                                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                       logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                       UIView *controllerView = myAlertController.view;
+                                       [controllerView addSubview:logoImageView];
+                                       [controllerView bringSubviewToFront:logoImageView];
+                                       
+                                      UIAlertAction* ok = [UIAlertAction
+                                                            actionWithTitle:strOk
+                                                            style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * action){
+                                           [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                       }];
+
+                                       [myAlertController addAction: ok];
+                                       [self presentViewController:myAlertController animated:YES completion:nil];
+
+                                            return;
+            
         }
     }
     @catch (NSException *exception) {
@@ -8302,6 +8325,12 @@ float animatedDistance;
                     NSArray *arrDictData =  [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSMutableArray *arrAvailableValues = [[NSMutableArray alloc]init];
                     for (NSDictionary *Dict in arrDictData) {
+                        //***added for bug-28969 By M.
+                     /*   if(strEventCode.integerValue == 10 || strEventCode.integerValue == 11 ||strEventCode.integerValue == 12 ||strEventCode.integerValue == 13){
+                            if ([[Dict valueForKey:@"dataItemKey"] integerValue] == 69){
+                                [Dict setValue:@"" forKey:@"val"];
+                            }
+                        }*/
                         if (![[Dict valueForKey:@"val"] isKindOfClass:[NSNull class]]){
                             if ([[Dict valueForKey:@"val"] length]>0 && ![[Dict valueForKey:@"val"] isEqualToString:@"-9999"]){
                                 [arrAvailableValues addObject:Dict];

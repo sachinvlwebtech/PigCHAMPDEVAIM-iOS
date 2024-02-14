@@ -2566,6 +2566,79 @@ BOOL isThousandFormatReport = NO;
             // return strSelectedDateyearformat;
             
         }
+    //****code added below for bug-27782 By M %%%%%
+        else if([self.strDateFormat isEqualToString:@"3"]){
+            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+            [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+            // Create a date formatter for the desired output format
+            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+            [outputDateFormatter setDateFormat:@"dd-MMM-yy"];
+
+            // Format the date to the desired output format
+            NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+            
+            return outputDateString;
+            
+        }else if([self.strDateFormat isEqualToString:@"4"]){
+            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+            [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+            // Create a date formatter for the desired output format
+            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+            [outputDateFormatter setDateFormat:@"mm/dd/yy"];
+
+            // Format the date to the desired output format
+            NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+            
+            return outputDateString;
+           
+        }else if([self.strDateFormat isEqualToString:@"5"]){
+            //5 = dd/mm/yy        e.g. 09/10/23
+            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+            [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+            
+            // Create a date formatter for the desired output format
+            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+            [outputDateFormatter setDateFormat:@"dd/MM/yy"];
+            
+            // Format the date to the desired output format
+            NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+            
+            return outputDateString;
+        }else if([self.strDateFormat isEqualToString:@"7"]){
+            //7 = mm/dd/yyyy        e.g. 10/09/2023
+            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+            [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+            // Create a date formatter for the desired output format
+            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+            [outputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+
+            // Format the date to the desired output format
+            NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+           
+            return outputDateString;
+        }else if([self.strDateFormat isEqualToString:@"8"]){
+            //8 = dd/mm/yyyy        e.g. 09/10/2023
+            NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
+            [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *dtselectedDate = [inputDateFormatter dateFromString:strSelectedDate];
+
+            // Create a date formatter for the desired output format
+            NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
+            [outputDateFormatter setDateFormat:@"dd/MM/yyyy"];
+
+            // Format the date to the desired output format
+            NSString *outputDateString = [outputDateFormatter stringFromDate:dtselectedDate];
+            
+            return outputDateString;
+        }
+        //end of
         else {
             return strSelectedDate;
         }

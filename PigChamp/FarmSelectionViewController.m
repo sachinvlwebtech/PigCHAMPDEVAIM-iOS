@@ -209,8 +209,8 @@ NSString *strFarms;
         }
         
         //^^^commented below for Bug-28952 By M.
-       // if (_arrFarms.count>1) {
-        if (_arrFarms.count>=1) { //^^^^^ for single  farm related issuess by M.
+        if (_arrFarms.count>1) { //^^^^^ uncommented this for Bug-29001 By M.
+       // if (_arrFarms.count>=1) { //^^^^^ for single  farm related issuess by M. but this will redirect to Farmsslection though ony one farm is set to the user.
             NSString *strFarm = [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"] ? [[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"]:@"";
 
             if (strFarm.length==0){

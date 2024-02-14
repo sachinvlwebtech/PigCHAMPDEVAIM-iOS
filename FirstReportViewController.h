@@ -24,6 +24,7 @@
 
 #pragma mark - view life cycle
 @property (weak, nonatomic) NSString *strDateFormat;
+@property (weak, nonatomic) NSString *strDisplayDateFormat;
 @property(nonatomic,strong)IBOutlet UITableView *tblFirst;
 @property(nonatomic,strong)NSMutableDictionary *dictHeaders,*dictTranslatedHeader;
 @property(nonatomic,strong)NSString *strEvnt;

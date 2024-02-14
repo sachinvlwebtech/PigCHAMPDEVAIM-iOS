@@ -51,7 +51,19 @@ BOOL isOpenFisrReport = NO;
         strSignOff = @"Signing off";
         strCancel = @"Cancel";
         strSelectSortType = @"Select Sort Type";
-
+        
+        //added below condition for bug-27782 By M %%%%%
+        NSArray *arrUserParameter = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
+        for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+            NSManagedObject *managedObject = arrUserParameter[i];
+            
+                   NSNumber *dateFormatNumber = [managedObject valueForKey:@"up_date_settings_output_format"];
+                   
+                   // Convert the numerical value to a string
+                   _strDisplayDateFormat = [dateFormatNumber stringValue];
+                   NSLog(@"_strDisplayDateFormat: %@", _strDisplayDateFormat);
+         
+        }
         
         NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:@"Please Wait...",@"You must be online for the app to function.",@"Ok",@"No report data to display.",@"Your session has been expired. Please login again.",@"Server Error.",@"Signing off.",@"Cancel",@"Select Sort Type",nil]];
         
@@ -892,7 +904,7 @@ BOOL isOpenFisrReport = NO;
 //        }
 //    }
 //}
-
+/*
 -(NSString*)displayDate:(NSString*)strSelectedDate{
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM/dd/yyyy"];
@@ -1008,6 +1020,107 @@ BOOL isOpenFisrReport = NO;
     }
     else{
         return strSelectedDate;
+    }
+}*/
+
+//commented the above function and added below function for bug-27782 By M %%%%%
+-(NSString*)displayDate:(NSString*)strSelectedDate{
+    
+    // The date format string from the API response
+    // Create an NSDateFormatter instance
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    
+    NSString *strBaseDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZD"];
+    
+    if ([_strDisplayDateFormat isEqualToString:@"DAYNUMBER"]){
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *dtselectedDate = [dateFormatter dateFromString:strSelectedDate];
+        [dateFormatter setDateFormat:@"yyyyMMdd"];
+        
+        NSDate *BaseDate = [dateFormatter dateFromString:strBaseDate];
+        int days = [dtselectedDate timeIntervalSinceDate:BaseDate]/24/60/60;
+        
+        NSString *strDate = [NSString stringWithFormat:@"%05d",days];
+        NSString *calFormat,*strFromString;
+        
+        if (strDate.length>=2) {
+            calFormat = [strDate substringToIndex:2];
+        }else {
+            calFormat = strDate;
+        }
+        
+        if (strDate.length>=3) {
+            strFromString = [strDate substringFromIndex:2];
+        }
+        
+        calFormat = [[calFormat stringByAppendingString:@"-"] stringByAppendingString:strFromString?strFromString:@""];
+        [dateFormatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+        
+        NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatter stringFromDate:dtselectedDate]];
+        
+         return strSelectedDate100;
+    
+    }else if ([_strDisplayDateFormat isEqualToString:@"DAYOFYEAR"]){
+        
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+        NSDate *dtselectedDate = [dateFormatter dateFromString:strSelectedDate];
+        NSDate *Firstdate= [self getFirstDateOfCurrentYear:dtselectedDate];
+    
+        NSInteger days=[self daysBetweenDate:Firstdate andDate:dtselectedDate];
+        NSLog(@"days:%ld",days);
+    
+        NSString *strDate = [NSString stringWithFormat:@"%03li",days];
+        [dateFormatter setDateFormat:@"yy"];
+    
+        NSString *strSelectedDateyearformat = [[[dateFormatter stringFromDate:dtselectedDate] stringByAppendingString:@"-"] stringByAppendingString:strDate];
+    
+
+        [dateFormatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+        NSString *strSelectedDateDayOfyear = [[strSelectedDateyearformat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatter stringFromDate:dtselectedDate]];
+    
+        return strSelectedDateDayOfyear;
+    
+  
+    } else if ([_strDisplayDateFormat rangeOfString:@"-"].location != NSNotFound) {
+       
+        // Set the desired output format for the string using the API-provided format
+        [dateFormatter setDateFormat:_strDisplayDateFormat];
+        // Create an NSDateFormatter instance
+        NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+        
+        // Set the input format for the string
+        [dateFormatter1 setDateFormat:@"MM/dd/yyyy"];
+        
+        // Convert the string to an NSDate object
+        NSDate *date = [dateFormatter1 dateFromString:strSelectedDate];
+        // Convert the NSDate object to a string with the specified format
+        NSString *formattedDateString = [dateFormatter stringFromDate:date];
+        
+        // Now, formattedDateString contains the date string in the format specified by the API
+        NSLog(@"Formatted Date String: %@", formattedDateString);
+        return formattedDateString;
+    }else{
+        NSString *apiDateFormat =  [_strDisplayDateFormat stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+       
+        // Set the desired output format for the string using the API-provided format
+        [dateFormatter setDateFormat:apiDateFormat];
+        // Create an NSDateFormatter instance
+        NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+        
+        // Set the input format for the string
+        [dateFormatter1 setDateFormat:@"MM/dd/yyyy"];
+        
+        // Convert the string to an NSDate object
+        NSDate *date = [dateFormatter1 dateFromString:strSelectedDate];
+        // Convert the NSDate object to a string with the specified format
+        NSString *formattedDateString = [dateFormatter stringFromDate:date];
+        
+        // Now, formattedDateString contains the date string in the format specified by the API
+        NSLog(@"Formatted Date String: %@", formattedDateString);
+        return formattedDateString;
+        
     }
 }
 -(NSDate *)getFirstDateOfCurrentYear:(NSDate*)selecteddate

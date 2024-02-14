@@ -17,6 +17,7 @@
     UIEdgeInsets contentInsetsScroll;
     
     UIAlertController *alertForUpdate,*alertForCriticalUpdate;
+    NSString *strOK,*strSignOff,*strNoInternet,*strUnauthorised,*strServerErr;
 }
 
 @property (weak, nonatomic) IBOutlet UIButton *btnSubmit;
