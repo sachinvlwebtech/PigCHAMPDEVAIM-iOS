@@ -546,6 +546,8 @@ BOOL isOpen = NO;
             [arrMenu addObject:@"Nurse Sow Weaning"];
             [arrMenu addObject:@"Piglet Death"];
 //            [arrMenu addObject:@"Piglet Identification"];
+            //$$$for Piglet identification Bug-28549 By M
+            [arrMenu addObject:@"Piglet Identification"];
             [arrMenu addObject:@"Piglet Defect"];
             
             
@@ -632,7 +634,15 @@ BOOL isOpen = NO;
                         else{
                         [arrMenu addObject:@"Piglet Defect"];
                         }
-                    }
+                    }//$$$for Piglet Identification Bug-28549 By M
+                    else  if (i==8){
+                        if ([dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                        [self addObject:[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]:@"" englishVersion:@"Piglet Identification"];
+                            }
+                    else{
+                    [arrMenu addObject:@"Piglet Identification"];
+                  }
+                 }
                 }
             }
             
@@ -648,6 +658,8 @@ BOOL isOpen = NO;
 //            [arrEventCode addObject:@"47"];
             //***code added for Bug- 28548 By M.
             [arrEventCode addObject:@"47"];
+            //$$$for identification
+            [arrEventCode addObject:@"112"];
         }else if ([countMenu isEqualToString:@"4"])
         {
             [arrMenu removeAllObjects];

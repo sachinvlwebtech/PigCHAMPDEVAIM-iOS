@@ -42,6 +42,9 @@ BOOL strSplitLosses = NO;
 BOOL strSplitFostered = NO;
 BOOL strSplitDefects = NO;
 BOOL strSplitTreatments = NO;
+//***added for Bug0-29063 by M.
+NSString* reqStringfulltmp;
+NSString* strServiceName1;
 @interface DynamicFormViewController ()
 {
     NSString* fullDataString,*strFromDropDownView;
@@ -52,10 +55,15 @@ BOOL strSplitTreatments = NO;
     NSUserDefaults *pref;
     NSInteger TapedDropDownTag;
     NSString *detectedDateFormat;
+    //***added for Bug0-29063 by M.
+    NSString *value;
+    NSArray *reqStringArray;
 }
 @property(nonatomic, strong) IBOutlet EAAccessory *accessory;
 @property(nonatomic) uint32_t totalBytesRead;
 @property (nonatomic, strong) EADSessionController *eaSessionController;
+//***added for Bug0-29063 by M.
+@property (nonatomic, assign) NSInteger currentIndex;
 @end
 
 @implementation DynamicFormViewController
@@ -1607,6 +1615,11 @@ BOOL strSplitTreatments = NO;
             }
         
         }else if ([[dict valueForKey:@"dk"]integerValue]==38) {
+            if([string isEqualToString:@" "]){
+                return NO;
+            }
+        }//code added for Bug-29064 By M.
+        else if ([[dict valueForKey:@"dk"]integerValue]==31) {
             if([string isEqualToString:@" "]){
                 return NO;
             }
@@ -4078,7 +4091,20 @@ float animatedDistance;
         
         
         if (strEventCode.integerValue == 30) {
-            NSString * value = [dictJson objectForKey:@"1"];
+           //***added code below for Bug-29063 By M.
+            self.currentIndex = 0;
+           
+            reqStringfulltmp = reqStringFUll;
+            value = [dictJson objectForKey:@"1"];
+            reqStringArray = [value componentsSeparatedByString:@","];
+            strServiceName1 = strServiceName;
+            [self makeAPICallsWithCallback:^{
+                // This block will be executed after the completion of the API calls
+                // Perform any additional actions or UI updates here
+                NSLog(@"API calls completed!");
+            }];
+            //***end of 
+            /*NSString * value = [dictJson objectForKey:@"1"];
             NSArray *reqStringArray = [value componentsSeparatedByString:@","];
             
             for (NSString* item in reqStringArray) {
@@ -4094,7 +4120,7 @@ float animatedDistance;
                     return;
                 }
                 [self callSaveEvent:strServiceName :jsonData];
-            }
+            } */
         }
           
             
@@ -5189,6 +5215,689 @@ float animatedDistance;
     
 }
 
+- (void)makeAPICallsWithCallback:(void (^)(void))callback {
+   
+    if (self.currentIndex < reqStringArray.count) {
+        NSString *item = reqStringArray[self.currentIndex];
+        
+        NSString *reqString = [[reqStringfulltmp stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"\"1\":\"%@\"", value] withString:[NSString stringWithFormat:@"\"1\":\"%@\"", item]] mutableCopy];
+        
+        NSError *error;
+        NSMutableDictionary* jsonDict = [[NSMutableDictionary alloc]init];
+        [jsonDict setObject:reqString forKey:@"arguments"];
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:kNilOptions error:nil];
+        if(!jsonData && error) {
+            NSLog(@"Error creating JSON: %@", [error localizedDescription]);
+            return;
+        }
+        
+        // Call the API with a completion block
+        [self callSaveEvent1:strServiceName1 :jsonData completion:^(BOOL success, NSString *responseString) {
+            if (success) {
+                // Handle the response from the first API call
+                NSLog(@"Response from API: %@", responseString);
+                
+                // Perform any action based on the response
+                
+                // Move to the next index
+                self.currentIndex++;
+                
+                // Call the callback block
+                if (callback) {
+                    
+                    callback();
+                   // [self makeAPICallsWithCallback:callback];
+                }
+            } else {
+                // Handle error if needed
+            }
+        }];
+    }
+}
+
+- (void)callSaveEvent1:(NSString *)strService :(NSData *)jsonData completion:(void (^)(BOOL success, NSString *responseString))completion {
+    
+    NSString *strSaved = @"Saved successfully";
+    NSString *strSavedLitterNote = @"Litter Note Event added successfully";//Need to code yog
+    
+    NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:@"Saved successfully",@"Litter Note Event added successfully", nil]];
+    NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
+    
+    for (int i=0; i<resultArray1.count; i++){
+        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+    }
+    
+    for (int i=0; i<2; i++) {
+        if (i==0) {
+            if ([dictMenu objectForKey:[@"Saved successfully" uppercaseString]] && ![[dictMenu objectForKey:[@"Saved successfully" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                if ([[dictMenu objectForKey:[@"Saved successfully" uppercaseString]] length]>0) {
+                    strSaved = [dictMenu objectForKey:[@"Saved successfully" uppercaseString]]?[dictMenu objectForKey:[@"Saved successfully" uppercaseString]]:@"";
+                }
+            }else if (i==1){
+                if ([dictMenu objectForKey:[@"Litter Note Event added successfully" uppercaseString]] && ![[dictMenu objectForKey:[@"Litter Note Event added successfully" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                    if ([[dictMenu objectForKey:[@"Litter Note Event added successfully" uppercaseString]] length]>0) {
+                        strSavedLitterNote = [dictMenu objectForKey:[@"Litter Note Event added successfully" uppercaseString]]?[dictMenu objectForKey:[@"Litter Note Event added successfully" uppercaseString]]:@"";
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    if ([[ControlSettings sharedSettings] isNetConnected ]){
+        _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+        [_customIOS7AlertView showLoaderWithMessage:strWait];
+     
+        
+        [ServerManager sendRequestEvent:[strService stringByAppendingString:[NSString stringWithFormat:@"token=%@&ignoreWarnings=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],@"0"]] idOfServiceUrl:jsonData methodType:@"POST" onSucess:^(NSString *responseData) {
+            [_customIOS7AlertView close];
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+            
+            // [dict setValue:@"Not connected" forKey:@"ResultString"];
+            if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+            {
+                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""])
+                {
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }
+                else if ([responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+                {
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:[self getTranslatedTextForString:@"Token not found"]
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }
+            }else if ([[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:@"Not connected"])
+            { //to do too
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:NSLocalizedString(@"connection_lost", @"")
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                //** added Pigchamp logo on alert Bug-27920 by M.
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:strOk
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action) {
+                    if ([[ControlSettings sharedSettings] isNetConnected ]){
+                        _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+                        [_customIOS7AlertView showLoaderWithMessage:strSignOff];
+                        
+                        [ServerManager sendRequestForLogout:^(NSString *responseData) {
+                            NSLog(@"%@",responseData);
+                            [_customIOS7AlertView close];
+                            
+                            if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])  {
+                            }else if ([responseData isEqualToString:@"\"Loged out\""] || [responseData isEqualToString:@""]){
+                                [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                            }
+                            
+                        } onFailure:^(NSString *responseData, NSError *error) {
+                            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                            NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                            [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                            NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                            
+                            NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,On log out=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate, self.title];
+                            [tracker set:kGAIScreenName value:strErr];
+                            [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                            
+                            [_customIOS7AlertView close];
+                        }];
+                    }
+                    else {
+                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                   message:strNoInternet
+                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
+                        
+                        UIAlertAction* ok = [UIAlertAction
+                                             actionWithTitle:strOk
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action)
+                                             {
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                        }];
+                        
+                        [myAlertController addAction: ok];
+                        [self presentViewController:myAlertController animated:YES completion:nil];
+                    }
+                    
+                    [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }
+            else if (dict!=nil){
+                if ([[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:[self getTranslatedTextForString:@"Are you sure?"]]){
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:[dict valueForKey:@"ResultString"]
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
+                    UIAlertAction* yes = [UIAlertAction
+                                          actionWithTitle:strYes
+                                          style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action){
+                        if ([[ControlSettings sharedSettings] isNetConnected ]){
+                            _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+                            [_customIOS7AlertView showLoaderWithMessage:strWait];
+                            [ServerManager sendRequestEvent:[strService stringByAppendingString:[NSString stringWithFormat:@"token=%@&ignoreWarnings=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],@"1"]] idOfServiceUrl:jsonData methodType:@"POST" onSucess:^(NSString *responseData) {
+                                
+                                [_customIOS7AlertView close];
+                                id dict = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                                
+                                
+                                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+                                {
+                                    if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""])
+                                    {
+                                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                                   message:[self getTranslatedTextForString:@"User is not signed in or Session expired"]
+                                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
+                                        UIAlertAction* ok = [UIAlertAction
+                                                             actionWithTitle:strOk
+                                                             style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action) {
+                                            [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+                                        
+                                        [myAlertController addAction: ok];
+                                        [self presentViewController:myAlertController animated:YES completion:nil];
+                                    }
+                                    else if ([responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])
+                                    {
+                                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                                   message:[self getTranslatedTextForString:@"Token not found"]
+                                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
+                                        UIAlertAction* ok = [UIAlertAction
+                                                             actionWithTitle:strOk
+                                                             style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action) {
+                                            [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+                                        
+                                        [myAlertController addAction: ok];
+                                        [self presentViewController:myAlertController animated:YES completion:nil];
+                                    }
+                                }else if ([dict isKindOfClass:[NSDictionary class]]) {
+                                    if ([[dict valueForKey:@"ResultString"] isEqualToString:strSaved])
+                                    {
+                                        //                                              UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                        //                                                                                                                         message:strSaved
+                                        //                                                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                        //
+                                        //                                              UIAlertAction* ok = [UIAlertAction
+                                        //                                                                   actionWithTitle:strOk
+                                        //                                                                   style:UIAlertActionStyleDefault
+                                        //                                                                   handler:^(UIAlertAction * action)
+                                        //                                                                   {
+                                        //                                                  //For maintaining last selected values
+                                        //                                                  [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
+                                        //                                                  [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
+                                        //                                                  [pref synchronize];
+                                        //                                                  flag = 1;
+                                        //
+                                        //
+                                        //                                                  NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+                                        //                                                  NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+                                        //                                                  if ([strFromDataEntry isEqualToString:@"1"]){
+                                        //                                                      [self.navigationController popViewControllerAnimated:YES];
+                                        //                                                  }else{
+                                        //
+                                        //                                                      [self clearFileds];
+                                        //                                                  }
+                                        //                                                  [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        //                                              }];
+                                        //
+                                        //                                              [myAlertController addAction:ok];
+                                        //                                              [self presentViewController:myAlertController animated:YES completion:nil];
+                                        
+                                        
+                                        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                        hud.mode = MBProgressHUDModeText;
+                                        hud.labelText = strSaved;
+                                        hud.margin = 10.f;
+                                        hud.yOffset = 150.f;
+                                        hud.removeFromSuperViewOnHide = YES;
+                                        
+                                        //For maintaining last selected values
+                                        [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
+                                        [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
+                                        [pref synchronize];
+                                        flag = 1;
+                                        
+                                        NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+                                        NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+                                        if ([strFromDataEntry isEqualToString:@"1"]){
+                                            [self.navigationController popViewControllerAnimated:YES];
+                                        }else{
+                                            //***code added for Bug-29063 By M.   Isha
+                                            [self makeAPICallsWithCallback:^{
+                                                // This block will be executed after the completion of the API calls
+                                                // Perform any additional actions or UI updates here
+                                                NSLog(@"API calls completed!");
+                                                [self clearFileds];
+                                            }];
+                                            //***end By M.
+                                        }
+                                        [hud hide:YES afterDelay:3];
+                                        
+                                        
+                                    }else{
+                                        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                                   message:[dict valueForKey:@"ResultString"]
+                                                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                        //** added Pigchamp logo on alert Bug-27920 by M.
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIView *controllerView = myAlertController.view;
+                                        [controllerView addSubview:logoImageView];
+                                        [controllerView bringSubviewToFront:logoImageView];
+                                        
+                                        UIAlertAction* ok = [UIAlertAction
+                                                             actionWithTitle:strOk
+                                                             style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action)
+                                                             {
+                                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+                                        
+                                        [myAlertController addAction: ok];
+                                        [self presentViewController:myAlertController animated:YES completion:nil];
+                                    }
+                                }
+                                
+                                NSLog(@"responseData=%@",responseData);
+                            } onFailure:^(NSString *responseData, NSError *error) {
+                                
+                                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                                //
+                                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                                
+                                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate,self.lblSelectedValue.text];
+                                [tracker set:kGAIScreenName value:strErr];
+                                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                                
+                                [_customIOS7AlertView close];
+                                
+                                if (responseData.integerValue ==401) {
+                                    
+                                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                               message:strUnauthorised
+                                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                                    //** added Pigchamp logo on alert Bug-27920 by M.
+                                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                    UIView *controllerView = myAlertController.view;
+                                    [controllerView addSubview:logoImageView];
+                                    [controllerView bringSubviewToFront:logoImageView];
+                                    
+                                    UIAlertAction* ok = [UIAlertAction
+                                                         actionWithTitle:strOk
+                                                         style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action) {
+                                        [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];                                                                                       [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                    }];
+                                    
+                                    [myAlertController addAction: ok];
+                                    [self presentViewController:myAlertController animated:YES completion:nil];
+                                    //[self.navigationController popToRootViewControllerAnimated:YES];
+                                }else{
+                                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                               message:responseData
+                                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                                    //** added Pigchamp logo on alert Bug-27920 by M.
+                                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                                    UIView *controllerView = myAlertController.view;
+                                    [controllerView addSubview:logoImageView];
+                                    [controllerView bringSubviewToFront:logoImageView];
+                                    
+                                    UIAlertAction* ok = [UIAlertAction
+                                                         actionWithTitle:strOk
+                                                         style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action) {
+                                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                    }];
+                                    
+                                    [myAlertController addAction: ok];
+                                    [self presentViewController:myAlertController animated:YES completion:nil];
+                                }
+                                
+                            }];
+                            
+                            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                            
+                        }else{
+                            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                       message:strNoInternet
+                                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                            //** added Pigchamp logo on alert Bug-27920 by M.
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            
+                            UIAlertAction* ok = [UIAlertAction
+                                                 actionWithTitle:strOk
+                                                 style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action)                                                                          {
+                                [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                            }];
+                            [myAlertController addAction: ok];
+                            [self presentViewController:myAlertController animated:YES completion:nil];
+                        }
+                    }];
+                    
+                    UIAlertAction* no = [UIAlertAction
+                                         actionWithTitle:strNo
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action){
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: yes];
+                    [myAlertController addAction: no];
+                    
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }else if ([[dict valueForKey:@"ResultString"] isEqualToString:strSaved] || [[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:strSavedLitterNote]){
+                    
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    hud.mode = MBProgressHUDModeText;
+                    hud.labelText = strSaved;
+                    hud.margin = 10.f;
+                    hud.yOffset = 150.f;
+                    hud.removeFromSuperViewOnHide = YES;
+                    
+                    //For maintaining last selected values
+                    [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
+                    [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
+                    [pref synchronize];
+                    flag = 1;
+                    
+                    NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+                    NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+                    if ([strFromDataEntry isEqualToString:@"1"]){
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }else{
+                        
+                        [self clearFileds];
+                    }
+                    [hud hide:YES afterDelay:3];
+                    
+                    
+                    //                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                    //                                                                                               message:strSaved
+                    //                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //
+                    //                    UIAlertAction* ok = [UIAlertAction
+                    //                                         actionWithTitle:strOk
+                    //                                         style:UIAlertActionStyleDefault
+                    //                                         handler:^(UIAlertAction * action) {
+                    //                        NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+                    //                        NSString *strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+                    //
+                    //                        //For maintaining last selected values
+                    //                        [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
+                    //                        [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
+                    //                        [pref synchronize];
+                    //                        flag = 1;
+                    //
+                    //                        if ([strFromDataEntry isEqualToString:@"1"]) {
+                    //                            [self.navigationController popViewControllerAnimated:YES];
+                    //                        }else {
+                    //                            [self clearFileds];
+                    //                        }
+                    //
+                    //                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    //                    }];
+                    //
+                    //                    [myAlertController addAction: ok];
+                    //                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }else if ([[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:@"Not connected"]) {//to do too
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:NSLocalizedString(@"connection_lost", @"")
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        if ([[ControlSettings sharedSettings] isNetConnected ]){
+                            _customIOS7AlertView = [[CustomIOS7AlertView alloc] init];
+                            [_customIOS7AlertView showLoaderWithMessage:strSignOff];
+                            
+                            [ServerManager sendRequestForLogout:^(NSString *responseData) {
+                                NSLog(@"%@",responseData);
+                                [_customIOS7AlertView close];
+                                
+                                if ([responseData isEqualToString:@"\"User is not signed in or Session expired\""] || [responseData localizedCaseInsensitiveContainsString:@"\"Token not found\""])  {
+                                }else if ([responseData isEqualToString:@"\"Loged out\""] || [responseData isEqualToString:@""]){
+                                    [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];
+                                }
+                            } onFailure:^(NSString *responseData, NSError *error) {
+                                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                                
+                                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,On log out=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate, self.title];
+                                [tracker set:kGAIScreenName value:strErr];
+                                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                                
+                                // [[NSNotificationCenter defaultCenter]postNotificationName:@"CloseAlert" object:responseData];
+                                
+                                [_customIOS7AlertView close];
+                            }];
+                        }
+                        else {
+                            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                       message:strNoInternet
+                                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                            //** added Pigchamp logo on alert Bug-27920 by M.
+                            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                            UIView *controllerView = myAlertController.view;
+                            [controllerView addSubview:logoImageView];
+                            [controllerView bringSubviewToFront:logoImageView];
+                            
+                            UIAlertAction* ok = [UIAlertAction
+                                                 actionWithTitle:strOk
+                                                 style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action)
+                                                 {
+                                [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                            }];
+                            
+                            [myAlertController addAction: ok];
+                            [self presentViewController:myAlertController animated:YES completion:nil];
+                        }
+                        
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }
+                else {
+                    [_customIOS7AlertView close];
+                    
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:[dict valueForKey:@"ResultString"]
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    //** added code for Logo image on alert Bug-27920
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    //  CGFloat offsetX = logoImageView.frame.size.width + 8.0;
+                    //UILabel *titleLabel = [controllerView valueForKey:@"ResultString"];
+                    // CGRect titleFrame = titleLabel.frame;
+                    // titleFrame.origin.x += offsetX;
+                    // titleLabel.frame  = titleFrame;
+                    //end of by M.
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }
+            }
+            
+            NSLog(@"responseData=%@",responseData);
+            // Assuming you have some way to check if the API call was successful, update the condition accordingly
+            BOOL success = YES; /* Check if the API call was successful */;
+            NSString *responseString = responseData;
+                // Call the completion block with the success status
+                if (completion) {
+                    completion(success,responseString);
+                }
+        }
+                                  
+                onFailure:^(NSString *responseData, NSError *error) {
+                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                //
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                
+                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,Farm Name = %@,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],[[NSUserDefaults standardUserDefaults] objectForKey:@"f_nm"],error.description,strDate,self.lblSelectedValue.text];
+                [tracker set:kGAIScreenName value:strErr];
+                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                
+                if (responseData.integerValue ==401) {
+                    
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:strUnauthorised
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        [[SlideNavigationController sharedInstance]popToRootViewControllerAnimated:YES];                                             [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                    //[self.navigationController popToRootViewControllerAnimated:YES];
+                }else{
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:responseData
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:strOk
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }
+                
+                [_customIOS7AlertView close];
+               
+            }];
+          
+        
+    }else{
+        UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                   message:strNoInternet
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction
+                             actionWithTitle:strOk
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [myAlertController addAction: ok];
+        [self presentViewController:myAlertController animated:YES completion:nil];
+    }
+    
+}
 -(void)clearFileds {
     @try {
         // [self btnClear_tapped:nil];
