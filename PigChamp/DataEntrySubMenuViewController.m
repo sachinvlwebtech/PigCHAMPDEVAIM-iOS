@@ -610,24 +610,24 @@ BOOL isOpen = NO;
                         else{
                             [arrMenu addObject:@"Piglet Death"];
                         }
-                    }
-//                    else  if (i==7){
-//                        if ([dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] isKindOfClass:[NSNull class]]) {
-//                            [self addObject:[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]:@"" englishVersion:@"Piglet Identification"];
-//                        }
-//                        else{
-//                            [arrMenu addObject:@"Piglet Identification"];
-//                        }
-//                    }else  if (i==8){
-//                        if ([dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] isKindOfClass:[NSNull class]]) {
-//                            [self addObject:[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]:@"" englishVersion:@"Piglet Defect"];
-//                        }
-//                        else{
-//                            [arrMenu addObject:@"Piglet Defect"];
-//                        }
-//                    }
-                    //*** code added for Piglet Defects Event Bug-28548 By M.
+                    }//***cofde added for Bug-28548 and Bug-28549 By M.
                     else  if (i==7){
+                        if ([dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                            [self addObject:[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Identification" uppercaseString]]:@"" englishVersion:@"Piglet Identification"];
+                        }
+                        else{
+                            [arrMenu addObject:@"Piglet Identification"];
+                        }
+                    }else  if (i==8){
+                        if ([dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                            [self addObject:[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]:@"" englishVersion:@"Piglet Defect"];
+                        }
+                        else{
+                            [arrMenu addObject:@"Piglet Defect"];
+                        }
+                    }
+                    //*** code added for Piglet Defects Event Bug-28548 By M.
+                   /* else  if (i==7){
                         if ([dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] && ![[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]] isKindOfClass:[NSNull class]]) {
                         [self addObject:[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]?[dictMenu objectForKey:[@"Piglet Defect" uppercaseString]]:@"" englishVersion:@"Piglet Defect"];
                             }
@@ -642,7 +642,7 @@ BOOL isOpen = NO;
                     else{
                     [arrMenu addObject:@"Piglet Identification"];
                   }
-                 }
+                 }*/
                 }
             }
             
@@ -654,12 +654,13 @@ BOOL isOpen = NO;
             [arrEventCode addObject:@"30"];
             [arrEventCode addObject:@"31"];
             [arrEventCode addObject:@"32"];
-//            [arrEventCode addObject:@"112"];
-//            [arrEventCode addObject:@"47"];
-            //***code added for Bug- 28548 By M.
-            [arrEventCode addObject:@"47"];
-            //$$$for identification
+            //***code added for Bug -28548 and Bug-28549 By M.
             [arrEventCode addObject:@"112"];
+            [arrEventCode addObject:@"47"];
+            //***code added for Bug- 28548 By M.
+          //  [arrEventCode addObject:@"47"];
+            //$$$for identification
+           // [arrEventCode addObject:@"112"];
         }else if ([countMenu isEqualToString:@"4"])
         {
             [arrMenu removeAllObjects];

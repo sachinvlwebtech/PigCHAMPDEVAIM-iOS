@@ -3818,6 +3818,10 @@ float animatedDistance;
             case 47:
                 strServiceName = @"/SrvEVTCommon.svc/SaveEventJson?";
                 break;
+                //***added code for Piglet Identification Bug-28549 By M.
+            case 112:
+                strServiceName = @"/SrvEVTCommon.svc/SaveEventJson?";
+                break;
                 //"/SrvEVTCommon.svc/SaveEventJson/";
             default:
                 break;
@@ -4075,6 +4079,10 @@ float animatedDistance;
                 if (strEventCode.integerValue == 47){
                     reqStringFUll  = [reqStringFUll stringByAppendingString:@","];
                     reqStringFUll  = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"EventCode\":\"47\""]];
+                }//***code added for Bug-28549 By M.Piglet Identification
+                else if (strEventCode.integerValue == 112){
+                    reqStringFUll  = [reqStringFUll stringByAppendingString:@","];
+                    reqStringFUll  = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"EventCode\":\"112\""]];
                 }
                 reqStringFUll  = [reqStringFUll stringByAppendingString:@"}"];
             }
