@@ -102,16 +102,18 @@
 
 - (IBAction)btnResetClicked:(id)sender {
     //*** commented below line for the bug-28795
-    //self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
+    self.txtURL.text = @"";
+    //@"https://dev-pc-mobile.farmsstaging.com";
     
     //***code added for Bug-28795 By M.
-    if ([self.txtURL.text isEqualToString:@"https://dev-pc-mobile.farmsstaging.com"]){
-        self.txtURL.text = @"https://pcmobile.pigchamp.com";
+   /* if ([self.txtURL.text isEqualToString:@"https://dev-pc-mobile.farmsstaging.com"]){
+        self.txtURL.text = @"https://pcmobile.pigchamp.com"; //-- LIVE
+        //http://pcmobile-beta.pigchamp.com--Beta
     }else if([self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"]){
         self.txtURL.text = @"https://dev-pc-mobile.farmsstaging.com";
     }else if([self.txtURL.text isEqualToString:@""] || [self.txtURL.text isEqual:nil] || self.txtURL.text == nil || (![self.txtURL.text isEqualToString:@"https://dev-pc-mobile.farmsstaging.com"] || ![self.txtURL.text isEqualToString:@"https://pcmobile.pigchamp.com"])){
         self.txtURL.text = @"https://pcmobile.pigchamp.com";
-    }
+    }*/
     //
     
  // self.txtURL.text = @"https://pcmobile.pigchamp.com";

@@ -103,7 +103,10 @@
     [pref setValue:@"0" forKey:@"reloadWeb"];
     [pref setValue:@"0" forKey:@"isRFID"];
     [pref synchronize];
-    
+    //Added By M for Dark mode issue raised in Mobile app grp by Hailey Arthur
+    if(@available(iOS 13.0,*)){
+        _window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
     return YES;
 }
 

@@ -4863,13 +4863,35 @@ float animatedDistance;
                                         //                                              [myAlertController addAction:ok];
                                         //                                              [self presentViewController:myAlertController animated:YES completion:nil];
                                         
-                                        
+                                        /*
                                         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                         hud.mode = MBProgressHUDModeText;
                                         hud.labelText = strSaved;
                                         hud.margin = 10.f;
                                         hud.yOffset = 150.f;
+                                        hud.removeFromSuperViewOnHide = YES;*/
+                                        //***code commented above for Bug-29140 By M.
+                                        UIImage *logoImage = [UIImage imageNamed:@"menuLogo.jpg"];
+                                        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:logoImage];
+                                        logoImageView.frame = CGRectMake(0, 0, 30, 30);
+                                        logoImageView.contentMode = UIViewContentModeScaleAspectFit;
+
+                                        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, 160, 30)]; // Adjust the frame as needed
+                                        label.text = strSaved;
+                                        label.textColor = [UIColor whiteColor];
+                                        UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 30)]; // Adjust the frame as needed
+                                        //customView.backgroundColor = [UIColor blackColor];
+                                        [customView addSubview:logoImageView];
+                                        [customView addSubview:label];
+
+                                        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                        hud.mode = MBProgressHUDModeCustomView;
+                                        hud.customView = customView;
+                                        hud.margin = 10.f;
+                                        hud.yOffset = 150.f;                                        // Set the correct size for the custom view
+                                        hud.customView.bounds = CGRectMake(0, 0, 200, 30);
                                         hud.removeFromSuperViewOnHide = YES;
+                                        
                                         
                                         //For maintaining last selected values
                                         [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
@@ -5009,13 +5031,34 @@ float animatedDistance;
                     [self presentViewController:myAlertController animated:YES completion:nil];
                 }else if ([[dict valueForKey:@"ResultString"] isEqualToString:strSaved] || [[dict valueForKey:@"ResultString"] localizedCaseInsensitiveContainsString:strSavedLitterNote]){
                     
-                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                   /* MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                        hud.mode = MBProgressHUDModeText;
                                        hud.labelText = strSaved;
                                        hud.margin = 10.f;
                                        hud.yOffset = 150.f;
-                                       hud.removeFromSuperViewOnHide = YES;
-                                       
+                                       hud.removeFromSuperViewOnHide = YES;*/
+                    //***code commented above for Bug-29140 By M.
+                    UIImage *logoImage = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithImage:logoImage];
+                    logoImageView.frame = CGRectMake(0, 0, 30, 30);
+                    logoImageView.contentMode = UIViewContentModeScaleAspectFit;
+
+                    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, 160, 30)]; // Adjust the frame as needed
+                    label.text = strSaved;
+                    label.textColor = [UIColor whiteColor];
+                    UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 30)]; // Adjust the frame as needed
+                    //customView.backgroundColor = [UIColor blackColor];
+                    [customView addSubview:logoImageView];
+                    [customView addSubview:label];
+
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    hud.mode = MBProgressHUDModeCustomView;
+                    hud.customView = customView;
+                    hud.margin = 10.f;
+                    hud.yOffset = 150.f;                                        // Set the correct size for the custom view
+                    hud.customView.bounds = CGRectMake(0, 0, 200, 30);
+                    hud.removeFromSuperViewOnHide = YES;
+                    
                     //For maintaining last selected values
                     [pref setObject:dictJson forKey:@"lastSelectedDictJSON"];
                     [pref setObject:_dictDynamic forKey:@"lastSelectedDictDynamic"];
