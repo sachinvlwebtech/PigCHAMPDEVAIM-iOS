@@ -27,6 +27,8 @@
 
 + (void)sendRequestForFarmsData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
 + (void)sendRequestForUsersData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
+//Added below method for getting Server Version Number-V10 issue by M. 
++ (void)getServerVersionDetails:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
 
 + (void)sendRequestForCheckVersion:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;
 + (void)sendRequestForTimeoutValue:(NSString*)platform onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure;

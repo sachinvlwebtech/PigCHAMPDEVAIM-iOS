@@ -31,7 +31,8 @@ NSString *Success        = @"";
 - (void)viewDidLoad {
     @try {
         [super viewDidLoad];
-        
+        //called below method for V10 By M.
+        [self getServerVersion];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationHasBecomeActive)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -84,6 +85,63 @@ NSString *Success        = @"";
     
     [self callCheckCurrentVersion]; //Code added by Priyanka July 18//
 }
+//Added method for Server Issue of V10 By M
+
+-(void)getServerVersion{
+    @try{
+            if ([[ControlSettings sharedSettings] isNetConnected ]){
+               
+                [ServerManager getServerVersionDetails:^(NSString *responseData) {
+                   
+                        NSDictionary *dictreponse = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                        
+                        NSNumber *majorVersionNumber = dictreponse[@"MajorVersion"];
+                                  
+                                   if (majorVersionNumber != nil) {
+                                       NSInteger majorVersion = [majorVersionNumber integerValue];
+                                       [_pref setInteger:majorVersion forKey:@"ServerVersion"];
+                                       NSLog(@"Major Version in LoginView: %ld", (long)majorVersion);
+                                   } else {
+                                       NSLog(@"Major Version is not available in the JSON.");
+                                   }
+                       
+                    
+                } onFailure:^(NSString *responseData, NSError *error) {
+                    [_customIOS7AlertView close];
+                    
+                    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                    [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                    NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                    
+                    NSString *strErr = [NSString stringWithFormat:@"User Name = %@,,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Server Version"];
+                    [tracker set:kGAIScreenName value:strErr];
+                    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                    
+                    UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                               message:responseData
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
+                    UIAlertAction* ok = [UIAlertAction
+                                         actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action) {
+                        //[self.navigationController popToRootViewControllerAnimated:YES];
+                        [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                    }];
+                    
+                    [myAlertController addAction: ok];
+                    [self presentViewController:myAlertController animated:YES completion:nil];
+                }];
+            }
+        }@catch (NSException *exception) {
+            NSLog(@"Exception in get language list=%@",exception.description);
+        }
+} 
 -(void)callLoadLanguageData{
     NSString *str = [[[_pref valueForKey:@"baseURL"] stringByAppendingString:@"lngmin/"] stringByAppendingString:[NSString stringWithFormat:@"%@_mob.lng",[_pref valueForKey:@"selectedLanguage"]]];
      NSData *data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:str]];
@@ -1497,8 +1555,11 @@ NSString *Success        = @"";
                                    // [_customIOS7AlertView close];
                                    // [self performSegueWithIdentifier:@"SegueLogin" sender:self];
                                     //^^^^ added below method for Bug-29001 By M.
+                                    //**added for Version V10  issue By M.
+                                    [[NSUserDefaults standardUserDefaults] setObject:self.txtLogintextField.text forKey:@"userName"];
+                                    NSLog(@"username=%@",self.txtLogintextField.text);
                                     
-                                    [self updateSingleFarmDataBase];
+                                [self updateSingleFarmDataBase];
                                 }
                             }
                         }
@@ -2225,6 +2286,15 @@ return strSearchTitle;
     if (textField == self.txtAccountNumber){
         NSString *resultText = [textField.text stringByReplacingCharactersInRange:range withString:string];
         return resultText.length <= 5;
+    }
+    //added below code for crash of V10 By M.
+    
+    if (textField == self.txtLogintextField){
+        NSString *resultText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+       
+            [[NSUserDefaults standardUserDefaults] setObject:resultText forKey:@"userName"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        return YES;
     }
     else
         return YES;

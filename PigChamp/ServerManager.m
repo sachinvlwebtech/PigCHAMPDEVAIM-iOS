@@ -313,8 +313,52 @@ static NSURLConnection *theConnection;
     }
 }
 
-
-
+//Added below method for getting Server Version Number by M.
++ (void)getServerVersionDetails:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure
+{
+    @try {
+        NSString *serviceUrl = @"";
+      
+      serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:[NSString stringWithFormat:@"SrvAuthentication.svc/GetDLLVersion"]];
+          
+        serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        
+        NSMutableURLRequest * request = [[NSMutableURLRequest alloc] init];
+        NSURL *url = [NSURL URLWithString:serviceUrl];
+        [request setURL:url];
+        [request setHTTPMethod:@"GET"];
+        NSData *requestBody = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+        [request setHTTPBody:requestBody];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            @try
+            {
+                NSString *myXMLResponse = [[NSString alloc] initWithBytes: [data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+                
+                if(!connectionError){
+                    success(myXMLResponse);
+                    NSLog(@"^^^^^^^^Get Server Version-- %@",myXMLResponse);
+                    
+                }
+                else{
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+                    long statusCodeResponse = (long)[httpResponse statusCode];
+                    
+                    NSString *strError = [NSString stringWithFormat:@"%@", [connectionError description]];
+                    if ([strError rangeOfString:@"Code=-1012"].location != NSNotFound) {
+                        statusCodeResponse = 401;
+                    }
+                    
+                    failure([NSString stringWithFormat:@"%ld",(long)statusCodeResponse], connectionError);
+                }
+            }
+            @catch (NSException *exception){
+                failure(@"Error Occured", connectionError);
+            }}];
+    }
+    @catch (NSException *exception){
+    }
+}
 
 
 
