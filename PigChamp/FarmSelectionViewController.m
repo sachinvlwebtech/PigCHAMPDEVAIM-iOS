@@ -597,11 +597,14 @@ NSString *strFarms;
                                 @try {
                                     for (NSDictionary *dict in destinartionArray)
                                     {
+                                        //***changed below key  got changed in Json response and  casue of crash in Testflight By M.
                                         NSMutableDictionary *dt  = [[NSMutableDictionary alloc]init];
                                         [dt setValue:[dict objectForKey:@"Ds"] forKey:@"Ds"];
-                                        [dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                        //[dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                        [dt setValue:[dict valueForKey:@"FC"] forKey:@"fC"];
                                         [dt setValue:[dict valueForKey:@"sid"] forKey:@"sid"];
-                                        [dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                        //[dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                        [dt setValue:[dict valueForKey:@"ZD"] forKey:@"zD"];
                                         
                                         [arrFilteredDestination addObject:dt];
                                     }
@@ -622,11 +625,14 @@ NSString *strFarms;
                                 @try {
                                     for (NSDictionary *dict in originArray)
                                     {
+                                       // ***changed below key key got changed in Json response and   casue of crash in Testflight By M.
                                         NSMutableDictionary *dt  = [[NSMutableDictionary alloc]init];
                                         [dt setValue:[dict objectForKey:@"Ds"] forKey:@"Ds"];
-                                        [dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                        //[dt setValue:[dict valueForKey:@"fC"] forKey:@"fC"];
+                                        [dt setValue:[dict valueForKey:@"FC"] forKey:@"fC"];
                                         [dt setValue:[dict valueForKey:@"sid"] forKey:@"sid"];
-                                        [dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                       // [dt setValue:[dict valueForKey:@"zD"] forKey:@"zD"];
+                                        [dt setValue:[dict valueForKey:@"ZD"] forKey:@"zD"];
                                         
                                         [arrFilteredOrigin addObject:dt];
                                     }

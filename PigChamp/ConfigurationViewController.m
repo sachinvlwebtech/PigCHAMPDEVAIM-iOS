@@ -163,8 +163,9 @@
 }
 
 - (IBAction)btnResetClicked:(id)sender {
-    //*** commented below line for the bug-28795
+    //*** added below line for the bug-29328
     self.txtURL.text = @"https://pcmobile.pigchamp.com";
+    //*** commented below line for the bug-28795
     //@"https://dev-pc-mobile.farmsstaging.com";
 //Added below for  V10 issue By M.
     [self getServerVersion];

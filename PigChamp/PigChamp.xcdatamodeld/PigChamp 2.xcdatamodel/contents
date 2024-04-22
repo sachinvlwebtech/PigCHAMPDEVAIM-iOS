@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G91" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G630" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Admin_Routes" syncable="YES">
         <attribute name="dk" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
@@ -64,7 +64,7 @@
         <attribute name="ds" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="zD" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zd" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Farms" syncable="YES">
         <attribute name="currencycode" optional="YES" attributeType="String" syncable="YES"/>
