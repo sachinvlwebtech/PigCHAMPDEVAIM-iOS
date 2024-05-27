@@ -787,7 +787,8 @@ NSString* strServiceName1;
             
             return cell;
             
-        }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText])  || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
+        }//added below 57 for bug-29360 By M.
+        else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText])  || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])) {
             
             twoTextCustomCell *cell = (twoTextCustomCell*)[tableView dequeueReusableCellWithIdentifier:@"TwoText" forIndexPath:indexPath];
             cell.backgroundColor = [UIColor clearColor];
@@ -1275,7 +1276,8 @@ NSString* strServiceName1;
         }else if((strSplitLosses) && strEventCode.integerValue == 32){
             return YES;
             
-        }else if((strSplitFostered) && (strEventCode.integerValue == 27 || strEventCode.integerValue == 93)){
+        }//added eventcode 31 for bug-29360 By M.
+        else if((strSplitFostered) && (strEventCode.integerValue == 27 || strEventCode.integerValue == 93 || strEventCode.integerValue == 31)){
             return YES;
             
         }else if((strSplitDefects) && strEventCode.integerValue == 47){
