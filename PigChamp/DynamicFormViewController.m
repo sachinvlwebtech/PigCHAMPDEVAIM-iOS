@@ -42,9 +42,13 @@ BOOL strSplitLosses = NO;
 BOOL strSplitFostered = NO;
 BOOL strSplitDefects = NO;
 BOOL strSplitTreatments = NO;
+int tattooScanflg = 0;
+BOOL addnewPigFlg = NO;
 //***added for Bug0-29063 by M.
 NSString* reqStringfulltmp;
 NSString* strServiceName1;
+//~~~~~ Added for piglet identities By M.
+NSString* strpigletIdentitiesEdit;
 @interface DynamicFormViewController ()
 {
     NSString* fullDataString,*strFromDropDownView;
@@ -58,6 +62,11 @@ NSString* strServiceName1;
     //***added for Bug0-29063 by M.
     NSString *value;
     NSArray *reqStringArray;
+    //~~~~~ Added for piglet identities By M.
+    NSMutableDictionary *pigletIdentityDict, *pigletIdentityJsonDict;
+    NSArray *array169_1;
+    NSMutableDictionary *dictDataToSend_1;
+    NSString *tattooScannedValue;
 }
 @property(nonatomic, strong) IBOutlet EAAccessory *accessory;
 @property(nonatomic) uint32_t totalBytesRead;
@@ -81,7 +90,12 @@ NSString* strServiceName1;
         
         arrMultipleIdentities = [[NSMutableArray alloc]init];
         arrMultipleSowIdentities = [[NSMutableArray alloc]init];
-        
+        //~~~~~ added for Piglet Identities By M.
+        _pigletIdentitiesArray = [[NSMutableArray alloc]init];
+        _pigletIdentitiesJsonArray = [[NSMutableArray alloc]init];
+        _pigletIdentitiesArray1= [[NSMutableArray alloc]init];
+        _pigletIdentitiesJsonArray1= [[NSMutableArray alloc]init];
+        _tmparray = [[NSMutableArray alloc]init];
         [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -303,11 +317,360 @@ NSString* strServiceName1;
             
             NSString * strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
             NSString *strFromSetting = [pref valueForKey:@"FromSetting"];
+            //~~~~~ Added for piglet identities By M.
+            pigletIdentityDict = [NSMutableDictionary dictionaryWithDictionary:@{
+                @"Identity": @"",
+                @"Tattoo": @"",
+                @"Transponder": @"",
+                @"Sex": @"",
+                @"Weight": @0,
+                @"Teats": @0,
+                @"TeatsLeft": @0,
+                @"TeatsBBL": @0,
+                @"TeatsBBR": @0,
+                @"Color": @"",
+                @"Designation": @""
+            }];
+            pigletIdentityJsonDict = [NSMutableDictionary dictionaryWithDictionary:@{
+                @"34": @"", //Identity
+                @"35": @"", //Tattoo
+                @"36": @"", //Transponder
+                @"37": @"", //Sex
+                @"38": @0,//Weight
+                @"39": @0, //Teats
+                @"40": @0,//TeatsLeft
+                @"41": @0, //TeatsBBL
+                @"42": @0, //TeatsBBR
+                @"43": @"", //Color
+                @"44": @"" //Designation
+            }];
+            /*strSplitSex = [pref valueForKey:@"SSL"];
+             strSplitWex = [pref valueForKey:@"SSW"];*/
+            //***code added for SplitSex Functionality Bug-27775 By M  @@@@@
+            strSplitSex = [[pref valueForKey:@"SSL"] boolValue];
+            strSplitWex = [[pref valueForKey:@"SSW"] boolValue];
+            strSplitLosses = [[pref valueForKey:@"splitsexlosses"] boolValue];
+            strSplitFostered = [[pref valueForKey:@"splitsexfostered"] boolValue];
+            strSplitDefects = [[pref valueForKey:@"splitsexdefects"] boolValue];
+            strSplitTreatments = [[pref valueForKey:@"splitsextreatments"] boolValue];
+            NSLog(@"strSplitSex=%d",strSplitSex);
+            NSLog(@"strSplitWex=%d",strSplitWex);
+            
+            if ([strFromSetting isEqualToString:@"0"]) {
+                NSArray *arrUserParameter = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"User_Parameters" andPredicate:nil andSortDescriptors:nil];
+                //***commented below code for User_Parameters api changes By M.
+                
+                //for (int count=0; count<arrUserParameter.count; count++) {
+                //if ([[[arrUserParameter objectAtIndex:count] valueForKey:@"up_date_settings_input_format"]  isEqualToString:@"DateUsageFormat"]) {
+                //_strDateFormat = [arrUserParameter valueForKey:@"up_date_settings_input_format"];
+                //}
+                // }
+                
+                for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                    NSManagedObject *managedObject = arrUserParameter[i];
+                    
+                    NSNumber *dateFormatNumber = [managedObject valueForKey:@"up_date_settings_input_format"];
+                    //*** code added for Bug-28561 By M.
+                    isGestationWarnLengthflg = [[managedObject valueForKey:@"up_date_settings_input_format"] boolValue];
+                    // Convert the numerical value to a string
+                    _strDateFormat = [dateFormatNumber stringValue];
+                    
+                    NSLog(@"_strDateFormat: %@", _strDateFormat);
+                }
+                
+                //*** codition changed as per the User_Params API response for date for Bug-27782 By M.
+                
+                //if ([_strDateFormat isEqualToString:@"7"]) {
+                if ([_strDateFormat isEqualToString:@"1"]) {
+                    isThousandFormat = YES;
+                }else {
+                    isThousandFormat = NO;
+                }
+                
+                NSLog(@"_strDateFormat=%@",_strDateFormat);
+                
+                self.title = self.strTitle;
+                self.lblSelectedValue.text = self.lblTitle;
+                [_arrDynamic removeAllObjects];
+                //~~~~~ added for Piglet Identities By M.
+                NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Data_Entry_Items"];
+                fetchRequest.predicate = [NSPredicate predicateWithFormat:@"cd == %@", strEventCode];
+                fetchRequest.sortDescriptors = nil;
+                fetchRequest.relationshipKeyPathsForPrefetching = @[@"dkaItems"];
+                NSArray *resultArray = [[CoreDataHandler sharedHandler]getValuesToListWithFetchRequest:fetchRequest];
+
+                for (NSManagedObject *dataEntryItem in resultArray){
+                    _dictDynamic = [[NSMutableDictionary alloc]init];
+                    
+                    // NSString *strData = [[resultArray objectAtIndex:count] valueForKey:@""];
+                    //if (![strData isEqualToString:@"7"])//Yogs commnetes bcz of bug NUMBER 24 IN DEFECT SHEET
+                    {
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"co"] ?: @"" forKey:@"co"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"dk"] ?: @"" forKey:@"dk"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"dt"] ?: @"" forKey:@"dt"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"dft"] ?: @"" forKey:@"dfT"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"dfv"] ?: @"" forKey:@"dfv"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"mxv"] ?: @"" forKey:@"mxV"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"mnv"] ?: @"" forKey:@"mnV"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"lb"] ?: @"" forKey:@"Lb"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"nc"] ?: @"" forKey:@"nC"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"op"] ?: @"" forKey:@"op"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"nd"] ?: @"" forKey:@"nD"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"ps"] ?: @"" forKey:@"ps"];
+                        [_dictDynamic setValue:[dataEntryItem valueForKey:@"ac"] ?: @"" forKey:@"ac"];
+                        
+                       
+                        [_arrDynamic addObject:_dictDynamic];
+                    
+                        // suppose to comment for Bug-27856 and Bug-27788 by M.
+                        //For removing 169 and piglet identities -------------------
+                        /*for (NSMutableDictionary *dict  in _arrDynamic){
+                         if ([[dict valueForKey:@"dk"] integerValue] == 169 && [[dict valueForKey:@"Lb"]   isEqual: @"Piglet Identities"]){
+                         [_arrDynamic removeObject:dict];
+                         }
+                         //For removing 169 and piglet identities -------------------
+                         } */
+                        //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
+                        if (strEventCode.integerValue == 27){
+                            BOOL doubleIdentity=TRUE;
+                            for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                                NSManagedObject *managedObject = arrUserParameter[i];
+                                NSNumber *doubleIdentityNumber = [managedObject valueForKey:@"up_fosterings_double_identity"];
+                                doubleIdentity = [doubleIdentityNumber boolValue];
+                            }
+                            if (!doubleIdentity){
+                                for (NSMutableDictionary *dict  in _arrDynamic){
+                                    if ([[dict valueForKey:@"dk"] integerValue] == 63 && [[dict valueForKey:@"Lb"]   isEqual: @"Destination Sow (+)"]){
+                                        [_arrDynamic removeObject:dict];
+                                    }
+                                }
+                            }
+                        }
+                        //***end of  By M.
+                    }
+                }
+                //~~~~~ Piglet identities by M.
+                NSMutableArray *uniqueArray = [NSMutableArray array];
+                NSMutableArray *uniqueArrayNew = [NSMutableArray array];
+                NSArray *arrPigleyIdentityies = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Piglet_Identities" andPredicate:nil andSortDescriptors:nil];
+                NSMutableArray *nestedDataArray = [NSMutableArray array];
+                for (NSInteger i = 0; i < arrPigleyIdentityies.count; i++){
+                    NSManagedObject *managedObject = arrPigleyIdentityies[i];
+                    NSMutableDictionary *nestedDict = [NSMutableDictionary dictionary];
+                   
+                    //NSNumber *pigCD = [managedObject valueForKey:@"cd"];
+                 
+                    [nestedDict setValue:[managedObject valueForKey:@"lb"] forKey:@"lb"];
+                    [nestedDict setValue:[managedObject valueForKey:@"ac"] forKey:@"ac"];
+                    [nestedDict setValue:[managedObject valueForKey:@"cd"] forKey:@"cd"];
+                    [nestedDict setValue:[managedObject valueForKey:@"co"] forKey:@"co"];
+                    [nestedDict setValue:[managedObject valueForKey:@"coe"] forKey:@"coe"];
+                    [nestedDict setValue:[managedObject valueForKey:@"dft"] forKey:@"dft"];
+                    [nestedDict setValue:[managedObject valueForKey:@"dfv"] forKey:@"dfv"];
+                    [nestedDict setValue:[managedObject valueForKey:@"dk"] forKey:@"dk"];
+                    [nestedDict setValue:[managedObject valueForKey:@"dt"] forKey:@"dt"];
+                    [nestedDict setValue:[managedObject valueForKey:@"lc"] forKey:@"lc"];
+                    [nestedDict setValue:[managedObject valueForKey:@"mnv"] forKey:@"mnv"];
+                    [nestedDict setValue:[managedObject valueForKey:@"mxv"] forKey:@"mxv"];
+                    [nestedDict setValue:[managedObject valueForKey:@"nc"] forKey:@"nc"];
+                    [nestedDict setValue:[managedObject valueForKey:@"nd"] forKey:@"nd"];
+                    [nestedDict setValue:[managedObject valueForKey:@"op"] forKey:@"op"];
+                    [nestedDict setValue:[managedObject valueForKey:@"ps"] forKey:@"ps"];
+                    [nestedDict setValue:[managedObject valueForKey:@"dka"] forKey:@"dka"];
+                    // Add the nested dictionary to the array*/
+                    [nestedDataArray addObject:nestedDict];
+                  
+                }
+                NSMutableDictionary *seen = [NSMutableDictionary dictionary];
+                
+
+                for (NSDictionary *item in nestedDataArray) {
+                    NSString *itemLb = item[@"lb"];
+                    if (![seen objectForKey:itemLb]) {
+                        [seen setObject:@(1) forKey:itemLb];
+                        [uniqueArray addObject:item];
+                    }
+                }
+
+                for (NSMutableDictionary *item in uniqueArray) {
+                    NSString *label = item[@"lb"];
+                    NSInteger dkValue = 0;
+                            
+                            if ([label isEqualToString:@"Tag"]) {
+                                dkValue = 34;
+                            } else if ([label isEqualToString:@"Tattoo"]) {
+                                dkValue = 35;
+                            } else if ([label isEqualToString:@"Transponder"]) {
+                                dkValue = 36;
+                            } else if ([label isEqualToString:@"Sex"]) {
+                                dkValue = 37;
+                            } else if ([label isEqualToString:@"Weight"]) {
+                                dkValue = 38;
+                            } else if ([label isEqualToString:@"Teats"]) {
+                                dkValue = 39;
+                            } else if ([label isEqualToString:@"Teats Left"]) {
+                                dkValue = 40;
+                            } else if ([label isEqualToString:@"Teats BBL"]) {
+                                dkValue = 41;
+                            } else if ([label isEqualToString:@"Teats BBR"]) {
+                                dkValue = 42;
+                            } else if ([label isEqualToString:@"Color"]) {
+                                dkValue = 43;
+                            } else if ([label isEqualToString:@"Designation"]) {
+                                dkValue = 44;
+                            }
+                    
+                    [item setObject:@(dkValue) forKey:@"dk"];
+                }
+                NSLog(@"%@", uniqueArray);
+                    for (NSMutableDictionary *dict  in _arrDynamic){
+                        if  ([[dict valueForKey:@"dk"] integerValue] == 169 && [[dict valueForKey:@"Lb"]  isEqual: @"Piglet Identities"]){
+                            
+                            [dict setValue:uniqueArray forKey:@"dka"];
+                            //[_arrDynamic addObject:_dictDynamic];
+                            NSLog(@">>>>>>>>>>>>>>>>>>>%@",_arrDynamic);
+                        }
+                        
+                    }
+                //~~~~~end of  By M.
+                    // Add the array of nested data to the main dictionary under the key "dka"
+                
+                    //[_dictDynamic setValue:nestedDataArray forKey:@"dka"];
+
+                    // Add the main dictionary to the array
+                    ///[_arrDynamic addObject:_dictDynamic];
+                
+                /*
+                 //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
+                 if (strEventCode.integerValue == 27){
+                 BOOL doubleIdentity=TRUE;
+                 for (NSInteger i = 0; i < arrUserParameter.count; i++) {
+                 NSManagedObject *managedObject = arrUserParameter[i];
+                 NSNumber *doubleIdentityNumber = [managedObject valueForKey:@"up_fosterings_double_identity"];
+                 doubleIdentity = [doubleIdentityNumber boolValue];
+                 }
+                 if (!doubleIdentity){
+                 for (NSMutableDictionary *dict  in _arrDynamic){
+                 if ([[dict valueForKey:@"dk"] integerValue] == 63 && [[dict valueForKey:@"Lb"]   isEqual: @"Destination Sow (+)"]){
+                 [_arrDynamic removeObject:dict];
+                 }
+                 }
+                 }
+                 }
+                 //***end of  By M.
+                 */
+                
+              
+                NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
+                    
+                    NSInteger position1 = [[obj1 valueForKey:@"ps"] integerValue];
+                    NSInteger position2 = [[obj2 valueForKey:@"ps"] integerValue];
+                    
+                    if (position1 <position2)
+                    {
+                        return  NSOrderedAscending;
+                    }
+                    else if (position1 >position2)
+                    {
+                        return NSOrderedDescending;
+                    }
+                    else {
+                        return NSOrderedSame;
+                    }
+                }];
+                
+                [_arrDynamic removeAllObjects];
+                _arrDynamic = [NSMutableArray arrayWithArray:arrsorted];
+                
+                _dictDynamic = [[NSMutableDictionary alloc]init];
+                dictJson = [[NSMutableDictionary alloc]init];
+                
+                for (NSMutableDictionary *dict  in _arrDynamic) {
+                    
+                    if ([[dict valueForKey:@"dk"] integerValue] != 7){
+                        if ([[dict valueForKey:@"dk"] integerValue] == 92){
+                            NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                            [dictText setValue:@"" forKey:@"first"];
+                            [dictText setValue:@"" forKey:@"second"];
+                            [dictText setValue:@"" forKey:@"third"];
+                            
+                            [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                        }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue] == 3 && [self isTwoText])){
+                            NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                            [dictText setValue:@"" forKey:@"Male"];
+                            [dictText setValue:@"" forKey:@"Female"];
+                            
+                            [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                        }
+                        else if([[dict valueForKey:@"dk"] integerValue] == 6){
+                            
+                            NSMutableDictionary *dictData = [[NSMutableDictionary alloc]init];
+                            [dictData setValue:@"" forKey:@"br"];
+                            [dictData setValue:@"" forKey:@"rm"];
+                            [dictData setValue:@"" forKey:@"pn"];
+                            
+                            [dictJson setObject:dictData forKey:[dict valueForKey:@"dk"]];
+                        }
+                        //~~~~~for piglet identities by M
+                        else if([[dict valueForKey:@"dk"] integerValue] == 169){
+                           // [_dictDynamic setValue:@"" forKey:[dict valueForKey:@"Lb"]];
+                            [dictJson setValue:pigletIdentityJsonDict forKey:[dict valueForKey:@"dk"]];
+                           
+                        }else if([[dict valueForKey:@"dk"] integerValue] != 6){
+                            [_dictDynamic setValue:@"" forKey:[dict valueForKey:@"Lb"]];
+                            [dictJson setValue:@"" forKey:[dict valueForKey:@"dk"]];
+                        }
+                    }
+                }
+                
+                [self fillDefaultValuesForMandatoryFields];
+                
+                if ([strFromDataEntry isEqualToString:@"1"]) {
+                    [self callEdit];
+                }
+                //***code added for Bug-28565 By M.
+                isDateSelected = FALSE;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tblDynamic reloadData];
+                });
+            }
+        }
+        @catch (NSException *exception) {
+            NSLog(@"Exception in viewWillAppear=%@",exception.description);
+        }
+    }
+}
+/*
+-(void)viewWillAppear:(BOOL)animated {
+    
+    [self registerForKeyboardNotifications];
+    
+    if (![strFromDropDownView  isEqual: @"fromDropDownView"]) {
+        @try {
+            [super viewWillAppear:animated];
+            
+            NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+            [pref setValue:@"OnDataEntryScreen" forKey:@"CurrentPage"];
+            [pref synchronize];
+            
+            if ([_strFromEditPage isEqualToString:@"fromEditPage"])
+            {
+                _strFromEditPage = @"FromEdit";
+            }
+            else
+            {
+                _strFromEditPage = @"FromDataEntry";
+            }
+            
+            isOpenDynamic = NO;
+            
+            NSString * strFromDataEntry = [pref valueForKey:@"FromDataEntry"];
+            NSString *strFromSetting = [pref valueForKey:@"FromSetting"];
             
             /*strSplitSex = [pref valueForKey:@"SSL"];
             strSplitWex = [pref valueForKey:@"SSW"];*/
             //***code added for SplitSex Functionality Bug-27775 By M  @@@@@
-            strSplitSex = [[pref valueForKey:@"SSL"] boolValue];
+    /*~~~~      strSplitSex = [[pref valueForKey:@"SSL"] boolValue];
             strSplitWex = [[pref valueForKey:@"SSW"] boolValue];
             strSplitLosses = [[pref valueForKey:@"splitsexlosses"] boolValue];
             strSplitFostered = [[pref valueForKey:@"splitsexfostered"] boolValue];
@@ -386,7 +749,7 @@ NSString* strServiceName1;
                             //For removing 169 and piglet identities -------------------
                         } */
                         //***added code for checking the Fostering flag and removing dk=63 for  Bug-27742 By M.
-                        if (strEventCode.integerValue == 27){
+               /*~~~~~~         if (strEventCode.integerValue == 27){
                         BOOL doubleIdentity=TRUE;
                         for (NSInteger i = 0; i < arrUserParameter.count; i++) {
                             NSManagedObject *managedObject = arrUserParameter[i];
@@ -423,7 +786,7 @@ NSString* strServiceName1;
                 }
                 //***end of  By M.
                 */
-                NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
+           /*~~~~~     NSArray *arrsorted = [_arrDynamic sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
                     
                     NSInteger position1 = [[obj1 valueForKey:@"ps"] integerValue];
                     NSInteger position2 = [[obj2 valueForKey:@"ps"] integerValue];
@@ -496,7 +859,7 @@ NSString* strServiceName1;
             NSLog(@"Exception in viewWillAppear=%@",exception.description);
         }
     }
-}
+}*/
 
 -(void)updateMenuBarPositions {
     @try {
@@ -657,6 +1020,9 @@ NSString* strServiceName1;
         NSMutableDictionary *dict = [_arrDynamic objectAtIndex:indexPath.row];
         if ([[dict valueForKey:@"dk"] integerValue] == 92){
             return 110;
+        }//~~~~~ added for new piglet identities By M.
+        else if ([[dict valueForKey:@"dk"] integerValue] == 169){
+            return 478;
         }
         //        else if ([[dict valueForKey:@"dk"] integerValue] == 7){
         //            return 250;
@@ -917,6 +1283,170 @@ NSString* strServiceName1;
         //
         //            return cell;
         //        }
+        //~~~~~ added for new piglet identities By M.
+        else if ([[dict valueForKey:@"dk"] integerValue]==169){
+            PigletIdentitiesTableViewCell *cell = (PigletIdentitiesTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"PigletIdentitiesTableViewCell" forIndexPath:indexPath];
+            cell.delegate = self;
+            cell.backgroundColor = [UIColor clearColor];
+            //UILabel *lblDetails = (UILabel*)[cell viewWithTag:1];
+            cell.lblDetail.text = [dict valueForKey:@"Lb"]?[dict valueForKey:@"Lb"]:@"";
+            
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                if ([[dict valueForKey:@"ac"] integerValue]==1 && [[dict valueForKey:@"co"] integerValue]==1){
+                    cell.lblDetail.font = [UIFont boldSystemFontOfSize:17];
+                }
+                else {
+                    cell.lblDetail.font = [UIFont systemFontOfSize:17];
+                }
+            }
+            else{
+                if ([[dict valueForKey:@"ac"] integerValue]==1 && [[dict valueForKey:@"co"] integerValue]==1){
+                    cell.lblDetail.font = [UIFont boldSystemFontOfSize:13];
+                }
+                else{
+                    cell.lblDetail.font = [UIFont systemFontOfSize:13];
+                }
+            }
+            
+            [cell.txtpiglet_den setKeyboardType:UIKeyboardTypeDefault];
+            [cell.txtpiglet_Tattoo setKeyboardType:UIKeyboardTypeDefault];
+            [cell.txtpiglet_transp setKeyboardType:UIKeyboardTypeDefault];
+            cell.txtpiglet_den.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+            cell.txtpiglet_Tattoo.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+            cell.txtpiglet_transp.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+            
+            if(![_strFromEditPage isEqualToString:@"FromEdit"]){
+                cell.txtpiglet_den.tag = indexPath.row;
+                cell.txtpiglet_Tattoo.tag = indexPath.row;
+                cell.txtpiglet_Weight.tag = indexPath.row;
+                cell.txtpiglet_transp.tag = indexPath.row;
+                cell.txtpiglet_Teats.tag = indexPath.row;
+                cell.txtpiglet_TeatsLeft.tag = indexPath.row;
+                cell.txtpiglet_TeatsBBL.tag = indexPath.row;
+                cell.txtpiglet_TeatsBBR.tag = indexPath.row;
+                
+                if(tattooScanflg == 1){
+                    cell.txtpiglet_Tattoo.text = dictJson[@"169"][@"35"];
+                    tattooScanflg = 0;
+                }
+                else if (tattooScanflg == 2){
+                    NSDictionary *dict = dictJson[@"169"];
+                    
+                    cell.txtpiglet_Tattoo.text = [dict valueForKey:@"35"];
+                    tattooScanflg = 0;
+                }
+                
+                /* __block NSDictionary *dict;
+                 
+                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                 if ([key integerValue]==169){
+                 dict = obj;
+                 }
+                 }];*/
+                
+                NSDictionary *dictDataToSend;
+                NSArray *array169 = dictJson[@"169"];
+                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                    if (array169.count == 1){
+                        dictDataToSend = array169[0];
+                        [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
+                        [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
+                        [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
+                    } else if(array169.count > 1) {
+                        dictDataToSend = [array169 lastObject];
+                        [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
+                        [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
+                        [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
+                    }
+                }
+                else{
+                    __block NSDictionary *dict;
+                    
+                    [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                        if ([key integerValue]==169){
+                            dict = obj;
+                        }
+                    }];
+                    [cell.btnSex setTitle:[dict valueForKey:@"37"] forState:UIControlStateNormal];
+                    [cell.btnColor setTitle:[dict valueForKey:@"43"] forState:UIControlStateNormal];
+                    [cell.btnDestination setTitle:[dict valueForKey:@"44"] forState:UIControlStateNormal];
+                }
+            } if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+                cell.txtpiglet_den.text = @"";
+                cell.txtpiglet_Tattoo.text = @"";
+                cell.txtpiglet_Weight.text = @"";
+                cell.txtpiglet_transp.text = @"";
+                cell.txtpiglet_Teats.text = @"";
+                cell.txtpiglet_TeatsLeft.text = @"";
+                cell.txtpiglet_TeatsBBL.text = @"";
+                cell.txtpiglet_TeatsBBR.text = @"";
+                [cell.btnSex setTitle:@"" forState:UIControlStateNormal];
+                [cell.btnColor setTitle:@"" forState:UIControlStateNormal];
+                [cell.btnDestination setTitle:@"" forState:UIControlStateNormal];
+                //if ([self.delegate respondsToSelector:@selector(showPigletIdentityList:)]) {
+                //   [self.delegate showPigletIdentityList:dictJson[@"169"]];
+                // }
+                //[self.delegate showPigletIdentityList:dictJson[@"169"]];
+            }else if([_strFromEditPage isEqualToString:@"FromEdit"] && addnewPigFlg){
+                cell.txtpiglet_den.tag = indexPath.row;
+                cell.txtpiglet_Tattoo.tag = indexPath.row;
+                cell.txtpiglet_Weight.tag = indexPath.row;
+                cell.txtpiglet_transp.tag = indexPath.row;
+                cell.txtpiglet_Teats.tag = indexPath.row;
+                cell.txtpiglet_TeatsLeft.tag = indexPath.row;
+                cell.txtpiglet_TeatsBBL.tag = indexPath.row;
+                cell.txtpiglet_TeatsBBR.tag = indexPath.row;
+                
+                if(tattooScanflg == 1){
+                    cell.txtpiglet_Tattoo.text = dictJson[@"169"][@"35"];
+                    tattooScanflg = 0;
+                }
+                else if (tattooScanflg == 2){
+                    NSDictionary *dict = dictJson[@"169"];
+                    
+                    cell.txtpiglet_Tattoo.text = [dict valueForKey:@"35"];
+                    tattooScanflg = 0;
+                }
+                
+                /* __block NSDictionary *dict;
+                 
+                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                 if ([key integerValue]==169){
+                 dict = obj;
+                 }
+                 }];*/
+                
+                NSDictionary *dictDataToSend;
+                NSArray *array169 = dictJson[@"169"];
+                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                    if (array169.count == 1){
+                        dictDataToSend = array169[0];
+                        [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
+                        [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
+                        [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
+                    } else if(array169.count > 1) {
+                        dictDataToSend = [array169 lastObject];
+                        [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
+                        [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
+                        [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
+                    }
+                }
+                else{
+                    __block NSDictionary *dict;
+                    
+                    [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                        if ([key integerValue]==169){
+                            dict = obj;
+                        }
+                    }];
+                    [cell.btnSex setTitle:[dict valueForKey:@"37"] forState:UIControlStateNormal];
+                    [cell.btnColor setTitle:[dict valueForKey:@"43"] forState:UIControlStateNormal];
+                    [cell.btnDestination setTitle:[dict valueForKey:@"44"] forState:UIControlStateNormal];
+                }
+            }
+          
+            return cell;
+        }
         else if ([strDataType isEqualToString:@"Date"]) {
             dateCustomCell *cell= (dateCustomCell*)[tableView dequeueReusableCellWithIdentifier:@"dateCustomCell" forIndexPath:indexPath];
             // cell = [[dateCustomCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dateCustomCell"];
@@ -1481,7 +2011,26 @@ NSString* strServiceName1;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     @try {
-        NSDictionary *dict = [self.arrDynamic objectAtIndex:textField.tag];
+        //~~~added for piglet identities By M.
+        NSDictionary *dict = [[NSDictionary alloc]init];
+        if([_strFromEditPage isEqualToString:@"FromEdit"]){
+            NSInteger index = NSNotFound;
+            // Iterate through the array of dictionaries
+            for (NSInteger i = 0; i < self.arrDynamic.count; i++) {
+                NSDictionary *dict = self.arrDynamic[i];
+                
+                // Check if the value of the "dk" key is equal to 169
+                if ([dict[@"dk"] integerValue] == 169) {
+                    index = i;
+                    break; // Exit the loop since we found the index
+                }
+            }
+            dict = [self.arrDynamic objectAtIndex:index];
+        }else{
+            dict = [self.arrDynamic objectAtIndex:textField.tag];
+        }
+        //commented below for Piglet Identities
+        //NSDictionary *dict = [self.arrDynamic objectAtIndex:textField.tag];
         //  NSLog(@"In shouldChangeCharactersInRange- %@",self.arrDynamic);
         string = [string uppercaseString];
         
@@ -2062,7 +2611,586 @@ NSString* strServiceName1;
             }
             else
                 return NO;
-        }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+        }//~~~~~~~added by M Piglet_identities
+        else if ([[dict valueForKey:@"dk"] integerValue]==169) {
+            PigletIdentitiesTableViewCell *cell = [self findCellForTextField:textField];
+            if (cell) {
+                    cell.btnSex.userInteractionEnabled = YES;
+                    cell.btnColor.userInteractionEnabled = YES;
+                    cell.btnDestination.userInteractionEnabled = YES;
+                    }
+            NSArray *dka = [dict valueForKey:@"dka"]?[dict valueForKey:@"dka"]:@"";
+            NSString *strMinVal,*strMaxVal;
+            if ([textField.placeholder isEqualToString:@"Tag"]) {
+                addnewPigFlg = YES;
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M
+              
+                if([string isEqualToString:@""]) {
+                    
+                    NSMutableString *tmp = [newString mutableCopy];
+            
+                    [pigletIdentityDict setObject:newString forKey:@"Identity"];
+                  
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"34"];
+                
+                    return YES;
+                }
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    
+                    NSMutableString *tmp = [newString mutableCopy];
+            
+                    [pigletIdentityDict setObject:newString forKey:@"Identity"];
+                  
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"34"];
+                    NSMutableArray *existingArray = [[NSMutableArray alloc]init];
+                  
+                  /*  if (pigdrop){
+                        NSDictionary *tmp = [dictJson valueForKey:@"169"];
+                        NSString *sex,*color,*desig;
+                        sex = [tmp valueForKey:@"37"];
+                        color = [tmp valueForKey:@"43"];
+                        desig = [tmp valueForKey:@"44"];
+                        [pigletIdentityJsonDict setValue:sex forKey:@"37"];
+                        [pigletIdentityJsonDict setValue:color forKey:@"43"];
+                        [pigletIdentityJsonDict setValue:desig forKey:@"44"];
+                        
+                        if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                            [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                        }
+                        [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];
+                        pigdrop = NO;
+                    }*/
+                  
+                    return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                }
+                else{
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"Tattoo"]){
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                  
+                    [pigletIdentityDict setObject:newString forKey:@"Tattoo"];
+                                 
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"35"];
+                    
+                    
+                    return YES;
+                }
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                  
+                    [pigletIdentityDict setObject:newString forKey:@"Tattoo"];
+                                 
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"35"];
+                      return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                }
+                else{
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"Weight"]) {
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+               
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 38) {
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+               
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                                         
+                    [pigletIdentityDict setObject:newString forKey:@"Weight"];
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"38"];
+                   
+                    return YES;
+                }
+                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                    
+                    [pigletIdentityDict setObject:newString forKey:@"Weight"];
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"38"];
+                    
+                    return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                }
+                else{
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for Weight is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"Teats"]) {
+                
+                    if([string isEqualToString:@""]) {
+                        NSMutableString *tmp = [newString mutableCopy];
+                         
+                        [pigletIdentityDict setObject:newString forKey:@"Teats"];
+                           
+                        [pigletIdentityJsonDict setObject:tmp forKey:@"39"];
+                        return YES;
+                    }
+                    
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 39) {
+                      
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+                if (newString.length > 2) {
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for Teats is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                       return NO;
+                   }
+                NSCharacterSet *nonDigitCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+                if ([newString rangeOfCharacterFromSet:nonDigitCharacterSet].location != NSNotFound) {
+                    
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for Teats is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                             message:custMsg
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:nil];
+                    [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    return NO;
+                }
+                // Convert the newString to an integer value
+                   NSInteger intValue = [newString integerValue];
+                
+                // Allow intermediate values that could form valid final values
+                if (newString.length == 1) {
+                    // For single digit intermediate values, allow if they can lead to a valid number
+                    if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        return YES;
+                    } else {
+                        // Allow typing '1' or '2' to form valid two-digit numbers later
+                        return (intValue == 1 || intValue == 2);
+                    }
+                } else {
+                    // For two-digit values, ensure they fall within the specified range
+                    if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        // Update the dictionaries with the new value
+                        [pigletIdentityDict setObject:newString forKey:@"Teats"];
+                        [pigletIdentityJsonDict setObject:newString forKey:@"39"];
+                        return YES;
+                    } else {
+                        
+                        NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for Teats is %@ and %@",strMinVal,strMaxVal];
+                        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                 message:custMsg
+                                                                                          preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                           style:UIAlertActionStyleDefault
+                                                                         handler:nil];
+                        [alertController addAction:okAction];
+                        [self presentViewController:alertController animated:YES completion:nil];
+                        return NO;
+                    }
+                }
+                }
+                /*NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 39) {
+                        
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                     
+                    [pigletIdentityDict setObject:newString forKey:@"Teats"];
+                       
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"39"];
+                    /*if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                    }
+                  
+                  
+                    [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                    }
+                  
+                    [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                    //return YES;
+                /*}if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]))) {
+                //if ((location.location != NSNotFound) && ([newString length]<=[strMaxVal length])) {
+                    
+                    NSMutableString *tmp = [newString mutableCopy];
+                     
+                    [pigletIdentityDict setObject:newString forKey:@"Teats"];
+                       
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"39"];
+                   /* if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                    }
+                  
+                    [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                    }
+                  
+                    [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                    
+                    //return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                //}
+               /* else{
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for Teats is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    
+                    return NO;
+                }*/
+            //}
+            else if ([textField.placeholder isEqualToString:@"Transponder"]) {
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 36) {
+                      
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                 
+                    [pigletIdentityDict setObject:newString forKey:@"Transponder"];
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"36"];
+                        
+                    /*if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                    }
+                  
+                  
+                    [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                    }
+                  
+                    [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]))) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                 
+                    [pigletIdentityDict setObject:newString forKey:@"Transponder"];
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"36"];
+                        
+                    /*if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                    }
+                  
+                    [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                    }
+                  
+                    [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                    return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                }
+                else{
+                    
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"TeatsLeft"])
+            {
+                
+                    if([string isEqualToString:@""]) {
+                        NSMutableString *tmp = [newString mutableCopy];
+                         
+                        [pigletIdentityDict setObject:newString forKey:@"TeatsLeft"];
+                           
+                        [pigletIdentityJsonDict setObject:tmp forKey:@"40"];
+                        return YES;
+                    }
+                    
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 40) {
+                      
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+                if (newString.length > 2) {
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for TeatsLeft is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                       return NO;
+                   }
+                NSCharacterSet *nonDigitCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+                if ([newString rangeOfCharacterFromSet:nonDigitCharacterSet].location != NSNotFound) {
+                    
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for TeatsLeft is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                             message:custMsg
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:nil];
+                    [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    return NO;
+                }
+                // Convert the newString to an integer value
+                   NSInteger intValue = [newString integerValue];
+                // Allow intermediate values that could form valid final values
+                if (newString.length == 1) {
+                    // For single digit intermediate values, allow if they can lead to a valid number
+                    if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        return YES;
+                    } else {
+                        // Allow typing '1', '4', '5', '6' to form valid two-digit numbers later
+                        return (intValue == 1 || intValue == 4 || intValue == 5 || intValue == 6);
+                    }
+                } else {
+                    // For two-digit values, ensure they fall within the specified range
+                    if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        // Update the dictionaries with the new value
+                        [pigletIdentityDict setObject:newString forKey:@"TeatsLeft"];
+                        [pigletIdentityJsonDict setObject:newString forKey:@"40"];
+                        return YES;
+                    } else {
+                        return NO;
+                    }
+                }
+                }
+            /*{
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                for (NSDictionary *entry in dka) {
+                    if ([entry[@"dk"] intValue] == 40) {
+                      
+                        strMinVal = entry[@"mnv"];
+                        strMaxVal = entry[@"mxv"];
+                        break; // Exit the loop once the desired entry is found
+                    }
+                }
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                  
+                    [pigletIdentityDict setObject:newString forKey:@"TeatsLeft"];
+                                  
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"40"];
+                   
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]))) {
+             
+                    NSMutableString *tmp = [newString mutableCopy];
+                  
+                    [pigletIdentityDict setObject:newString forKey:@"TeatsLeft"];
+                                  
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"40"];
+                   
+                    return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                }
+                else{
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for TeatsLeft is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    
+                    return NO;
+                }
+            }*/
+                
+           
+         else if ([textField.placeholder isEqualToString:@"TeatsBBL"]) {
+             
+             NSCharacterSet *characterSet = nil;
+             characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+             NSRange location = [string rangeOfCharacterFromSet:characterSet];
+             for (NSDictionary *entry in dka) {
+                 if ([entry[@"dk"] intValue] == 41) {
+                     
+                     strMinVal = entry[@"mnv"];
+                     strMaxVal = entry[@"mxv"];
+                     break; // Exit the loop once the desired entry is found
+                 }
+             }
+             //@@@@@ by M
+             if([string isEqualToString:@""]) {
+                 NSMutableString *tmp = [newString mutableCopy];
+                 
+                 [pigletIdentityDict setObject:newString forKey:@"TeatsBBL"];
+                 [pigletIdentityJsonDict setObject:tmp forKey:@"41"];
+                 
+                 /*if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                     [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                 }
+               
+               
+                 [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                 if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                     [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                 }
+               
+                 [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                 
+                 return YES;
+             }
+             if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]))) {
+             //if ((location.location != NSNotFound) && ([newString length]<=[strMaxVal length])) {
+                 NSMutableString *tmp = [newString mutableCopy];
+                 
+                 [pigletIdentityDict setObject:newString forKey:@"TeatsBBL"];
+                 [pigletIdentityJsonDict setObject:tmp forKey:@"41"];
+                 
+               /*  if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                     [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                 }
+               
+                 [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                 if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                     [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                 }
+               
+                 [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+
+                 return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+             }
+             else{
+                 NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for TeatsBBL is %@ and %@",strMinVal,strMaxVal];
+                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                             message:custMsg
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:nil];
+                    [alertController addAction:okAction];
+                 [self presentViewController:alertController animated:YES completion:nil];
+                 
+                 return NO;
+             }
+         }else if ([textField.placeholder isEqualToString:@"TeatsBBR"]) {
+                
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+             for (NSDictionary *entry in dka) {
+                 if ([entry[@"dk"] intValue] == 42) {
+                    
+                     strMinVal = entry[@"mnv"];
+                     strMaxVal = entry[@"mxv"];
+                     break; // Exit the loop once the desired entry is found
+                 }
+             }
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    NSMutableString *tmp = [newString mutableCopy];
+                 
+                    [pigletIdentityDict setObject:newString forKey:@"TeatsBBR"];
+                    [pigletIdentityJsonDict setObject:tmp forKey:@"42"];
+                    
+                    /*if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                    }
+                  
+                  
+                    [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                    }
+                  
+                    [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+
+                    return YES;
+                }
+             if (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]))) {
+                 NSMutableString *tmp = [newString mutableCopy];
+              
+                 [pigletIdentityDict setObject:newString forKey:@"TeatsBBR"];
+                 [pigletIdentityJsonDict setObject:tmp forKey:@"42"];
+                 
+                /* if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                     [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                 }
+               
+                 [self.dictDynamic setObject:_pigletIdentitiesArray forKey:[dict valueForKey:@"Lb"]];
+                 if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                     [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                 }
+               
+                 [dictJson setObject:_pigletIdentitiesJsonArray forKey:[dict valueForKey:@"dk"]];*/
+                 return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+             }
+                else{
+                    NSString *custMsg = [NSString stringWithFormat:@"The Minimum value and Maximum Value range for TeatsBBR is %@ and %@",strMinVal,strMaxVal];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                                message:custMsg
+                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:nil];
+                       [alertController addAction:okAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    return NO;
+                }
+            }
+           //addnewPigFlg = NO;
+        }
+        else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
             
             NSLog(@"data item key=%@",[dict valueForKey:@"dk"]);
             
@@ -2519,9 +3647,27 @@ float animatedDistance;
     self.txtReference = textField;
     NSLog(@"form fields: %@",self.arrDynamic);
     
-    dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:textField.tag];
-    NSLog(@"Current field: %@",dictCurrentTextFieldClicked);
-    
+    /*dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:textField.tag];
+    NSLog(@"Current field: %@",dictCurrentTextFieldClicked);*/
+    //~~~~~ comented above two lines and added below for Piglet Identities By M.
+    if([_strFromEditPage isEqualToString:@"FromEdit"]){
+        NSInteger index = NSNotFound;
+        // Iterate through the array of dictionaries
+        for (NSInteger i = 0; i < self.arrDynamic.count; i++) {
+            NSDictionary *dict = self.arrDynamic[i];
+            
+            // Check if the value of the "dk" key is equal to 169
+            if ([dict[@"dk"] integerValue] == 169) {
+                index = i;
+                break; // Exit the loop since we found the index
+            }
+        }
+        dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:index];
+        //end by M.
+    }else{
+        dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:textField.tag];
+        NSLog(@"Current field: %@",dictCurrentTextFieldClicked);
+    }
     //    fullDataString = @"100000985152001342978";
     //    [self callTransponderClicked:self.txtReference];
     
@@ -2557,6 +3703,16 @@ float animatedDistance;
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     self.activeTextField = nil;
+    //~~~~~ added below code for Piglet Identities By M.
+    if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+    }
+    
+    [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
+    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+    }
+    [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
 }
 
 -(void)getRFID:(NSString*)transponder index:(NSInteger)index :(NSDictionary*)dictPassed{
@@ -3025,8 +4181,13 @@ float animatedDistance;
                     
                     [_dictDynamic setObject:dictBarn forKey:[dict valueForKey:@"Lb"]];
                     [dictJson setObject:dictData forKey:[dict valueForKey:@"dk"]];
-                }
-                else if([[dict valueForKey:@"dk"] integerValue] != 6){
+                }//~~~~ added for Piglet Identities By M.
+                else if([[dict valueForKey:@"dk"] integerValue] == 169){
+                
+                    [_dictDynamic setObject:pigletIdentityDict forKey:[dict valueForKey:@"Lb"]];
+                    [dictJson setObject:pigletIdentityJsonDict forKey:[dict valueForKey:@"dk"]];
+                    [self.delegate ClearPigletIdentitiesList];
+                } else if([[dict valueForKey:@"dk"] integerValue] != 6){
                     [_dictDynamic setValue:@"" forKey:[dict valueForKey:@"Lb"]];
                     [dictJson setValue:@"" forKey:[dict valueForKey:@"dk"]];
                 }
@@ -3090,7 +4251,69 @@ float animatedDistance;
                 }
             }
         }
-        
+        //~~~~~ added for piglet Identities By M.
+        if(![_strFromEditPage isEqualToString:@"FromEdit"]){
+            for (NSDictionary *dict in _arrDynamic){
+                if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                  
+                    [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                    
+                    for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
+                        if ([[dict valueForKey:@"43"] isEqualToString:@""] ||[[dict valueForKey:@"44"] isEqualToString:@""] ){
+                            [dict setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
+                            [dict setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
+                            
+                        }
+                    }
+                    NSMutableDictionary *seenp = [NSMutableDictionary dictionary];
+                    NSMutableArray *uniqueArrayp = [NSMutableArray array];
+                    
+                    for (NSDictionary *item in _pigletIdentitiesJsonArray1) {
+                        NSString *itemLb = item[@"34"];
+                        if (![seenp objectForKey:itemLb]) {
+                            [seenp setObject:@(1) forKey:itemLb];
+                            [uniqueArrayp addObject:item];
+                        }
+                    }
+                    [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                }
+            }
+        } else if([_strFromEditPage isEqualToString:@"FromEdit"] && (addnewPigFlg)){
+            for (NSDictionary *dict in _arrDynamic){
+                {
+                    if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                        [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                        
+                        for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
+                            if ([[dict valueForKey:@"43"] isEqualToString:@""] ||[[dict valueForKey:@"44"] isEqualToString:@""] ){
+                                [dict setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
+                                [dict setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
+                                
+                            }
+                        }
+                        NSMutableDictionary *seenp = [NSMutableDictionary dictionary];
+                        NSMutableArray *uniqueArrayp = [NSMutableArray array];
+                        
+                        for (NSDictionary *item in _pigletIdentitiesJsonArray1) {
+                            NSString *itemLb = item[@"34"];
+                            if (![seenp objectForKey:itemLb]) {
+                                [seenp setObject:@(1) forKey:itemLb];
+                                [uniqueArrayp addObject:item];
+                            }
+                        }
+                        [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                    }
+                }
+            }
+        }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+            for (NSDictionary *dict in _arrDynamic){
+                if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                    [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                    
+                    [dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+                }
+            }
+        }
         //strMustValue = [strMustValue stringByReplacingOccurrencesOfString:@"#1" withString:@""];
         
         __block NSDictionary *dictBarnData,*dictForBarnRoomPen;
@@ -3312,8 +4535,11 @@ float animatedDistance;
                 }];
             }
             else {//if([[dict valueForKey:@"dk"] integerValue] != 6)
-                if ([[dict valueForKey:@"co"] isEqualToString:@"1"] && str.length==0){
-                    [arrLableList addObject:[dict valueForKey:@"Lb"]];
+                //~~~~ added below condition for Piglet Identities By M.
+                if ([[dict valueForKey:@"dk"] integerValue] != 169){
+                    if ([[dict valueForKey:@"co"] isEqualToString:@"1"] && str.length==0){
+                        [arrLableList addObject:[dict valueForKey:@"Lb"]];
+                    }
                 }
             }
         }
@@ -3864,8 +5090,67 @@ float animatedDistance;
                     strValue = (NSMutableString*)[strValue stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
                 }
             }
-            
-            if ([[dict valueForKey:@"dk"] integerValue] == 48){
+            //~~~~~~~~~added for piglet identities by M.
+            if ([[dict valueForKey:@"dk"] integerValue] == 169){
+              
+                __block NSDictionary *dictTextFieldData;
+                
+               
+                [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                    if ([key integerValue]==169){
+                        dictTextFieldData = obj;
+                    }
+                }];
+                
+                NSMutableArray *dataArray = [NSMutableArray array];
+                NSString *tmpSex,*tmpColor,*tmpDesig;
+                for (NSDictionary *textFieldDict  in dictTextFieldData) {
+                    if ([textFieldDict[@"37"] isEqualToString:@""])
+                    {
+                        NSLog(@"No data found");
+                    }else{
+                        tmpSex = [self getPigletIDS:textFieldDict[@"37"] optVal:1];
+                    }
+                    if ([textFieldDict[@"43"] isEqualToString:@""]){
+                        NSLog(@"No data found");
+                    }else{
+                        tmpColor = [self getPigletIDS:textFieldDict[@"43"] optVal:2];
+                    }
+                    if ([textFieldDict[@"44"] isEqualToString:@""]){
+                        NSLog(@"No data found");
+                    }else{
+                        tmpDesig = [self getPigletIDS:textFieldDict[@"44"] optVal:3];
+                    }
+                  
+                       NSDictionary *individualDict = @{
+                          
+                                @"Identity": textFieldDict[@"34"],
+                                @"Tattoo": textFieldDict[@"35"],
+                                @"Transponder": textFieldDict[@"36"],
+                                @"Sex": tmpSex,
+                                @"Weight": textFieldDict[@"38"],
+                                @"Teats": textFieldDict[@"39"],
+                                @"TeatsLeft":textFieldDict[@"40"],
+                                @"TeatsBBLeft":textFieldDict[@"41"],
+                                @"TeatsBBRight":textFieldDict[@"42"],
+                                @"Color": tmpColor,
+                                @"Designation": tmpDesig
+                            };
+                            // Add the individual dictionary to the array
+                            [dataArray addObject:individualDict];
+                }
+
+                // Convert the array to JSON
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray options:NSJSONWritingPrettyPrinted error:nil];
+
+                // Convert JSON data to a string
+                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+                reqStringFUll=(NSMutableString*)[reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":%@",strKey,jsonString]];
+                NSLog(@"%@", reqStringFUll); // Print or use reqStringFUll as needed
+
+            }
+            else if ([[dict valueForKey:@"dk"] integerValue] == 48){
                 NSArray *arr = [strValue componentsSeparatedByString:@"\n"];
                 strValue = (NSMutableString*)@"\\\"";
                 strValue = (NSMutableString*)[strValue stringByAppendingString:[arr componentsJoinedByString:@"\\\"\\n\\\""]];//[arr componentsJoinedByString:@"\"\""];
@@ -6947,6 +8232,116 @@ float animatedDistance;
 
             }
                 break;
+                //~~~for piglet identities By M.
+            case 169:{
+               /* __block NSMutableDictionary *dictDataToSend;
+                
+                [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+                 {
+                    if ([key isEqualToString:@"169"]) {
+                        dictDataToSend = obj;
+                    }
+                }];
+                
+                NSMutableDictionary *dictDataToSend1 = (NSMutableDictionary *)dictDataToSend;
+                
+                    __block NSString *strSex,*strColor,*strDestination;
+                    [dictDataToSend1 enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                        if ([key isEqualToString:@"37"]){
+                            strSex = obj;
+                        }
+                        else if ([key isEqualToString:@"43"]) {
+                            strColor = obj;
+                        }else if ([key isEqualToString:@"44"]) {
+                            strDestination = obj;
+                        }
+                    }];
+                */
+                NSArray *array169 = dictJson[@"169"];
+
+                if ([array169 isKindOfClass:[NSArray class]]) {
+                    // Extract the first dictionary from the array (assuming there's only one dictionary in the array)
+                    NSDictionary *dictDataToSend = array169[0];
+                    
+                    // Process the dictionary to retrieve values for specific keys
+                    NSString *strSex = dictDataToSend[@"37"];
+                    NSString *strColor = dictDataToSend[@"43"];
+                    NSString *strDestination = dictDataToSend[@"44"];
+                    
+                    // Use the retrieved values as needed
+                    NSLog(@"Sex: %@, Color: %@, Destination: %@", strSex, strColor, strDestination);
+                }
+                
+                NSArray* resultArray ;
+                if (TapedDropDownTag==4){
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt"
+                                                         ascending:YES];
+                    sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Sex" andPredicate:nil andSortDescriptors:sortDescriptors];
+                    for (int count=0; count<resultArray.count; count++){
+                        NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dt"]:@"" forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dk"]?[[resultArray objectAtIndex:count] valueForKey:@"dk"]:@"" forKey:@"dataTosend"];
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                        //[_arrDropDown addObject:dict];
+                    }
+                   
+                   
+                }else if (TapedDropDownTag==5){
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
+                                                         ascending:YES];
+                    sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Color" andPredicate:nil andSortDescriptors:sortDescriptors];
+                    
+                    for (int count=0; count<resultArray.count; count++) {
+                        NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                           // [_arrDropDown addObject:dict];
+                       
+                    }
+                }else if (TapedDropDownTag==6){
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
+                                                         ascending:YES];
+                    sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
+                    resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Designation" andPredicate:nil andSortDescriptors:sortDescriptors];
+                    for (int count=0; count<resultArray.count; count++) {
+                        NSDictionary *dict = [[NSMutableDictionary alloc]init];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
+                        if (![_arrDropDown containsObject:dict]) {
+                                [_arrDropDown addObject:dict];
+                            }
+
+                            //[_arrDropDown addObject:dict];
+                       
+                    }
+                
+                  
+                }
+                
+                if (TapedDropDownTag==4){
+                    strTitle = [self getTranslatedTextForString:@"Sex"];
+                }else if (TapedDropDownTag==5)
+                {
+                    strTitle = [self getTranslatedTextForString:@"Color"];
+                }
+                else if(TapedDropDownTag==6){
+                   
+                    strTitle = [self getTranslatedTextForString:@"Designation"];
+                }
+                
+                NSLog(@"_arrDropDown=%@",_arrDropDown);
+              
+            }
+            break;
             default:{
                 NSString *strDataType  = [self getViewType:[dict valueForKey:@"dt"]];
                 if ([strDataType isEqualToString:@"DropDown"]){
@@ -7057,6 +8452,33 @@ float animatedDistance;
                     
                     //[weakSelf.dictDynamic setObject:dictBarn forKey:[dict valueForKey:@"Lb"]];
                     [weakSelf.dictJson setObject:dictBarnDataToSend forKey:[dict valueForKey:@"dk"]];
+                }
+                //~~~~ for piglet identities By m
+                if ([[dict valueForKey:@"dk"] integerValue] == 169){
+                    
+                    __block NSMutableDictionary *dictDataToSend;
+                    
+                    [weakSelf.dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                        if ([key isEqualToString:@"169"]){
+                            dictDataToSend = [obj mutableCopy];
+                        }
+                    }];
+                    
+                    NSString *strVal=[[weakSelf.arrDropDown objectAtIndex:0] valueForKey:@"visible"]?[[weakSelf.arrDropDown objectAtIndex:0] valueForKey:@"visible"]:@"";
+                    
+                    if (TapedDropDownTag==4) {
+                        [dictDataToSend setValue:strVal forKey:@"37"];
+                      
+                    }else if (TapedDropDownTag==5){
+                        [dictDataToSend setValue:strVal forKey:@"43"];
+                        
+                    }
+                    else if (TapedDropDownTag==6){
+                        [dictDataToSend setValue:strVal forKey:@"44"];
+                    }
+                    
+                    //[weakSelf.dictDynamic setObject:dictBarn forKey:[dict valueForKey:@"Lb"]];
+                    [weakSelf.dictJson setObject:dictDataToSend forKey:[dict valueForKey:@"dk"]];
                 }else {
                     [weakSelf.dictDynamic setValue:[[weakSelf.arrDropDown objectAtIndex:row] valueForKey:@"visible"] forKey:[dict valueForKey:@"Lb"]];
                     [weakSelf.dictJson setValue:[[weakSelf.arrDropDown objectAtIndex:row] valueForKey:@"dataTosend"] forKey:[dict valueForKey:@"dk"]];
@@ -7870,6 +9292,11 @@ float animatedDistance;
             }else if ([[dict valueForKey:@"dk"] integerValue]==42){
                 [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
+            }//~~~~ added for Piglet Identities By M.
+            else if ([[dict valueForKey:@"dk"] integerValue]==169){
+                
+                [_dictDynamic setValue:pigletIdentityDict forKey:[dict valueForKey:@"Lb"]];
+                [dictJson setValue:pigletIdentityJsonDict forKey:[dict valueForKey:@"dk"]];
             }
         }
         
@@ -9346,7 +10773,11 @@ float animatedDistance;
                             }
                         }
                     }
-                    
+                    //~~~~~ for piglet Identities By M.
+                    NSString * dataArray = [dictJson valueForKey:@"169"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
+                    //end By M.
+                    strpigletIdentitiesEdit = [dictJson valueForKey:@"169"];
                     NSLog(@"dictJson=%@",dictJson);
                     NSLog(@"data=%@",_dictDynamic);
                     NSLog(@"data=%@",arrAvailableValues);
@@ -9907,11 +11338,38 @@ float animatedDistance;
         
                 //[_dictDynamic setValue:barcode forKey:strScan];
                 //[dictJson setValue:barcode forKey:@"1"];
+        /*
         ///*** added code below for  bug- 27755    By M.
         [_dictDynamic setValue:barcode forKey:strScan];
         [dictJson setValue:barcode forKey:strScandk];
         ///***end By M.
+        */
+        //~~~~commented above code and added new code for Piglet Identities By M.
+        if([strScandk isEqualToString:@"169"]){
+            tattooScannedValue = [barcode mutableCopy];
+            NSArray *array169 = dictJson[@"169"];
+            NSDictionary *dictDataToSend;
+            if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                dictDataToSend = array169[0];
+                [dictDataToSend setValue:barcode forKey:@"35"];
+                [self.dictJson setObject:dictDataToSend forKey:strScandk];
+                [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                tattooScanflg = 2;
+            }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+                array169_1 =[array169 mutableCopy];
+                [array169_1 setValue:barcode forKey:@"35"];
+                [self.dictJson setObject:array169_1 forKey:strScandk];
+                [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                tattooScanflg = 1;
+            }
+        }else{
+            ///*** added code below for  bug- 27755    By M.
+            [_dictDynamic setValue:barcode forKey:strScan];
+            [dictJson setValue:barcode forKey:strScandk];
+            ///***end By M.
+        }
         [self.tblDynamic reloadData];
+        
     
        // [_dictDynamic setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"Lb"]];
      //   [dictJson setValue:barcode forKey:[dictCurrentTextFieldClicked valueForKey:@"dk"]];
@@ -10275,11 +11733,658 @@ float animatedDistance;
             
             //[weakSelf.dictDynamic setObject:dictBarn forKey:[dict valueForKey:@"Lb"]];
             [self.dictJson setObject:dictBarnDataToSend forKey:[dictData valueForKey:@"dk"]];
-        }else{
+        }//~~~~ added for piglet identities by M
+        else if ([[dictData valueForKey:@"dk"] integerValue] == 169){
+            
+          /*  __block NSMutableDictionary *dictDataToSend,*dictDataToSend1;
+            
+            [self.dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                if ([key isEqualToString:@"169"]){
+                    dictDataToSend = [obj mutableCopy];
+                    dictDataToSend1 = [obj mutableCopy];
+                }
+            }];*/
+            NSArray *array169 = dictJson[@"169"];
+            NSDictionary *dictDataToSend;
+           
+            if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                if (array169.count == 1){
+                    dictDataToSend = array169[0];
+                    
+                    dictDataToSend_1 = [dictDataToSend mutableCopy];
+                   
+                    NSString *strIden = dictDataToSend[@"34"];
+                    
+                    NSString *strVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]:@"";
+                    NSString *idVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]:@"";
+                    [dictDataToSend_1 setValue:strIden forKey:@"34"];
+                    if (TapedDropDownTag==4) {
+                        [dictDataToSend setValue:strVal forKey:@"37"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"37"];
+                        
+                    }else if (TapedDropDownTag==5){
+                        [dictDataToSend setValue:strVal forKey:@"43"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"43"];
+                        
+                    }
+                    else if (TapedDropDownTag==6){
+                        [dictDataToSend setValue:strVal forKey:@"44"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"44"];
+                    }
+                   // [self.dictDynamic setObject:dictDataToSend forKey:[dictData valueForKey:@"Lb"]];
+                   
+                    [self.dictJson setObject:dictDataToSend forKey:[dictData valueForKey:@"dk"]];
+                }
+                else if(array169.count > 1) {
+                    dictDataToSend = [array169 lastObject];
+                    dictDataToSend_1 = [dictDataToSend mutableCopy];
+                    
+                    NSString *strIden = dictDataToSend[@"34"];
+                  
+                    NSString *strVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]:@"";
+                    NSString *idVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]:@"";
+                    [dictDataToSend_1 setValue:strIden forKey:@"34"];
+                    if (TapedDropDownTag==4) {
+                        [dictDataToSend setValue:strVal forKey:@"37"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"37"];
+                        
+                    }else if (TapedDropDownTag==5){
+                        [dictDataToSend setValue:strVal forKey:@"43"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"43"];
+                        
+                    }
+                    else if (TapedDropDownTag==6){
+                        [dictDataToSend setValue:strVal forKey:@"44"];
+                        [dictDataToSend_1 setValue:idVal forKey:@"44"];
+                    }
+                    // [self.dictDynamic setObject:dictDataToSend forKey:[dictData valueForKey:@"Lb"]];
+                    
+                    NSMutableArray *mutableArray169 = [array169 mutableCopy];
+                    if (!mutableArray169) {
+                        mutableArray169 = [NSMutableArray array];
+                    }
+                    if (![mutableArray169 containsObject:dictDataToSend]){
+                        [mutableArray169 addObject:dictDataToSend];
+                    }
+                   
+                    [self.dictJson setObject:mutableArray169 forKey:[dictData valueForKey:@"dk"]];
+                }
+            } if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+               
+                array169_1 =[array169 mutableCopy];
+               
+                NSString *strIden = [array169 valueForKey:@"34"];
+               
+                NSString *strVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"visible"]:@"";
+                NSString *idVal=[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]?[[self.arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"]:@"";
+               
+                
+                if (TapedDropDownTag==4) {
+                    [array169_1 setValue:strVal forKey:@"37"];
+                    
+                }else if (TapedDropDownTag==5){
+                    [array169_1 setValue:strVal forKey:@"43"];
+                    
+                }
+                else if (TapedDropDownTag==6){
+                    [array169_1 setValue:strVal forKey:@"44"];
+                }
+                //[self.dictDynamic setObject:array169 forKey:[dictData valueForKey:@"Lb"]];
+                
+                [self.dictJson setObject:array169_1 forKey:[dictData valueForKey:@"dk"]];
+            }
+            //pigdrop = YES;
+        }
+        else{
             [self.dictDynamic setValue:[[_arrDropDown objectAtIndex:0] valueForKey:@"visible"] forKey:[dictData valueForKey:@"Lb"]];
             [self.dictJson setValue:[[_arrDropDown objectAtIndex:0] valueForKey:@"dataTosend"] forKey:[dictData valueForKey:@"dk"]];
         }
         [self.tblDynamic reloadData];
     }
 }
+
+//~~~~~ for Piglet Identities by M.
+-(void)PigletIdentitiesListUpdate:(NSString *)strIdent {
+   // NSLog(@"Received row: %@", strIdent);
+    NSString *capIden = [strIdent uppercaseString];
+    //NSString *strWithoutLastChar= [capIden substringToIndex:[capIden length] - 1];
+    NSMutableArray *tmppigletIdentitiesArray1 = [[NSMutableArray alloc]init];
+    NSMutableArray *tmppigletIdentitiesJsonArray1 = [[NSMutableArray alloc]init];
+    if([_strFromEditPage isEqualToString:@"FromEdit"] && addnewPigFlg){
+        NSMutableArray *tmppigletIdentitiesArray11 = [[NSMutableArray alloc]init];
+        NSMutableArray *tmppigletIdentitiesJsonArray11 = [[NSMutableArray alloc]init];
+
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+         
+        //[tmppigletIdentitiesArray11 addObject:pigletIdentityDict];
+        //[tmppigletIdentitiesJsonArray11 addObject:pigletIdentityJsonDict];
+        tmppigletIdentitiesArray11  = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray11 = [dictJson valueForKey:@"169"];
+        
+       
+        [tmppigletIdentitiesArray1 addObject:tmppigletIdentitiesArray11];
+        [tmppigletIdentitiesJsonArray1 addObject:tmppigletIdentitiesJsonArray11];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 addObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 addObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+            }
+        }
+    }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+       
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 addObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 addObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+            }
+        }
+    }
+    else{
+        tmppigletIdentitiesArray1 = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray1 = [dictJson valueForKey:@"169"];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = item[@"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 addObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 addObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+            }
+        }
+    }
+    // Handle the row value here
+
+}
+//~~~~~ for Piglet Identities by M.
+-(void)PigletIdentitiesListUpdateUnchk:(NSString *)strIdent {
+   // NSLog(@"Received row: %@", strIdent);
+    NSString *capIden = [strIdent uppercaseString];
+    //NSString *strWithoutLastChar= [capIden substringToIndex:[capIden length] - 1];
+    NSMutableArray *tmppigletIdentitiesArray1 = [[NSMutableArray alloc]init];
+    NSMutableArray *tmppigletIdentitiesJsonArray1 = [[NSMutableArray alloc]init];
+    if([_strFromEditPage isEqualToString:@"FromEdit"] && addnewPigFlg){
+        NSMutableArray *tmppigletIdentitiesArray11 = [[NSMutableArray alloc]init];
+        NSMutableArray *tmppigletIdentitiesJsonArray11 = [[NSMutableArray alloc]init];
+
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+         
+        tmppigletIdentitiesArray11  = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray11 = [dictJson valueForKey:@"169"];
+        
+       
+        [tmppigletIdentitiesArray1 addObject:tmppigletIdentitiesArray11];
+        [tmppigletIdentitiesJsonArray1 addObject:tmppigletIdentitiesJsonArray11];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+            }
+        }
+    }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+       
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+            }
+        }
+    }
+    else{
+        tmppigletIdentitiesArray1 = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray1 = [dictJson valueForKey:@"169"];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = item[@"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+            }
+        }
+    }
+    // Handle the row value here
+
+}
+
+
+
+//~~~~ for Piglet Identities By M.
+-(void)PigletIdentitiesRemoveObject:(NSString *)strRIdent {
+    NSLog(@"Received row: %@", strRIdent);
+    NSString *capIden = [strRIdent uppercaseString];
+    //NSString *strWithoutLastChar= [capIden substringToIndex:[capIden length] - 1];
+    NSMutableArray *tmppigletIdentitiesArray1 = [[NSMutableArray alloc]init];
+    NSMutableArray *tmppigletIdentitiesJsonArray1 = [[NSMutableArray alloc]init];
+    if([_strFromEditPage isEqualToString:@"FromEdit"] && addnewPigFlg){
+        NSMutableArray *tmppigletIdentitiesArray11 = [[NSMutableArray alloc]init];
+        NSMutableArray *tmppigletIdentitiesJsonArray11 = [[NSMutableArray alloc]init];
+
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+         
+        tmppigletIdentitiesArray11  = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray11 = [dictJson valueForKey:@"169"];
+        
+       
+        [tmppigletIdentitiesArray1 addObject:tmppigletIdentitiesArray11];
+        [tmppigletIdentitiesJsonArray1 addObject:tmppigletIdentitiesJsonArray11];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+            }
+        }
+    }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+       
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+            }
+        }
+    }
+    else{
+        tmppigletIdentitiesArray1 = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray1 = [dictJson valueForKey:@"169"];
+        
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = item[@"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+            }
+        }
+    }
+    /*for (NSDictionary *dict in _arrDynamic){
+        if ([[dict valueForKey:@"dk"]integerValue] == 169){
+            [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+            [dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+        }
+    } */
+}
+
+//~~~~~for Piglet Identities By M.
+- (void)clearAlldicts{
+    pigletIdentityDict = [NSMutableDictionary dictionaryWithDictionary:@{
+        @"Identity": @"",
+        @"Tattoo": @"",
+        @"Transponder": @"",
+        @"Sex": @"",
+        @"Weight": @0,
+        @"Teats": @0,
+        @"TeatsLeft": @0,
+        @"TeatsBBL": @0,
+        @"TeatsBBR": @0,
+        @"Color": @"",
+        @"Designation": @""
+    }];
+    pigletIdentityJsonDict = [NSMutableDictionary dictionaryWithDictionary:@{
+        @"34": @"", //Identity
+        @"35": @"", //Tattoo
+        @"36": @"", //Transponder
+        @"37": @"", //Sex
+        @"38": @0,//Weight
+        @"39": @0, //Teats
+        @"40": @0,//TeatsLeft
+        @"41": @0, //TeatsBBL
+        @"42": @0, //TeatsBBR
+        @"43": @"", //Color
+        @"44": @"" //Designation
+    }];
+}
+    //~~~~~ for Piglet Identities by M.
+    - (void)showAlertFromCell:(nonnull UITableViewCell *)cell {
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                    message:@"Please fill in all values for Piglet Identity"
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+           UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:nil];
+           [alertController addAction:okAction];
+           [self presentViewController:alertController animated:YES completion:nil];
+    }
+
+- (NSString *)getPigletIDS:(NSString *)inPString optVal:(int)inputopt{
+    NSString *strId;
+    NSArray *arrDropDownSex = [[CoreDataHandler sharedHandler]getValuesToListWithEntityName:@"Sex" andPredicate:nil andSortDescriptors:nil];
+    NSArray *arrDropDownColor = [[CoreDataHandler sharedHandler]getValuesToListWithEntityName:@"Color" andPredicate:nil andSortDescriptors:nil];
+    NSArray *arrDropDownDesig = [[CoreDataHandler sharedHandler]getValuesToListWithEntityName:@"Designation" andPredicate:nil andSortDescriptors:nil];
+    
+    switch(inputopt){
+        case 1:
+            
+            for (int count=0; count<arrDropDownSex.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+        case 2:
+            for (int count=0; count<arrDropDownColor.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownColor objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownColor objectAtIndex:count] valueForKey:@"ln"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownColor objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownColor objectAtIndex:count] valueForKey:@"id"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+            
+        case 3:
+            for (int count=0; count<arrDropDownDesig.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownDesig objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownDesig objectAtIndex:count] valueForKey:@"ln"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownDesig objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownDesig objectAtIndex:count] valueForKey:@"id"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+        case 4:
+            
+            for (int count=0; count<arrDropDownSex.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+        case 5:
+            for (int count=0; count<arrDropDownColor.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownColor objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownColor objectAtIndex:count] valueForKey:@"id"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownColor objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownColor objectAtIndex:count] valueForKey:@"ln"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+        case 6:
+            for (int count=0; count<arrDropDownDesig.count; count++)
+            {
+                NSString *dtValue = [[arrDropDownDesig objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownDesig objectAtIndex:count] valueForKey:@"id"]:@"";
+                if ([dtValue isEqualToString:inPString]) {
+                    strId = [[arrDropDownDesig objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownDesig objectAtIndex:count] valueForKey:@"ln"]:@"";
+                    break;
+                }
+            }
+            return strId;
+            break;
+            
+    }
+    return nil;
+}
+- (PigletIdentitiesTableViewCell *)findCellForTextField:(UITextField *)textField {
+    UIResponder *responder = textField;
+    while (![responder isKindOfClass:[PigletIdentitiesTableViewCell class]] && responder != nil) {
+        responder = [responder nextResponder];
+    }
+    return (PigletIdentitiesTableViewCell *)responder;
+}
+//~~~~~~added for Piglet Identities By M.
+-(NSMutableArray *)getPigletsJsonDynamicStringToArray:(NSString *)PigletsJson{
+    NSMutableArray *pigletsArray = [[NSMutableArray alloc]init];
+    NSData *jsonData = [PigletsJson dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSError *error;
+    NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+   
+    if (!error) {
+        for (NSDictionary *dict in jsonArray) {
+            NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
+            NSString *tmpSx,*tmpCol,*tmpDesg;
+            
+            [editdata setValue:dict[@"Identity"] forKey:@"Identity"];
+            
+            [editdata setValue:dict[@"Tattoo"] forKey:@"Tattoo"];
+            
+            [editdata setValue:dict[@"Transponder"] forKey:@"Transponder"];
+            
+            tmpSx = [self getPigletIDS:dict[@"Sex"] optVal:4];
+            [editdata setValue:tmpSx forKey:@"Sex"];
+            
+            [editdata setValue:dict[@"Weight"] forKey:@"Weight"];
+            
+            [editdata setValue:dict[@"Teats"] forKey:@"Teats"];
+            
+            [editdata setValue:dict[@"TeatsLeft"] forKey:@"TeatsLeft"];
+            
+            [editdata setValue:dict[@"TeatsBBLeft"] forKey:@"TeatsBBL"];
+            
+            [editdata setValue:dict[@"TeatsBBRight"] forKey:@"TeatsBBR"];
+            
+            tmpCol = [self getPigletIDS:dict[@"Color"] optVal:5];
+            [editdata setValue:tmpCol forKey:@"Color"];
+            
+            tmpDesg = [self getPigletIDS:dict[@"Designation"] optVal:6];
+            [editdata setValue:tmpDesg forKey:@"Designation"];
+            
+            [pigletsArray addObject:editdata];
+        }
+    }
+    return pigletsArray;
+}
+//~~~~~~added for Piglet Identities By M.
+-(NSMutableArray *)getPigletsJsonStringToArray:(NSString *)PigletsJson{
+    NSMutableArray *pigletsArray = [[NSMutableArray alloc]init];
+    NSData *jsonData = [PigletsJson dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSError *error;
+    NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+    
+    if (!error) {
+        for (NSDictionary *dict in jsonArray) {
+            NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
+            NSString *tmpSx,*tmpCol,*tmpDesg;
+            
+            [editdata setValue:dict[@"Identity"] forKey:@"34"];
+            
+            [editdata setValue:dict[@"Tattoo"] forKey:@"35"];
+            
+            [editdata setValue:dict[@"Transponder"] forKey:@"36"];
+            
+            tmpSx = [self getPigletIDS:dict[@"Sex"] optVal:4];
+            [editdata setValue:tmpSx forKey:@"37"];
+            
+            [editdata setValue:dict[@"Weight"] forKey:@"38"];
+            
+            [editdata setValue:dict[@"Teats"] forKey:@"39"];
+            
+            [editdata setValue:dict[@"TeatsLeft"] forKey:@"40"];
+            
+            [editdata setValue:dict[@"TeatsBBLeft"] forKey:@"41"];
+            
+            [editdata setValue:dict[@"TeatsBBRight"] forKey:@"42"];
+            
+            tmpCol = [self getPigletIDS:dict[@"Color"] optVal:5];
+            [editdata setValue:tmpCol forKey:@"43"];
+            
+            tmpDesg = [self getPigletIDS:dict[@"Designation"] optVal:6];
+            [editdata setValue:tmpDesg forKey:@"44"];
+            
+            [pigletsArray addObject:editdata];
+        }
+    }
+    return pigletsArray;
+}
+
 @end

@@ -277,8 +277,8 @@ this function updates sqllite entries via core data
     [self commitDefaultMOC];
     return updateSuccess;
 }
-
--(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore pigletDefects:(NSArray*)pigletDefectsArray herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray{
+//~~~~added new params for Color and DEsignation for pigletidentities By M.
+-(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andColor:(NSArray*)color andDesignation:(NSArray*)designation andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore pigletDefects:(NSArray*)pigletDefectsArray herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray{
     BOOL response = YES;
     NSError* error;
 
@@ -294,7 +294,7 @@ this function updates sqllite entries via core data
     }
     
     // update data entry items
-    for (int counter=0; counter<dataEntryArray.count; counter++) {
+    /*for (int counter=0; counter<dataEntryArray.count; counter++) {
           NSManagedObject* dataEntryManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Data_Entry_Items" inManagedObjectContext:managedObjectContext];
         NSDictionary* dict = [dataEntryArray objectAtIndex:counter];
       //  [dataEntryManagedObject setValuesForKeysWithDictionary:dict];
@@ -312,6 +312,42 @@ this function updates sqllite entries via core data
         }];
         
     //[ save:&error];
+    }*/
+    //~~~~added code for piglet identites By M.
+    for (int counter = 0; counter < dataEntryArray.count; counter++) {
+        NSManagedObject *dataEntryManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Data_Entry_Items" inManagedObjectContext:managedObjectContext];
+
+        NSDictionary *dict = [dataEntryArray objectAtIndex:counter];
+
+        // Iterate through the main dictionary keys and set values in the Core Data entity
+        [dict enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+            NSLog(@"%@ key value is =  object value is  %@", key, object);
+            if ([key isEqualToString:@"dka"]) {
+                // Handle the nested array
+                NSArray *nestedArray = (NSArray *)object;
+
+                // Process the nested array and save it
+                for (NSDictionary *nestedDict in nestedArray) {
+                    NSManagedObject *nestedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Piglet_Identities" inManagedObjectContext:managedObjectContext];
+
+                    // Convert dictionary keys to lowercase
+                       NSMutableDictionary *lowercaseDict = [NSMutableDictionary dictionary];
+                       [nestedDict enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+                           [lowercaseDict setObject:object forKey:[key lowercaseString]];
+                       }];
+
+                       // Set values for the nested entity
+                       [nestedObject setValuesForKeysWithDictionary:lowercaseDict];
+                    // Link the nested object to the main object
+                    [dataEntryManagedObject setValue:nestedObject forKey:@"dkaItems"];
+                }
+            }else  if([key isEqualToString:@"lC"]) {
+                NSLog(@"%@ detected is ic value  %@", key, object);
+            }else {
+                // Set values for the main entity
+                [dataEntryManagedObject setValue:object forKey:[key lowercaseString]];
+            }
+        }];
     }
     
     // Update location
@@ -641,7 +677,29 @@ this function updates sqllite entries via core data
 
         }];
     }
+    //~~~~~ for piglet_identities By M.
+    // _PIGLET_COLOR
+   
     
+    if ([color isKindOfClass:[NSArray class]]) {
+        for (int counter=0; counter<color.count; counter++) {
+            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Color" inManagedObjectContext:managedObjectContext];
+            NSDictionary* dict = [color objectAtIndex:counter];
+            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+        }
+    }
+    //~~~~~ for piglet_identities By M.
+    // _DESIGNATION
+  
+    if ([designation isKindOfClass:[NSArray class]]) {
+        for (int counter=0; counter<designation.count; counter++) {
+            NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Designation" inManagedObjectContext:managedObjectContext];
+            NSDictionary* dict = [designation objectAtIndex:counter];
+            [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+        }
+    }
+   //~~~~~~end of M.
+   
      // _TOD
     for (int counter=0; counter<tod.count; counter++)
     {
@@ -734,7 +792,20 @@ this function updates sqllite entries via core data
     
     return context;
 }
+//~~~~ added function for Piglrt Identities By M.
+- (NSArray *)getValuesToListWithFetchRequest:(NSFetchRequest *)fetchRequest {
+    NSManagedObjectContext *context = [self defaultManagedObjectContext];;/* Get your managed object context */
+    
+    NSError *error = nil;
+    NSArray *resultArray = [context executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Error fetching data: %@", error.localizedDescription);
+        return nil;
+    }
 
+    return resultArray;
+}
 -(NSArray*)getValuesBarnRoomPen:(NSString*)entityName column:(NSString*)column andPredicate:(NSPredicate*)predicate andSortDescriptors:(NSArray*)sortDescriptors{
     static NSString * fetchRequestString = @"fetchResults";
     NSArray *fetchResults;

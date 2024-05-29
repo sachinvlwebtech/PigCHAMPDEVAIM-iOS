@@ -20,7 +20,11 @@
 @class CustomIOS7AlertView;
 @class SettingsViewController;
 @class DropDown;
+//~~~For piglet identites By M.
+@protocol DynamicFormViewControllerDelegate<NSObject>
+- (void)ClearPigletIdentitiesList;
 
+@end
 @interface DynamicFormViewController : UIViewController<barcodeScanner,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UITextViewDelegate,SlideNavigationControllerDelegate,NSStreamDelegate> {
     SettingsViewController *settingsViewController;
     BarcodeScannerViewController *barcodeScannerViewController;
@@ -56,13 +60,18 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnSave;
 @property (weak, nonatomic) IBOutlet UIButton *btnClear;
 @property (weak, nonatomic) IBOutlet UIView *vwOverlay;
+//~~~~ added for Piglet Identities By M.
+@property(nonatomic,strong)NSMutableArray *pigletIdentitiesArray,*pigletIdentitiesArray1,*tmparray;
+@property(nonatomic,strong)NSMutableArray *pigletIdentitiesJsonArray,*pigletIdentitiesJsonArray1;
 
 @property (weak, nonatomic) IBOutlet UITextField *txtReference;
 ///***added for new API call for User_Paramters
 @property (nonatomic) NSNumber *boolVal;
 @property (weak, nonatomic) IBOutlet UIButton *btnConnectAccessory;
-- (IBAction)btnConnectAccessoryClicked:(id)sender;
 
+- (IBAction)btnConnectAccessoryClicked:(id)sender;
+//~~~For piglet identites By M.
+@property (nonatomic, weak) id<DynamicFormViewControllerDelegate> delegate;
 #pragma mark method
 -(void)callEdit;
 

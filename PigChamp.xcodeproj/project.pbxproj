@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		050F74D5255C770E00449A3A /* DropDownSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 050F74D4255C770E00449A3A /* DropDownSearchViewController.m */; };
-		05637A3E25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05637A3D25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.m */; };
 		056EEB0F2629D77600EA4C6F /* 1242x2208.png in Resources */ = {isa = PBXBuildFile; fileRef = 056EEB0E2629D77600EA4C6F /* 1242x2208.png */; };
 		1103D8212052BFDB00CF6956 /* UITextField+PasswordField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1103D8202052BFDB00CF6956 /* UITextField+PasswordField.m */; };
 		110BF99E227873B500F3C207 /* ConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110BF99D227873B500F3C207 /* ConfigurationViewController.m */; };
@@ -81,6 +80,8 @@
 		11ED05B61CB24C4F00BCC461 /* CollectionViewCellSowDetailedReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 11ED05B51CB24C4F00BCC461 /* CollectionViewCellSowDetailedReport.m */; };
 		11F9A23A228462E500463EEA /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F9A236228462E400463EEA /* TPKeyboardAvoidingScrollView.m */; };
 		11F9A23B228462E500463EEA /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F9A238228462E400463EEA /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		CBB307B32C05B05E00784C46 /* PigletIdTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB307AF2C05B05E00784C46 /* PigletIdTableViewCell.m */; };
+		CBC99D582C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBC99D572C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,8 +104,6 @@
 /* Begin PBXFileReference section */
 		050F74D3255C770E00449A3A /* DropDownSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DropDownSearchViewController.h; sourceTree = "<group>"; };
 		050F74D4255C770E00449A3A /* DropDownSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropDownSearchViewController.m; sourceTree = "<group>"; };
-		05637A3C25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PigletIdentitiesTableViewCell.h; sourceTree = "<group>"; };
-		05637A3D25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PigletIdentitiesTableViewCell.m; sourceTree = "<group>"; };
 		056EEB0E2629D77600EA4C6F /* 1242x2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1242x2208.png; sourceTree = "<group>"; };
 		1103D81F2052BFA700CF6956 /* UITextField+PasswordField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextField+PasswordField.h"; sourceTree = "<group>"; };
 		1103D8202052BFDB00CF6956 /* UITextField+PasswordField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+PasswordField.m"; sourceTree = "<group>"; };
@@ -240,6 +239,10 @@
 		165A869978256BF80EC45333 /* Pods-PigChamp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PigChamp.release.xcconfig"; path = "Pods/Target Support Files/Pods-PigChamp/Pods-PigChamp.release.xcconfig"; sourceTree = "<group>"; };
 		5B2C92D473F3240562908814 /* libPods-PigChamp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PigChamp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		858B5F88F2AC457466F7E266 /* Pods-PigChamp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PigChamp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PigChamp/Pods-PigChamp.debug.xcconfig"; sourceTree = "<group>"; };
+		CBB307AF2C05B05E00784C46 /* PigletIdTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PigletIdTableViewCell.m; sourceTree = "<group>"; };
+		CBB307B12C05B05E00784C46 /* PigletIdTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PigletIdTableViewCell.h; sourceTree = "<group>"; };
+		CBC99D562C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PigletIdentitiesTableViewCell.h; sourceTree = "<group>"; };
+		CBC99D572C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PigletIdentitiesTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +276,10 @@
 		113F60511BDE5F5D00E66692 /* DynamicForm */ = {
 			isa = PBXGroup;
 			children = (
+				CBC99D562C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.h */,
+				CBC99D572C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m */,
+				CBB307B12C05B05E00784C46 /* PigletIdTableViewCell.h */,
+				CBB307AF2C05B05E00784C46 /* PigletIdTableViewCell.m */,
 				1138E38F22C0CD0200165127 /* EADSessionController.h */,
 				1138E39022C0CD0200165127 /* EADSessionController.m */,
 				113F60521BDE5F8300E66692 /* DynamicFormViewController.h */,
@@ -293,8 +300,6 @@
 				114855DC1D34D3F600AA7916 /* twoTextCustomCell.m */,
 				114855DE1D34D41100AA7916 /* threeTextCustomCell.h */,
 				114855DF1D34D41100AA7916 /* threeTextCustomCell.m */,
-				05637A3C25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.h */,
-				05637A3D25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.m */,
 			);
 			name = DynamicForm;
 			sourceTree = "<group>";
@@ -867,6 +872,7 @@
 				11C2CE801BD672B4002C14DA /* main.m in Sources */,
 				114410AF1D0AEFD300B58946 /* DropDown.m in Sources */,
 				119A0BEE1D473CB900D1A32F /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
+				CBC99D582C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m in Sources */,
 				110BF99E227873B500F3C207 /* ConfigurationViewController.m in Sources */,
 				113F60501BDE406100E66692 /* LngData+CoreDataProperties.m in Sources */,
 				116B6BC51C646C4600716EDA /* ReportsInput.m in Sources */,
@@ -876,6 +882,7 @@
 				119077A61CB5103F0043B039 /* ProductionsummaryViewController.m in Sources */,
 				119E3B311D33D15D0074EA9B /* dateCustomCell.m in Sources */,
 				119A0BEF1D473CB900D1A32F /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
+				CBB307B32C05B05E00784C46 /* PigletIdTableViewCell.m in Sources */,
 				050F74D5255C770E00449A3A /* DropDownSearchViewController.m in Sources */,
 				114855DD1D34D3F600AA7916 /* twoTextCustomCell.m in Sources */,
 				113F60541BDE5F8300E66692 /* DynamicFormViewController.m in Sources */,
@@ -885,7 +892,6 @@
 				11CFF0C01C99400400124409 /* HerdSummaryViewController.m in Sources */,
 				119A0BE11D47395F00D1A32F /* SlideNavigationController.m in Sources */,
 				11C5CB061C296557000BF617 /* BarcodeScannerViewController.m in Sources */,
-				05637A3E25781C5C00BDCE75 /* PigletIdentitiesTableViewCell.m in Sources */,
 				11ED05B61CB24C4F00BCC461 /* CollectionViewCellSowDetailedReport.m in Sources */,
 				11C2CEB71BD67372002C14DA /* CoreDataHandler.m in Sources */,
 				1145C30F22CE080B00DB1C28 /* MBProgressHUD.m in Sources */,

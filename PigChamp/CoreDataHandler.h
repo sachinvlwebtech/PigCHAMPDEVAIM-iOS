@@ -87,8 +87,8 @@
 -(BOOL)updateManagedObject:(NSString*)entityName andAttributeArray:(NSArray*)attributeArray;
 
 //_LesionScoreArray; _LockArray _LeakageArray _QualityArray _StandingReflexArray _TestTypeArray
-
--(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore pigletDefects:(NSArray*)pigletDefectsArray herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray;
+//~~~~added new params for Color and DEsignation for pigletidentities By M.
+-(BOOL)insertBulkValuesWithCommonLookupArray:(NSArray*)commonLookupsArray andFarmsArray:(NSArray*)farmsArray andDataEntryArray:(NSArray*)dataEntryArray andGeneticsArray:(NSArray*)geneticsArray andUserParameters:(NSArray*)userParametersArray andLocations:(NSArray*)locationsArray andOperatorArray:(NSArray*)operatorArray andBreedingComapniesArray:(NSArray*)breedingCompaniesArray andCondistionsArray:(NSArray*)conditionsArray andFlagsArray:(NSArray*)flagsArray andTransportArray:(NSArray*)transportCompaniesArray andPackingPlantsArray:(NSArray*)packingPlantsArray andTreatmentsArray:(NSArray*)treatmentsArray andAdminRoutes:(NSArray*)adminRoutes andAiStuds:(NSArray*)aiStuds andHalothane:(NSArray*)halothane andPdResults:(NSArray*)pdresults andSex:(NSArray*)sex andColor:(NSArray*)color andDesignation:(NSArray*)designation andTod:(NSArray*)tod andOrigin:(NSArray*)origin andDestination:(NSArray*)destination translated:(NSArray*)arrTrnaslated conditionScore:(NSArray*)conditionScore pigletDefects:(NSArray*)pigletDefectsArray herdCategory:(NSArray*)herdCategory lesionScoreArray:(NSArray*)_LesionScoreArray lockArray:(NSArray*)lockArray leakageArray:(NSArray*)leakageArray qualityArray:(NSArray*)qualityArray standingReflexArray:(NSArray*)standingReflexArray testTypeArray:(NSArray*)testTypeArray;
 
 
 #pragma mark Fetch Functions
@@ -98,6 +98,8 @@
 
 -(NSArray*)getAllAttributesForEntityName:(NSString*)entityName andManagedObjectContext:(NSManagedObjectContext*)moc;
 
+//~~~~~ for Piglet Identities By M.
+- (NSArray *)getValuesToListWithFetchRequest:(NSFetchRequest *)fetchRequest;
 
 //// this method will fetch all objects and returns count in NSinteger.
 

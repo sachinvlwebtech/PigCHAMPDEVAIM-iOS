@@ -575,7 +575,18 @@ NSString *strFarms;
                             {
                                 sex = [dict objectForKey:@"_SEX"];
                             }
-                            
+                            //~~~~~ for piglet_identities By M.
+                            NSArray *color;
+                            if (![[dict objectForKey:@"_PIGLET_COLOR"] isKindOfClass:[NSNull class]])
+                            {
+                                color = [dict objectForKey:@"_PIGLET_COLOR"];
+                            }
+                            NSArray *designation;
+                            if (![[dict objectForKey:@"_DESIGNATION"] isKindOfClass:[NSNull class]])
+                            {
+                                designation = [dict objectForKey:@"_DESIGNATION"];
+                            }
+                            //~~~~~~end of M.
                             NSArray *tod;
                             if (![[dict objectForKey:@"_TOD"] isKindOfClass:[NSNull class]])
                             {
@@ -872,9 +883,9 @@ NSString *strFarms;
                                 [myAlertController addAction: ok];
                                 [self presentViewController:myAlertController animated:YES completion:nil];
                             }else{
-                                
+                                //~~~~added new params for Color and DEsignation for pigletidentities By M.
                                 @try {
-                                    BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:nil andFarmsArray:nil andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:nil andLocations:locationsArray andOperatorArray:operatorArray andBreedingComapniesArray:nil andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds andHalothane:halothane andPdResults:pdResults andSex:sex andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:nil conditionScore:conditionsScoreArray pigletDefects:pigletDefectsArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
+                                    BOOL isSucess = [[CoreDataHandler sharedHandler] insertBulkValuesWithCommonLookupArray:nil andFarmsArray:nil andDataEntryArray:dataEntryItemsArray andGeneticsArray:geneticsArray andUserParameters:nil andLocations:locationsArray andOperatorArray:operatorArray andBreedingComapniesArray:nil andCondistionsArray:conditionsArray andFlagsArray:flagsArray andTransportArray:transportCompaniesArray andPackingPlantsArray:packingPlantsArray andTreatmentsArray:treatmentsArray andAdminRoutes:adminRoutes andAiStuds:aistuds andHalothane:halothane andPdResults:pdResults andSex:sex andColor:color andDesignation:designation andTod:tod andOrigin:arrFilteredOrigin andDestination:arrFilteredDestination translated:nil conditionScore:conditionsScoreArray pigletDefects:pigletDefectsArray herdCategory:_herdCategoryArray lesionScoreArray:_LesionScoreArray lockArray:_LockArray leakageArray:_LeakageArray qualityArray:_QualityArray standingReflexArray:_StandingReflexArray testTypeArray:_TestTypeArray];
                                     //_LesionScoreArray; _LockArray _LeakageArray _QualityArray _StandingReflexArray _TestTypeArray
                                     
                                     if (isSucess && isFromSubmit){
