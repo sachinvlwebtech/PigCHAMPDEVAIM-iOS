@@ -1022,7 +1022,7 @@ NSString* strpigletIdentitiesEdit;
             return 110;
         }//~~~~~ added for new piglet identities By M.
         else if ([[dict valueForKey:@"dk"] integerValue] == 169){
-            return 478;
+            return 510;//478;
         }
         //        else if ([[dict valueForKey:@"dk"] integerValue] == 7){
         //            return 250;
@@ -4252,36 +4252,34 @@ float animatedDistance;
             }
         }
         //~~~~~ added for piglet Identities By M.
-        if(![_strFromEditPage isEqualToString:@"FromEdit"]){
-            for (NSDictionary *dict in _arrDynamic){
-                if ([[dict valueForKey:@"dk"]integerValue] == 169){
-                  
-                    [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
-                    
-                    for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
-                        if ([[dict valueForKey:@"43"] isEqualToString:@""] ||[[dict valueForKey:@"44"] isEqualToString:@""] ){
-                            [dict setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
-                            [dict setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
-                            
-                        }
-                    }
-                    NSMutableDictionary *seenp = [NSMutableDictionary dictionary];
-                    NSMutableArray *uniqueArrayp = [NSMutableArray array];
-                    
-                    for (NSDictionary *item in _pigletIdentitiesJsonArray1) {
-                        NSString *itemLb = item[@"34"];
-                        if (![seenp objectForKey:itemLb]) {
-                            [seenp setObject:@(1) forKey:itemLb];
-                            [uniqueArrayp addObject:item];
-                        }
-                    }
-                    [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
-                }
-            }
-        } else if([_strFromEditPage isEqualToString:@"FromEdit"] && (addnewPigFlg)){
-            for (NSDictionary *dict in _arrDynamic){
-                {
+        if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+            message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
+            preferredStyle:UIAlertControllerStyleAlert];
+            //** added Pigchamp logo on alert Bug-27920 by M.
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
+            
+            UIAlertAction* ok = [UIAlertAction
+            actionWithTitle:strOk
+            style:UIAlertActionStyleDefault
+            handler:^(UIAlertAction * action){
+            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+            }];
+            
+            [myAlertController addAction: ok];
+            [self presentViewController:myAlertController animated:YES completion:nil];
+            
+            return;
+            
+        }else{
+            if(![_strFromEditPage isEqualToString:@"FromEdit"]){
+                for (NSDictionary *dict in _arrDynamic){
                     if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                        
                         [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
                         
                         for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
@@ -4304,13 +4302,40 @@ float animatedDistance;
                         [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
                     }
                 }
-            }
-        }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
-            for (NSDictionary *dict in _arrDynamic){
-                if ([[dict valueForKey:@"dk"]integerValue] == 169){
-                    [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
-                    
-                    [dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+            } else if([_strFromEditPage isEqualToString:@"FromEdit"] && (addnewPigFlg)){
+                for (NSDictionary *dict in _arrDynamic){
+                    {
+                        if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                            [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                            
+                            for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
+                                if ([[dict valueForKey:@"43"] isEqualToString:@""] ||[[dict valueForKey:@"44"] isEqualToString:@""] ){
+                                    [dict setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
+                                    [dict setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
+                                    
+                                }
+                            }
+                            NSMutableDictionary *seenp = [NSMutableDictionary dictionary];
+                            NSMutableArray *uniqueArrayp = [NSMutableArray array];
+                            
+                            for (NSDictionary *item in _pigletIdentitiesJsonArray1) {
+                                NSString *itemLb = item[@"34"];
+                                if (![seenp objectForKey:itemLb]) {
+                                    [seenp setObject:@(1) forKey:itemLb];
+                                    [uniqueArrayp addObject:item];
+                                }
+                            }
+                            [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                        }
+                    }
+                }
+            }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+                for (NSDictionary *dict in _arrDynamic){
+                    if ([[dict valueForKey:@"dk"]integerValue] == 169){
+                        [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                        
+                        [dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+                    }
                 }
             }
         }
@@ -10775,7 +10800,10 @@ float animatedDistance;
                     }
                     //~~~~~ for piglet Identities By M.
                     NSString * dataArray = [dictJson valueForKey:@"169"];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
+                    if (dataArray != nil) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
+                        
+                    }
                     //end By M.
                     strpigletIdentitiesEdit = [dictJson valueForKey:@"169"];
                     NSLog(@"dictJson=%@",dictJson);

@@ -232,6 +232,28 @@ NSString *strFarms;
                 [_pref setValue:[[self.arrFarms objectAtIndex:0] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
                 //@@@@@
                 [_pref synchronize];
+            }else{
+                //code added for Bug-29361 By M.
+                for (int count=0; count<_arrFarms.count; count++) {
+                    if([[[self.arrFarms objectAtIndex:count] valueForKey:@"f_nm"] isEqualToString: strFarm]){
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"f_No"] forKey:@"f_No"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"id"] forKey:@"id"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"f_nm"] forKey:@"f_nm"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"ZD"] forKey:@"ZD"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"SSL"] forKey:@"SSL"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"SSW"] forKey:@"SSW"];
+                        
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"tattoounique"] forKey:@"tattoounique"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"tattoolength"] forKey:@"tattoolength"];
+                        
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"splitsexlosses"] forKey:@"splitsexlosses"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"splitsexfostered"] forKey:@"splitsexfostered"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"splitsexdefects"] forKey:@"splitsexdefects"];
+                        [_pref setValue:[[self.arrFarms objectAtIndex:count] valueForKey:@"splitsextreatments"] forKey:@"splitsextreatments"];
+                        
+                        [_pref synchronize];
+                    }
+                }
             }
 
            [self.btnFarmSelection setTitle:[_pref valueForKey:@"f_nm"] forState:UIControlStateNormal];
