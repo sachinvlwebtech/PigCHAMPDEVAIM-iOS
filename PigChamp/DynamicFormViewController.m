@@ -4251,11 +4251,14 @@ float animatedDistance;
                 }
             }
         }
-        //~~~~~ added for piglet Identities By M.
+//~~~~~ added for piglet Identities By M.
+for (NSDictionary *dict in _arrDynamic)
+{
+    if ([[dict valueForKey:@"dk"]integerValue] == 169){
         if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
-            message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
-            preferredStyle:UIAlertControllerStyleAlert];
+                                                                                       message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
             //** added Pigchamp logo on alert Bug-27920 by M.
             UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
             logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
@@ -4264,10 +4267,10 @@ float animatedDistance;
             [controllerView bringSubviewToFront:logoImageView];
             
             UIAlertAction* ok = [UIAlertAction
-            actionWithTitle:strOk
-            style:UIAlertActionStyleDefault
-            handler:^(UIAlertAction * action){
-            [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                 actionWithTitle:strOk
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action){
+                [myAlertController dismissViewControllerAnimated:YES completion:nil];
             }];
             
             [myAlertController addAction: ok];
@@ -4339,6 +4342,8 @@ float animatedDistance;
                 }
             }
         }
+    }
+}
         //strMustValue = [strMustValue stringByReplacingOccurrencesOfString:@"#1" withString:@""];
         
         __block NSDictionary *dictBarnData,*dictForBarnRoomPen;
