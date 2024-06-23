@@ -3,22 +3,4 @@
    uuid = "3F98A7A8-D3E5-4BD1-8FC8-9E6E80377569"
    type = "0"
    version = "2.0">
-   <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9C4DA027-DBE6-426C-973A-967DCB72DFE3"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PigChamp/DynamicFormViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11325"
-            endingLineNumber = "11325"
-            landmarkName = "-btnSnnerType_tapped:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-   </Breakpoints>
 </Bucket>

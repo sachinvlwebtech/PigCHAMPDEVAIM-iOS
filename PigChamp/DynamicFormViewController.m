@@ -43,6 +43,9 @@ BOOL strSplitFostered = NO;
 BOOL strSplitDefects = NO;
 BOOL strSplitTreatments = NO;
 int tattooScanflg = 0;
+//~~~~~ for Piglet Identities By M.
+int tagScanflg = 0;
+NSInteger btnTag;
 BOOL addnewPigFlg = NO;
 //***added for Bug0-29063 by M.
 NSString* reqStringfulltmp;
@@ -87,6 +90,8 @@ NSString* strpigletIdentitiesEdit;
         
         flag = 0;
         pref =[NSUserDefaults standardUserDefaults];
+        //~~~added for Piglet Identities Bug-29596 By M.
+        addnewPigFlg = NO;
         
         arrMultipleIdentities = [[NSMutableArray alloc]init];
         arrMultipleSowIdentities = [[NSMutableArray alloc]init];
@@ -96,6 +101,9 @@ NSString* strpigletIdentitiesEdit;
         _pigletIdentitiesArray1= [[NSMutableArray alloc]init];
         _pigletIdentitiesJsonArray1= [[NSMutableArray alloc]init];
         _tmparray = [[NSMutableArray alloc]init];
+        //~~~~~added for piglet Identities  Bug-29596 By M.
+        _pigletidentitiesArryinUnchk= [[NSMutableArray alloc]init];
+        _pigletidentitiesJsonArryinUnchk= [[NSMutableArray alloc]init];
         [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1325,6 +1333,18 @@ NSString* strpigletIdentitiesEdit;
                 cell.txtpiglet_TeatsBBL.tag = indexPath.row;
                 cell.txtpiglet_TeatsBBR.tag = indexPath.row;
                 
+                //~~~~~ code added for Piglet Identities By M. Bug-29595
+                
+                if(tagScanflg == 1){
+                    cell.txtpiglet_den.text = dictJson[@"169"][@"34"];
+                    tagScanflg = 0;
+                }
+                else if (tagScanflg == 2){
+                    NSDictionary *dict = dictJson[@"169"];
+                    
+                    cell.txtpiglet_den.text = [dict valueForKey:@"34"];
+                    tagScanflg = 0;
+                }
                 if(tattooScanflg == 1){
                     cell.txtpiglet_Tattoo.text = dictJson[@"169"][@"35"];
                     tattooScanflg = 0;
@@ -1335,6 +1355,7 @@ NSString* strpigletIdentitiesEdit;
                     cell.txtpiglet_Tattoo.text = [dict valueForKey:@"35"];
                     tattooScanflg = 0;
                 }
+                
                 
                 /* __block NSDictionary *dict;
                  
@@ -1396,6 +1417,17 @@ NSString* strpigletIdentitiesEdit;
                 cell.txtpiglet_TeatsLeft.tag = indexPath.row;
                 cell.txtpiglet_TeatsBBL.tag = indexPath.row;
                 cell.txtpiglet_TeatsBBR.tag = indexPath.row;
+                //~~~~~ code added for Piglet Identities By M. Bug-29595
+                if(tagScanflg == 1){
+                    cell.txtpiglet_den.text = dictJson[@"169"][@"34"];
+                    tagScanflg = 0;
+                }
+                else if (tagScanflg == 2){
+                    NSDictionary *dict = dictJson[@"169"];
+                    
+                    cell.txtpiglet_den.text = [dict valueForKey:@"34"];
+                    tagScanflg = 0;
+                }
                 
                 if(tattooScanflg == 1){
                     cell.txtpiglet_Tattoo.text = dictJson[@"169"][@"35"];
@@ -2613,6 +2645,7 @@ NSString* strpigletIdentitiesEdit;
                 return NO;
         }//~~~~~~~added by M Piglet_identities
         else if ([[dict valueForKey:@"dk"] integerValue]==169) {
+            
             PigletIdentitiesTableViewCell *cell = [self findCellForTextField:textField];
             if (cell) {
                     cell.btnSex.userInteractionEnabled = YES;
@@ -4255,6 +4288,9 @@ float animatedDistance;
 for (NSDictionary *dict in _arrDynamic)
 {
     if ([[dict valueForKey:@"dk"]integerValue] == 169){
+        if ([_strFromEditPage isEqualToString: @"FromEdit"]){
+            addnewPigFlg = NO;
+        }
         if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
@@ -7220,6 +7256,12 @@ for (NSDictionary *dict in _arrDynamic)
                     UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                message:strUnauthorised
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                    //** added Pigchamp logo on alert Bug-27920 by M.and Bug-29344
+                    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                    logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                    UIView *controllerView = myAlertController.view;
+                    [controllerView addSubview:logoImageView];
+                    [controllerView bringSubviewToFront:logoImageView];
                     UIAlertAction* ok = [UIAlertAction
                                          actionWithTitle:strOk
                                          style:UIAlertActionStyleDefault
@@ -8595,7 +8637,30 @@ for (NSDictionary *dict in _arrDynamic)
         __block NSString *strTitle=[dict valueForKey:@"Lb"]?[dict valueForKey:@"Lb"]:@"";
         
         NSDateFormatter *dateFormatterr = [[NSDateFormatter alloc]init];
-        [dateFormatterr setDateFormat:@"YYYYMMdd"];
+        
+        //***commented below for Bug-29092 By M.
+        //[dateFormatterr setDateFormat:@"YYYYMMdd"];
+      
+        //***added below for Bug-29092 By M.
+        if ([_strDateFormat isEqualToString:@"1"]){
+            [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+        }else if ([_strDateFormat isEqualToString:@"2"] || [_strDateFormat isEqualToString:@"3"]){
+            [dateFormatterr setDateFormat:@"dd-MMM-yy"];
+        }else if ([_strDateFormat isEqualToString:@"4"]){
+            [dateFormatterr setDateFormat:@"mm/dd/yy"];
+        }else if ([_strDateFormat isEqualToString:@"5"]){
+            [dateFormatterr setDateFormat:@"dd/mm/yy"];
+        }else if ([_strDateFormat isEqualToString:@"6"]){
+            [dateFormatterr setDateFormat:@"dd/MM/yyyy"];
+        }else if ([_strDateFormat isEqualToString:@"7"]){
+            [dateFormatterr setDateFormat:@"mm/dd/yyyy"];
+        }else if ([_strDateFormat isEqualToString:@"8"]){
+            [dateFormatterr setDateFormat:@"dd/mm/yyyy"];
+        }else{
+            
+            [dateFormatterr setDateFormat:@"MMddYYYY"];
+        }
+        //end of M.
         NSDate *dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];//YYYYMMDD
         
         self.dtPicker= [[UIDatePicker alloc] init];
@@ -10680,6 +10745,8 @@ for (NSDictionary *dict in _arrDynamic)
                                             NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[formatter stringFromDate:dtselectedDate]];
                                             
                                             [_dictDynamic setValue:strSelectedDate100 forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //Added below for Bug-29092 By M.
+                                            [dictJson setValue:strSelectedDate100 forKey:[DictDynamic valueForKey:@"dk"]];
                                         }
                                         //*** changed below code for strDateFormat due to User_Paramters APi changes By M.
                                         //else if([self.strDateFormat isEqualToString:@"6"]){
@@ -10714,12 +10781,15 @@ for (NSDictionary *dict in _arrDynamic)
                                             // NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
                                             //[_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
                                             [_dictDynamic setValue:strSelectedDateDayOFYear forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:strSelectedDateDayOFYear forKey:[DictDynamic valueForKey:@"dk"]];
                                             /**********************/
                                             
                                             
                                             // [_dictDynamic setValue:strSelectedDateyearformat forKey:[dict valueForKey:@"Lb"]];
                                         }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
-                                        else if([_strDateFormat isEqualToString:@"3"]){
+                                        //***added check for 2 below in condition for bug-29092 by M
+                                        else if([_strDateFormat isEqualToString:@"3"] || [_strDateFormat isEqualToString:@"2"]){
                                             
                                             NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
                                             [inputDateFormatter setDateFormat:@"yyyyMMdd"];
@@ -10732,6 +10802,8 @@ for (NSDictionary *dict in _arrDynamic)
                                             // Format the date to the desired output format
                                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
                                             [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:outputDateString forKey:[DictDynamic valueForKey:@"dk"]];
                                         }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
                                         else if([_strDateFormat isEqualToString:@"4"]){
                                             
@@ -10746,6 +10818,8 @@ for (NSDictionary *dict in _arrDynamic)
                                             // Format the date to the desired output format
                                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
                                             [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:outputDateString forKey:[DictDynamic valueForKey:@"dk"]];
                                         }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
                                         else if([_strDateFormat isEqualToString:@"5"]){
                                             
@@ -10760,6 +10834,8 @@ for (NSDictionary *dict in _arrDynamic)
                                             // Format the date to the desired output format
                                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
                                             [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:outputDateString forKey:[DictDynamic valueForKey:@"dk"]];
                                         }  //*** condition added below code for strDateFormat due to User_Paramters APi changes Bug 27782 -By M.
                                         else if([_strDateFormat isEqualToString:@"8"]){
                                             
@@ -10774,13 +10850,17 @@ for (NSDictionary *dict in _arrDynamic)
                                             // Format the date to the desired output format
                                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
                                             [_dictDynamic setValue:outputDateString forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:outputDateString forKey:[DictDynamic valueForKey:@"dk"]];
                                         }
                                         else{
                                             [_dictDynamic setValue:[[[[str substringWithRange:NSMakeRange(4, [str length]-6)] stringByAppendingString:@"/"] stringByAppendingString:[[str substringWithRange:NSMakeRange(6, [str length]-6)] stringByAppendingString:@"/"]] stringByAppendingString:[str substringToIndex:4]] forKey:[DictDynamic valueForKey:@"Lb"]];
+                                            //added for Bug-29092
+                                            [dictJson setValue:[[[[str substringWithRange:NSMakeRange(4, [str length]-6)] stringByAppendingString:@"/"] stringByAppendingString:[[str substringWithRange:NSMakeRange(6, [str length]-6)] stringByAppendingString:@"/"]] stringByAppendingString:[str substringToIndex:4]] forKey:[DictDynamic valueForKey:@"dk"]];
                                         }
                                         //
-                                        
-                                        [dictJson setValue:str forKey:[DictDynamic valueForKey:@"dk"]];
+                                        //commenetd below line for Bug-29092
+                                       // [dictJson setValue:str forKey:[DictDynamic valueForKey:@"dk"]];
                                     }
                                 }else if ([strDataType isEqualToString:@"IR"]){
                                     __block NSMutableDictionary *dictText;
@@ -10803,18 +10883,31 @@ for (NSDictionary *dict in _arrDynamic)
                             }
                         }
                     }
-                    //~~~~~ for piglet Identities By M.
-                    NSString * dataArray = [dictJson valueForKey:@"169"];
-                    if (dataArray != nil) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
-                        
-                    }
-                    //end By M.
-                    strpigletIdentitiesEdit = [dictJson valueForKey:@"169"];
+                    
                     NSLog(@"dictJson=%@",dictJson);
                     NSLog(@"data=%@",_dictDynamic);
                     NSLog(@"data=%@",arrAvailableValues);
-                    
+                    //***added code for Bug-29092 By M.
+                    BOOL found = NO;
+                    for (NSDictionary *dict in arrAvailableValues) {
+                        if ([[dict valueForKey:@"dataItemKey"] isEqualToString:@"169"]) {
+                            found = YES;
+                            break;
+                        }
+                    }
+                    if(found){
+                        strpigletIdentitiesEdit = [dictJson valueForKey:@"169"];
+                        
+                        NSString * dataArray = [dictJson valueForKey:@"169"];
+                       
+                        if (dataArray != nil) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
+                            
+                        }
+                    }
+                    //end By M.
+                   
+
                     _dictReload = [[NSMutableDictionary alloc] init];
                     
                     //  NSArray *deepCopyArray=[[NSArray alloc] initWithArray:someArray copyItems:YES];
@@ -10847,6 +10940,12 @@ for (NSDictionary *dict in _arrDynamic)
                         UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                                    message:strUnauthorised
                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                        //** added Pigchamp logo on alert Bug-27920 and Bug-29344 by M.
+                        UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                        logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                        UIView *controllerView = myAlertController.view;
+                        [controllerView addSubview:logoImageView];
+                        [controllerView bringSubviewToFront:logoImageView];
                         UIAlertAction* ok = [UIAlertAction
                                              actionWithTitle:strOk
                                              style:UIAlertActionStyleDefault
@@ -11329,6 +11428,18 @@ for (NSDictionary *dict in _arrDynamic)
         strScan = [dict valueForKey:@"Lb"];
         strScandk = [dict valueForKey:@"dk"];
         ///*** End By M.
+        ///
+        //~~~~~added below code for Piglet Identities Bug-29596 By M.
+        if ([cell isKindOfClass:[PigletIdentitiesTableViewCell class]]) {
+            PigletIdentitiesTableViewCell *pigletCell = (PigletIdentitiesTableViewCell *)cell;
+            pigletCell.btnSex.userInteractionEnabled = YES;
+            pigletCell.btnColor.userInteractionEnabled = YES;
+            pigletCell.btnDestination.userInteractionEnabled = YES;
+        }
+        //~~~~~added below code for Piglet Identities Bug-29596 By M.
+        UIButton *btn = (UIButton*)sender;
+        btnTag = btn.tag;
+        //End of M.
         pref = [NSUserDefaults standardUserDefaults];
         // NSString *strRFID = [pref valueForKey:@"isRFID"];
         NSString *strBar = [pref valueForKey:@"isBarcode"];
@@ -11379,22 +11490,50 @@ for (NSDictionary *dict in _arrDynamic)
         */
         //~~~~commented above code and added new code for Piglet Identities By M.
         if([strScandk isEqualToString:@"169"]){
+            //~~~~~ added below code for Piglet Identities By M.
+         /*   if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                [_pigletIdentitiesArray addObject:pigletIdentityDict];
+            }
+            
+            [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
+            if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+            }
+            [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];*/
+
             tattooScannedValue = [barcode mutableCopy];
             NSArray *array169 = dictJson[@"169"];
             NSDictionary *dictDataToSend;
-            if (array169 && [array169 isKindOfClass:[NSArray class]]) {
-                dictDataToSend = array169[0];
-                [dictDataToSend setValue:barcode forKey:@"35"];
-                [self.dictJson setObject:dictDataToSend forKey:strScandk];
-                [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
-                tattooScanflg = 2;
-            }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
-                array169_1 =[array169 mutableCopy];
-                [array169_1 setValue:barcode forKey:@"35"];
-                [self.dictJson setObject:array169_1 forKey:strScandk];
-                [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
-                tattooScanflg = 1;
+            if(btnTag == 4){
+                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                    dictDataToSend = array169[0];
+                    [dictDataToSend setValue:barcode forKey:@"34"];
+                    [self.dictJson setObject:dictDataToSend forKey:strScandk];
+                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
+                    tagScanflg = 2;
+                }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+                    array169_1 =[array169 mutableCopy];
+                    [array169_1 setValue:barcode forKey:@"34"];
+                    [self.dictJson setObject:array169_1 forKey:strScandk];
+                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
+                    tagScanflg = 1;
+                }
+            }if(btnTag == 3){
+                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                    dictDataToSend = array169[0];
+                    [dictDataToSend setValue:barcode forKey:@"35"];
+                    [self.dictJson setObject:dictDataToSend forKey:strScandk];
+                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                    tattooScanflg = 2;
+                }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+                    array169_1 =[array169 mutableCopy];
+                    [array169_1 setValue:barcode forKey:@"35"];
+                    [self.dictJson setObject:array169_1 forKey:strScandk];
+                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                    tattooScanflg = 1;
+                }
             }
+           
         }else{
             ///*** added code below for  bug- 27755    By M.
             [_dictDynamic setValue:barcode forKey:strScan];
@@ -11985,6 +12124,7 @@ for (NSDictionary *dict in _arrDynamic)
 
 }
 //~~~~~ for Piglet Identities by M.
+/*
 -(void)PigletIdentitiesListUpdateUnchk:(NSString *)strIdent {
    // NSLog(@"Received row: %@", strIdent);
     NSString *capIden = [strIdent uppercaseString];
@@ -12089,8 +12229,153 @@ for (NSDictionary *dict in _arrDynamic)
     }
     // Handle the row value here
 
-}
+}*/
+//~~~~~ for Piglet Identities Bug-29596 made changes to function by M.
+-(void)PigletIdentitiesListUpdateUnchk:(NSString *)strIdent {
+   // NSLog(@"Received row: %@", strIdent);
+    NSString *capIden = [strIdent uppercaseString];
+    //NSString *capIden = [capIden1 substringToIndex:[capIden1 length] - 1];
+   
+    NSMutableArray *tmppigletIdentitiesArray1 = [[NSMutableArray alloc]init];
+    NSMutableArray *tmppigletIdentitiesJsonArray1 = [[NSMutableArray alloc]init];
+    if([_strFromEditPage isEqualToString:@"FromEdit"] && addnewPigFlg){
+        NSMutableArray *tmppigletIdentitiesArray11 = [[NSMutableArray alloc]init];
+        NSMutableArray *tmppigletIdentitiesJsonArray11 = [[NSMutableArray alloc]init];
 
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+         
+        tmppigletIdentitiesArray11  = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray11 = [dictJson valueForKey:@"169"];
+        
+       
+        [tmppigletIdentitiesArray1 addObjectsFromArray:tmppigletIdentitiesArray11];
+        [tmppigletIdentitiesJsonArray1 addObject:tmppigletIdentitiesJsonArray11];
+        //~~~~ for Piglet Identities added for Bug-29596 By M.
+        if (_pigletidentitiesArryinUnchk.count <= 0 && _pigletidentitiesJsonArryinUnchk.count <= 0){
+            _pigletIdentitiesArray1 = [tmppigletIdentitiesArray1 mutableCopy];
+            _pigletIdentitiesJsonArray1 = [tmppigletIdentitiesJsonArray1 mutableCopy];
+        }else{
+            _pigletIdentitiesArray1 = [_pigletidentitiesArryinUnchk mutableCopy];
+            _pigletIdentitiesJsonArray1 = [_pigletidentitiesJsonArryinUnchk mutableCopy];
+        }
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+                _pigletidentitiesArryinUnchk = [_pigletIdentitiesArray1 mutableCopy];
+            }
+        }
+            
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                    _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+                _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+            }
+        }
+    }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
+       
+        tmppigletIdentitiesArray1 = [self getPigletsJsonDynamicStringToArray:strpigletIdentitiesEdit];
+        tmppigletIdentitiesJsonArray1 = [self getPigletsJsonStringToArray:strpigletIdentitiesEdit];
+        //~~~~ for Piglet Identities added for Bug-29596 By M.
+        if (_pigletidentitiesArryinUnchk.count <= 0 && _pigletidentitiesJsonArryinUnchk.count <= 0){
+            _pigletIdentitiesArray1 = [tmppigletIdentitiesArray1 mutableCopy];
+            _pigletIdentitiesJsonArray1 = [tmppigletIdentitiesJsonArray1 mutableCopy];
+        }else{
+            _pigletIdentitiesArray1 = [_pigletidentitiesArryinUnchk mutableCopy];
+            _pigletIdentitiesJsonArray1 = [_pigletidentitiesJsonArryinUnchk mutableCopy];
+        }
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = [item valueForKey: @"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesArray1 removeObject:item];
+                _pigletidentitiesArryinUnchk = [_pigletIdentitiesArray1 mutableCopy];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                    _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary
+                                                          class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = [item1 valueForKey: @"34"];//item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 addObject:item1];
+                _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+            }
+        }
+    }
+    else{
+        tmppigletIdentitiesArray1 = [self.dictDynamic valueForKey:@"Piglet Identities"];
+        tmppigletIdentitiesJsonArray1 = [dictJson valueForKey:@"169"];
+        //~~~~ for Piglet Identities added for Bug-29596 By M.
+        if (_pigletidentitiesArryinUnchk.count <= 0 && _pigletidentitiesJsonArryinUnchk.count <= 0){
+            _pigletIdentitiesArray1 = [tmppigletIdentitiesArray1 mutableCopy];
+            _pigletIdentitiesJsonArray1 = [tmppigletIdentitiesJsonArray1 mutableCopy];
+        }else{
+            _pigletIdentitiesArray1 = [_pigletidentitiesArryinUnchk mutableCopy];
+            _pigletIdentitiesJsonArray1 = [_pigletidentitiesJsonArryinUnchk mutableCopy];
+        }
+        
+        for (NSDictionary *item in tmppigletIdentitiesArray1){
+            NSString *itemLb = item[@"Identity"];//item[@"Identity"];
+            if ([itemLb isEqual:capIden]){
+                
+                [_pigletIdentitiesArray1 removeObject:item];
+                _pigletidentitiesArryinUnchk = [_pigletIdentitiesArray1 mutableCopy];
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSArray class]]) {
+            for (NSDictionary *item1 in tmppigletIdentitiesJsonArray1){
+                NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+                
+                if ([itemLb isEqual:capIden]){
+                    [_pigletIdentitiesJsonArray1 removeObject:item1];
+                    _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+                }
+            }
+        }
+        if ([tmppigletIdentitiesJsonArray1 isKindOfClass:[NSDictionary
+                                                          class]]) {
+            NSMutableDictionary *item1 =[tmppigletIdentitiesJsonArray1 mutableCopy];
+            NSString *itemLb = item1[@"34"]; //--working for device~~~~~~
+            
+            if ([itemLb isEqual:capIden]){
+                [_pigletIdentitiesJsonArray1 removeObject:item1];
+                _pigletidentitiesJsonArryinUnchk = [_pigletIdentitiesJsonArray1 mutableCopy];
+            }
+        }
+    }
+    // Handle the row value here
+
+}
+//~~~~ for Piglet Identities added for Bug-29596 By M.
+-(void)AddPigletIdentityToArray{
+   
+    [_pigletIdentitiesArray1 addObject: [self.dictDynamic valueForKey:@"Piglet Identities"]];
+    [_pigletIdentitiesJsonArray1 addObject:[dictJson valueForKey:@"169"]];
+}
 
 
 //~~~~ for Piglet Identities By M.
@@ -12419,5 +12704,46 @@ for (NSDictionary *dict in _arrDynamic)
     }
     return pigletsArray;
 }
+-(NSMutableArray*)ConvertStrTOArrayEdit:(NSString *)pigStrEdit{
+    NSMutableArray *pigletsArray = [[NSMutableArray alloc]init];
+    NSData *jsonData = [pigStrEdit dataUsingEncoding:NSUTF8StringEncoding];
 
+    NSError *error;
+    NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+    
+    if (!error) {
+        for (NSDictionary *dict in jsonArray) {
+            NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
+            NSString *tmpSx,*tmpCol,*tmpDesg;
+            
+            [editdata setValue:dict[@"Identity"] forKey:@"34"];
+            
+            [editdata setValue:dict[@"Tattoo"] forKey:@"35"];
+            
+            [editdata setValue:dict[@"Transponder"] forKey:@"36"];
+            
+            tmpSx = [self getPigletIDS:dict[@"Sex"] optVal:4];
+            [editdata setValue:tmpSx forKey:@"37"];
+            
+            [editdata setValue:dict[@"Weight"] forKey:@"38"];
+            
+            [editdata setValue:dict[@"Teats"] forKey:@"39"];
+            
+            [editdata setValue:dict[@"TeatsLeft"] forKey:@"40"];
+            
+            [editdata setValue:dict[@"TeatsBBLeft"] forKey:@"41"];
+            
+            [editdata setValue:dict[@"TeatsBBRight"] forKey:@"42"];
+            
+            tmpCol = [self getPigletIDS:dict[@"Color"] optVal:5];
+            [editdata setValue:tmpCol forKey:@"43"];
+            
+            tmpDesg = [self getPigletIDS:dict[@"Designation"] optVal:6];
+            [editdata setValue:tmpDesg forKey:@"44"];
+            
+            [pigletsArray addObject:editdata];
+        }
+    }
+    return pigletsArray;
+}
 @end

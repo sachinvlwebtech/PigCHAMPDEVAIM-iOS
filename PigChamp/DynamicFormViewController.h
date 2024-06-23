@@ -64,6 +64,7 @@
 @property(nonatomic,strong)NSMutableArray *pigletIdentitiesArray,*pigletIdentitiesArray1,*tmparray;
 @property(nonatomic,strong)NSMutableArray *pigletIdentitiesJsonArray,*pigletIdentitiesJsonArray1;
 
+@property(nonatomic,strong)NSMutableArray *pigletidentitiesArryinUnchk,*pigletidentitiesJsonArryinUnchk;
 @property (weak, nonatomic) IBOutlet UITextField *txtReference;
 ///***added for new API call for User_Paramters
 @property (nonatomic) NSNumber *boolVal;

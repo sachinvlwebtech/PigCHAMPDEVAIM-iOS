@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)PigletIdentitiesListUpdate:(NSString *)strIden;
 - (void)PigletIdentitiesRemoveObject:(NSString *)strRIden;
 -(void)PigletIdentitiesListUpdateUnchk:(NSString *)strIdent;
-
+//Added for bug-29596 By M.
+-(void)AddPigletIdentityToArray;
 - (void)clearAlldicts;
 @end
 
@@ -40,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *btnColor;
 @property (weak, nonatomic) IBOutlet UIButton *btnDestination;
 @property (weak, nonatomic) IBOutlet UIButton *btnTattaoScanner;
+@property (weak, nonatomic) IBOutlet UIButton *btnTagScanner;
 
 -(void)showPigletIdentityList:(NSString *)pigletStringEdit;
 @end

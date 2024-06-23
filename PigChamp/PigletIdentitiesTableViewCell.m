@@ -60,14 +60,12 @@ BOOL chkMarkEdit = FALSE;
             
         }
         [self.pigletIdenListArray insertObject:txtdata atIndex:0];
-        NSLog(@"%@",_pigletIdenListArray);
-        // Calculate the index path for the new row
-     /*   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.stringArr.count - 1 inSection:0];
+        //NSLog(@"%@",_pigletIdenListArray);
+      
+        //added for Bug-29596 By M.
+        chkMarkEdit = TRUE;
+        [self.delegate AddPigletIdentityToArray];
         
-        // Update the table view
-        [self.identitiestblView beginUpdates];
-        [self.identitiestblView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.identitiestblView endUpdates]; */
         [_identitiestblView reloadData];
       
         _txtpiglet_den.text = @"";
@@ -155,24 +153,8 @@ BOOL chkMarkEdit = FALSE;
     @try {
         PigletIdTableViewCell *cell = (PigletIdTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"identitiesList" forIndexPath:indexPath];
         cell.backgroundColor = [UIColor clearColor];
-        // cell.lblPigletIdenty.text = _stringArr[indexPath.row];
-        /* for (NSDictionary *dict in _stringArr) {
-         
-         if (dict[@"Identity"]) {
-         NSString *identityValue = dict[@"Identity"];
-         cell.lblPigletIdenty.text = identityValue;
-         } if(dict[@"Tattoo"]) {
-         NSString *tattooValue = dict[@"Tattoo"];
-         cell.lblPigletTattoo.text = tattooValue;
-         
-         } if(dict[@"Transponder"]) {
-         NSString *transpValue = dict[@"Transponder"];
-         cell.lblPigletTrans.text = transpValue;
-         
-         }
-         
-         }*/
-        // Get the dictionary at the current index
+       
+       
         NSDictionary *item = self.pigletIdenListArray[indexPath.row];
         
         // Extract the "Identity" value
@@ -211,8 +193,7 @@ BOOL chkMarkEdit = FALSE;
            NSString *identity = item[@"Identity"];
            [self.delegate PigletIdentitiesListUpdate:identity];
            if (prev!=indexPath.row) {
-            // cell=[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:prev inSection:0]];
-            // cell.accessoryType=UITableViewCellAccessoryNone;
+           
              prev=indexPath.row;
          }
 
@@ -265,7 +246,8 @@ BOOL chkMarkEdit = FALSE;
         }
         
     }
-    //chkMarkEdit = TRUE;
+    //added for Bug-29596
+    chkMarkEdit = TRUE;
     [self.identitiestblView reloadData];
 }
 - (void)dealloc {
