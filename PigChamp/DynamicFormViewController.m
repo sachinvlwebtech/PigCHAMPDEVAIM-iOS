@@ -4288,9 +4288,6 @@ float animatedDistance;
 for (NSDictionary *dict in _arrDynamic)
 {
     if ([[dict valueForKey:@"dk"]integerValue] == 169){
-        if ([_strFromEditPage isEqualToString: @"FromEdit"]){
-            addnewPigFlg = NO;
-        }
         if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
@@ -4321,10 +4318,10 @@ for (NSDictionary *dict in _arrDynamic)
                         
                         [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
                         
-                        for (NSDictionary *dict in _pigletIdentitiesJsonArray1){
-                            if ([[dict valueForKey:@"43"] isEqualToString:@""] ||[[dict valueForKey:@"44"] isEqualToString:@""] ){
-                                [dict setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
-                                [dict setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
+                        for (NSDictionary *dict1 in _pigletIdentitiesJsonArray1){
+                            if (([[dict1 valueForKey:@"43"] isEqualToString:@""] ||[[dict1 valueForKey:@"44"] isEqualToString:@""])&& [[dict1 valueForKey:@"34"] isEqualToString:[array169_1 valueForKey:@"34"]] ){
+                                [dict1 setValue:[array169_1 valueForKey:@"43"] forKey:@"43"];
+                                [dict1 setValue:[array169_1 valueForKey:@"44"] forKey:@"44"];
                                 
                             }
                         }
@@ -11429,13 +11426,33 @@ for (NSDictionary *dict in _arrDynamic)
         strScandk = [dict valueForKey:@"dk"];
         ///*** End By M.
         ///
-        //~~~~~added below code for Piglet Identities Bug-29596 By M.
-        if ([cell isKindOfClass:[PigletIdentitiesTableViewCell class]]) {
-            PigletIdentitiesTableViewCell *pigletCell = (PigletIdentitiesTableViewCell *)cell;
-            pigletCell.btnSex.userInteractionEnabled = YES;
-            pigletCell.btnColor.userInteractionEnabled = YES;
-            pigletCell.btnDestination.userInteractionEnabled = YES;
+       /* if([strScandk isEqualToString:@"169"]){
+            // added below code for Piglet Identities By M.
+            if ([_strFromEditPage isEqualToString:@"FromEdit"]){
+                addnewPigFlg = YES;
+            }else{
+                addnewPigFlg = NO;
+            }
         }
+            if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                [_pigletIdentitiesArray addObject:pigletIdentityDict];
+            }
+            
+            [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
+         
+            
+            if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+            }
+            [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
+            //~~~~~added below code for Piglet Identities Bug-29596 By M.
+            if ([cell isKindOfClass:[PigletIdentitiesTableViewCell class]]) {
+                PigletIdentitiesTableViewCell *pigletCell = (PigletIdentitiesTableViewCell *)cell;
+                pigletCell.btnSex.userInteractionEnabled = YES;
+                pigletCell.btnColor.userInteractionEnabled = YES;
+                pigletCell.btnDestination.userInteractionEnabled = YES;
+            }
+        }*/
         //~~~~~added below code for Piglet Identities Bug-29596 By M.
         UIButton *btn = (UIButton*)sender;
         btnTag = btn.tag;
@@ -11490,8 +11507,9 @@ for (NSDictionary *dict in _arrDynamic)
         */
         //~~~~commented above code and added new code for Piglet Identities By M.
         if([strScandk isEqualToString:@"169"]){
-            //~~~~~ added below code for Piglet Identities By M.
-         /*   if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+           /* //~~~~~ added below code for Piglet Identities By M.
+            addnewPigFlg = YES;
+            if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
                 [_pigletIdentitiesArray addObject:pigletIdentityDict];
             }
             
@@ -12373,8 +12391,17 @@ for (NSDictionary *dict in _arrDynamic)
 //~~~~ for Piglet Identities added for Bug-29596 By M.
 -(void)AddPigletIdentityToArray{
    
-    [_pigletIdentitiesArray1 addObject: [self.dictDynamic valueForKey:@"Piglet Identities"]];
-    [_pigletIdentitiesJsonArray1 addObject:[dictJson valueForKey:@"169"]];
+    //[_pigletIdentitiesArray1 addObject: [self.dictDynamic valueForKey:@"Piglet Identities"]];
+    //[_pigletIdentitiesJsonArray1 addObject:[dictJson valueForKey:@"169"]];
+    NSMutableArray *pigletIdentitiesArrayTmp = [[NSMutableArray alloc]init];
+    NSMutableArray *pigletIdentitiesJsonArrayTmp = [[NSMutableArray alloc]init];
+    
+    pigletIdentitiesArrayTmp  = [self.dictDynamic valueForKey:@"Piglet Identities"];
+    pigletIdentitiesJsonArrayTmp = [dictJson valueForKey:@"169"];
+    _pigletIdentitiesArray1 = [pigletIdentitiesArrayTmp mutableCopy];
+    _pigletIdentitiesJsonArray1 = [pigletIdentitiesJsonArrayTmp mutableCopy];
+    //[_pigletIdentitiesArray1 addObject:pigletIdentitiesArrayTmp];
+    //[_pigletIdentitiesJsonArray1 addObject:pigletIdentitiesJsonArrayTmp];
 }
 
 
