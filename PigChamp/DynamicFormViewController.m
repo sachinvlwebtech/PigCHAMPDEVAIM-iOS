@@ -1333,29 +1333,6 @@ NSString* strpigletIdentitiesEdit;
                 cell.txtpiglet_TeatsBBL.tag = indexPath.row;
                 cell.txtpiglet_TeatsBBR.tag = indexPath.row;
                 
-                //~~~~~ code added for Piglet Identities By M. Bug-29595
-                
-                if(tagScanflg == 1){
-                    cell.txtpiglet_den.text = dictJson[@"169"][@"34"];
-                    tagScanflg = 0;
-                }
-                else if (tagScanflg == 2){
-                    NSDictionary *dict = dictJson[@"169"];
-                    
-                    cell.txtpiglet_den.text = [dict valueForKey:@"34"];
-                    tagScanflg = 0;
-                }
-                if(tattooScanflg == 1){
-                    cell.txtpiglet_Tattoo.text = dictJson[@"169"][@"35"];
-                    tattooScanflg = 0;
-                }
-                else if (tattooScanflg == 2){
-                    NSDictionary *dict = dictJson[@"169"];
-                    
-                    cell.txtpiglet_Tattoo.text = [dict valueForKey:@"35"];
-                    tattooScanflg = 0;
-                }
-                
                 
                 /* __block NSDictionary *dict;
                  
@@ -1370,11 +1347,25 @@ NSString* strpigletIdentitiesEdit;
                 if (array169 && [array169 isKindOfClass:[NSArray class]]) {
                     if (array169.count == 1){
                         dictDataToSend = array169[0];
+                        // added for Bug-29637 By M.
+                        if (tagScanflg > 0 || tattooScanflg >0){
+                            cell.txtpiglet_den.text = [dictDataToSend valueForKey:@"34"];
+                            cell.txtpiglet_Tattoo.text = dictDataToSend[@"35"];
+                            tagScanflg = 0;
+                            tattooScanflg = 0;
+                        }
                         [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
                         [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
                         [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
                     } else if(array169.count > 1) {
                         dictDataToSend = [array169 lastObject];
+                        // added for Bug-29637 By M.
+                        if (tagScanflg > 0 || tattooScanflg >0){
+                            cell.txtpiglet_den.text = [dictDataToSend  valueForKey: @"34"];
+                            cell.txtpiglet_Tattoo.text = dictDataToSend[@"35"];
+                            tagScanflg = 0;
+                            tattooScanflg = 0;
+                        }
                         [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
                         [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
                         [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
@@ -1418,7 +1409,7 @@ NSString* strpigletIdentitiesEdit;
                 cell.txtpiglet_TeatsBBL.tag = indexPath.row;
                 cell.txtpiglet_TeatsBBR.tag = indexPath.row;
                 //~~~~~ code added for Piglet Identities By M. Bug-29595
-                if(tagScanflg == 1){
+               /* if(tagScanflg == 1){
                     cell.txtpiglet_den.text = dictJson[@"169"][@"34"];
                     tagScanflg = 0;
                 }
@@ -1438,7 +1429,7 @@ NSString* strpigletIdentitiesEdit;
                     
                     cell.txtpiglet_Tattoo.text = [dict valueForKey:@"35"];
                     tattooScanflg = 0;
-                }
+                }*/
                 
                 /* __block NSDictionary *dict;
                  
@@ -1453,11 +1444,25 @@ NSString* strpigletIdentitiesEdit;
                 if (array169 && [array169 isKindOfClass:[NSArray class]]) {
                     if (array169.count == 1){
                         dictDataToSend = array169[0];
+                        // added for Bug-29637 By M.
+                        if (tagScanflg > 0 || tattooScanflg >0){
+                            cell.txtpiglet_den.text = [dictDataToSend valueForKey:@"34"];
+                            cell.txtpiglet_Tattoo.text = dictDataToSend[@"35"];
+                            tagScanflg = 0;
+                            tattooScanflg = 0;
+                        }
                         [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
                         [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
                         [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
                     } else if(array169.count > 1) {
                         dictDataToSend = [array169 lastObject];
+                        // added for Bug-29637 By M.
+                        if (tagScanflg > 0 || tattooScanflg > 0){
+                            cell.txtpiglet_den.text = [dictDataToSend valueForKey:@"34"];
+                            cell.txtpiglet_Tattoo.text = dictDataToSend[@"35"];
+                            tagScanflg = 0;
+                            tattooScanflg = 0;
+                        }
                         [cell.btnSex setTitle:[dictDataToSend valueForKey:@"37"] forState:UIControlStateNormal];
                         [cell.btnColor setTitle:[dictDataToSend valueForKey:@"43"] forState:UIControlStateNormal];
                         [cell.btnDestination setTitle:[dictDataToSend valueForKey:@"44"] forState:UIControlStateNormal];
@@ -2655,7 +2660,12 @@ NSString* strpigletIdentitiesEdit;
             NSArray *dka = [dict valueForKey:@"dka"]?[dict valueForKey:@"dka"]:@"";
             NSString *strMinVal,*strMaxVal;
             if ([textField.placeholder isEqualToString:@"Tag"]) {
-                addnewPigFlg = YES;
+               // addnewPigFlg = YES;
+                if ([_strFromEditPage isEqualToString:@"FromEdit"]){
+                    addnewPigFlg = YES;
+                }else{
+                    addnewPigFlg = NO;
+                }
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
@@ -2824,6 +2834,9 @@ NSString* strpigletIdentitiesEdit;
                 if (newString.length == 1) {
                     // For single digit intermediate values, allow if they can lead to a valid number
                     if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        //***added for saving single digit value By M.
+                        [pigletIdentityDict setObject:newString forKey:@"Teats"];
+                        [pigletIdentityJsonDict setObject:newString forKey:@"39"];
                         return YES;
                     } else {
                         // Allow typing '1' or '2' to form valid two-digit numbers later
@@ -3023,6 +3036,9 @@ NSString* strpigletIdentitiesEdit;
                 if (newString.length == 1) {
                     // For single digit intermediate values, allow if they can lead to a valid number
                     if (intValue >= [strMinVal integerValue] && intValue <= [strMaxVal integerValue]) {
+                        //***code below added for saving the single digit value By M.
+                        [pigletIdentityDict setObject:newString forKey:@"TeatsLeft"];
+                        [pigletIdentityJsonDict setObject:newString forKey:@"40"];
                         return YES;
                     } else {
                         // Allow typing '1', '4', '5', '6' to form valid two-digit numbers later
@@ -4288,7 +4304,8 @@ float animatedDistance;
 for (NSDictionary *dict in _arrDynamic)
 {
     if ([[dict valueForKey:@"dk"]integerValue] == 169){
-        if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
+        //**** commeneted below code for Bug-29652 By M.
+        /*if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -4311,7 +4328,7 @@ for (NSDictionary *dict in _arrDynamic)
             
             return;
             
-        }else{
+        }else{*/
             if(![_strFromEditPage isEqualToString:@"FromEdit"]){
                 for (NSDictionary *dict in _arrDynamic){
                     if ([[dict valueForKey:@"dk"]integerValue] == 169){
@@ -4375,7 +4392,7 @@ for (NSDictionary *dict in _arrDynamic)
                 }
             }
         }
-    }
+    //}
 }
         //strMustValue = [strMustValue stringByReplacingOccurrencesOfString:@"#1" withString:@""];
         
@@ -11426,33 +11443,16 @@ for (NSDictionary *dict in _arrDynamic)
         strScandk = [dict valueForKey:@"dk"];
         ///*** End By M.
         ///
-       /* if([strScandk isEqualToString:@"169"]){
-            // added below code for Piglet Identities By M.
-            if ([_strFromEditPage isEqualToString:@"FromEdit"]){
-                addnewPigFlg = YES;
-            }else{
-                addnewPigFlg = NO;
-            }
-        }
-            if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
-                [_pigletIdentitiesArray addObject:pigletIdentityDict];
-            }
-            
-            [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
-         
-            
-            if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
-                [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
-            }
-            [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
-            //~~~~~added below code for Piglet Identities Bug-29596 By M.
+        if([strScandk isEqualToString:@"169"]){
+       
+            //~~~~~added below code for Piglet Identities Bug-29637 By M.
             if ([cell isKindOfClass:[PigletIdentitiesTableViewCell class]]) {
                 PigletIdentitiesTableViewCell *pigletCell = (PigletIdentitiesTableViewCell *)cell;
                 pigletCell.btnSex.userInteractionEnabled = YES;
                 pigletCell.btnColor.userInteractionEnabled = YES;
                 pigletCell.btnDestination.userInteractionEnabled = YES;
             }
-        }*/
+        }
         //~~~~~added below code for Piglet Identities Bug-29596 By M.
         UIButton *btn = (UIButton*)sender;
         btnTag = btn.tag;
@@ -11507,50 +11507,75 @@ for (NSDictionary *dict in _arrDynamic)
         */
         //~~~~commented above code and added new code for Piglet Identities By M.
         if([strScandk isEqualToString:@"169"]){
-           /* //~~~~~ added below code for Piglet Identities By M.
-            addnewPigFlg = YES;
-            if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
-                [_pigletIdentitiesArray addObject:pigletIdentityDict];
-            }
-            
-            [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
-            if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
-                [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
-            }
-            [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];*/
-
-            tattooScannedValue = [barcode mutableCopy];
-            NSArray *array169 = dictJson[@"169"];
-            NSDictionary *dictDataToSend;
-            if(btnTag == 4){
-                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
-                    dictDataToSend = array169[0];
-                    [dictDataToSend setValue:barcode forKey:@"34"];
-                    [self.dictJson setObject:dictDataToSend forKey:strScandk];
-                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
-                    tagScanflg = 2;
-                }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
-                    array169_1 =[array169 mutableCopy];
-                    [array169_1 setValue:barcode forKey:@"34"];
-                    [self.dictJson setObject:array169_1 forKey:strScandk];
-                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
-                    tagScanflg = 1;
-                }
-            }if(btnTag == 3){
-                if (array169 && [array169 isKindOfClass:[NSArray class]]) {
-                    dictDataToSend = array169[0];
-                    [dictDataToSend setValue:barcode forKey:@"35"];
-                    [self.dictJson setObject:dictDataToSend forKey:strScandk];
-                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
-                    tattooScanflg = 2;
-                }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
-                    array169_1 =[array169 mutableCopy];
-                    [array169_1 setValue:barcode forKey:@"35"];
-                    [self.dictJson setObject:array169_1 forKey:strScandk];
-                    [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
-                    tattooScanflg = 1;
-                }
-            }
+        //~~~~~ added below code for Piglet Identities By M.
+        //***code added for Bug-29637 By M.
+             if ([_strFromEditPage isEqualToString:@"FromEdit"]){
+                 addnewPigFlg = YES;
+             }else{
+                 addnewPigFlg = NO;
+             }
+             if(btnTag == 4){
+                 
+                 if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+                     [_pigletIdentitiesArray addObject:pigletIdentityDict];
+                 }
+                 
+                 [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
+                 if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+                     [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+                 }
+                 [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
+             }
+             tattooScannedValue = [barcode mutableCopy];
+             NSArray *array169 = dictJson[@"169"];
+             NSDictionary *dictDataToSend;
+             if(btnTag == 4){
+                 if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                     dictDataToSend = [array169 lastObject];
+                     [dictDataToSend setValue:barcode forKey:@"34"];
+                     NSMutableArray *mutableArray169 = [array169 mutableCopy];
+                     if (!mutableArray169) {
+                         mutableArray169 = [NSMutableArray array];
+                     }
+                     if (![mutableArray169 containsObject:dictDataToSend]){
+                         [mutableArray169 addObject:dictDataToSend];
+                     }
+                    
+                     [self.dictJson setObject:mutableArray169 forKey:strScandk];
+                     //[self.dictJson setObject:dictDataToSend forKey:strScandk];
+                     [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
+                     tagScanflg = 1;
+                 }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+                     array169_1 =[array169 mutableCopy];
+                     [array169_1 setValue:barcode forKey:@"34"];
+                     [self.dictJson setObject:array169_1 forKey:strScandk];
+                     [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"34"];
+                     tagScanflg = 1;
+                 }
+             }if(btnTag == 3){
+                 if (array169 && [array169 isKindOfClass:[NSArray class]]) {
+                     dictDataToSend = [array169 lastObject];
+                     [dictDataToSend setValue:barcode forKey:@"35"];
+                     NSMutableArray *mutableArray169 = [array169 mutableCopy];
+                     if (!mutableArray169) {
+                         mutableArray169 = [NSMutableArray array];
+                     }
+                     if (![mutableArray169 containsObject:dictDataToSend]){
+                         [mutableArray169 addObject:dictDataToSend];
+                     }
+                    
+                     [self.dictJson setObject:mutableArray169 forKey:strScandk];
+                    // [self.dictJson setObject:dictDataToSend forKey:strScandk];
+                     [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                     tattooScanflg = 1;
+                 }if ([array169 isKindOfClass:[NSMutableDictionary class]]) {
+                     array169_1 =[array169 mutableCopy];
+                     [array169_1 setValue:barcode forKey:@"35"];
+                     [self.dictJson setObject:array169_1 forKey:strScandk];
+                     [pigletIdentityJsonDict setValue:tattooScannedValue forKey:@"35"];
+                     tattooScanflg = 1;
+                 }
+             }
            
         }else{
             ///*** added code below for  bug- 27755    By M.
@@ -11951,6 +11976,8 @@ for (NSDictionary *dict in _arrDynamic)
                     if (TapedDropDownTag==4) {
                         [dictDataToSend setValue:strVal forKey:@"37"];
                         [dictDataToSend_1 setValue:idVal forKey:@"37"];
+                        //***code added for Bug-29637 By M.
+                        [pigletIdentityJsonDict setValue:strVal forKey:@"37"];
                         
                     }else if (TapedDropDownTag==5){
                         [dictDataToSend setValue:strVal forKey:@"43"];
@@ -11977,6 +12004,8 @@ for (NSDictionary *dict in _arrDynamic)
                     if (TapedDropDownTag==4) {
                         [dictDataToSend setValue:strVal forKey:@"37"];
                         [dictDataToSend_1 setValue:idVal forKey:@"37"];
+                        //***code added for Bug-29637 By M.
+                        [pigletIdentityJsonDict setValue:strVal forKey:@"37"];
                         
                     }else if (TapedDropDownTag==5){
                         [dictDataToSend setValue:strVal forKey:@"43"];
@@ -12011,6 +12040,8 @@ for (NSDictionary *dict in _arrDynamic)
                 
                 if (TapedDropDownTag==4) {
                     [array169_1 setValue:strVal forKey:@"37"];
+                    //***code added for Bug-29637 By M.
+                    [pigletIdentityJsonDict setValue:strVal forKey:@"37"];
                     
                 }else if (TapedDropDownTag==5){
                     [array169_1 setValue:strVal forKey:@"43"];
@@ -12399,7 +12430,11 @@ for (NSDictionary *dict in _arrDynamic)
     pigletIdentitiesArrayTmp  = [self.dictDynamic valueForKey:@"Piglet Identities"];
     pigletIdentitiesJsonArrayTmp = [dictJson valueForKey:@"169"];
     _pigletIdentitiesArray1 = [pigletIdentitiesArrayTmp mutableCopy];
-    _pigletIdentitiesJsonArray1 = [pigletIdentitiesJsonArrayTmp mutableCopy];
+    //_pigletIdentitiesJsonArray1 = [pigletIdentitiesJsonArrayTmp mutableCopy];
+    
+    //***added for Bug-29646 By M.
+    _pigletIdentitiesJsonArray1 = [_pigletIdentitiesJsonArray mutableCopy];
+    
     //[_pigletIdentitiesArray1 addObject:pigletIdentitiesArrayTmp];
     //[_pigletIdentitiesJsonArray1 addObject:pigletIdentitiesJsonArrayTmp];
 }
