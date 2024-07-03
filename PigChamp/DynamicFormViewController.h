@@ -39,6 +39,7 @@
 #pragma mark - Property
 @property (weak, nonatomic) IBOutlet UIView *vwcontainer;
 @property (weak, nonatomic) NSString *strDateFormat;
+@property (weak, nonatomic) NSString *strOutputDateFormat;
 @property (weak, nonatomic) IBOutlet UIView *vwFooter;
 @property (weak, nonatomic) IBOutlet UIButton *btnDropDown;
 @property(nonatomic,strong)UIView *activeTextField;

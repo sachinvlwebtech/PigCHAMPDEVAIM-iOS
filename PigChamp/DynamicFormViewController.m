@@ -104,6 +104,8 @@ NSString* strpigletIdentitiesEdit;
         //~~~~~added for piglet Identities  Bug-29596 By M.
         _pigletidentitiesArryinUnchk= [[NSMutableArray alloc]init];
         _pigletidentitiesJsonArryinUnchk= [[NSMutableArray alloc]init];
+        //added for bug-29661 By M.
+        strSelectedDateMMM = nil;
         [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -382,7 +384,8 @@ NSString* strpigletIdentitiesEdit;
                     isGestationWarnLengthflg = [[managedObject valueForKey:@"up_date_settings_input_format"] boolValue];
                     // Convert the numerical value to a string
                     _strDateFormat = [dateFormatNumber stringValue];
-                    
+                    //***added for bug-29662 By M.
+                    _strOutputDateFormat = [managedObject valueForKey:@"up_date_settings_output_format"];
                     NSLog(@"_strDateFormat: %@", _strDateFormat);
                 }
                 
@@ -635,6 +638,8 @@ NSString* strpigletIdentitiesEdit;
                 
                 if ([strFromDataEntry isEqualToString:@"1"]) {
                     [self callEdit];
+                    //added for bug-29661 By M.
+                    strSelectedDateMMM = nil;
                 }
                 //***code added for Bug-28565 By M.
                 isDateSelected = FALSE;
@@ -1129,6 +1134,26 @@ NSString* strpigletIdentitiesEdit;
             cell.txtDetail.rightViewMode = UITextFieldViewModeAlways;
             cell.txtDetail.rightView = leftView;
             
+            //Added for Bug-29659 By M.
+            cell.txtDetail.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.txtDetail.spellCheckingType = UITextSpellCheckingTypeNo;
+            if (@available(iOS 11.0, *)) {
+                cell.txtDetail.smartQuotesType = UITextSmartQuotesTypeNo;
+            } else {
+                // Fallback on earlier versions
+            }
+            if (@available(iOS 11.0, *)) {
+                cell.txtDetail.smartDashesType = UITextSmartDashesTypeNo;
+            } else {
+                // Fallback on earlier versions
+            }
+            if (@available(iOS 11.0, *)) {
+                cell.txtDetail.smartInsertDeleteType = UITextSmartInsertDeleteTypeNo;
+            } else {
+                // Fallback on earlier versions
+            }
+           
+            //*** end of M.
             cell.txtDetail.text = [_dictDynamic valueForKey:[dict valueForKey:@"Lb"]];
            // strScan = [dict valueForKey:@"Lb"];
             NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
@@ -1319,6 +1344,8 @@ NSString* strpigletIdentitiesEdit;
             [cell.txtpiglet_den setKeyboardType:UIKeyboardTypeDefault];
             [cell.txtpiglet_Tattoo setKeyboardType:UIKeyboardTypeDefault];
             [cell.txtpiglet_transp setKeyboardType:UIKeyboardTypeDefault];
+            //***added decimal for Bug-29689 By M.
+            [cell.txtpiglet_Weight setKeyboardType:UIKeyboardTypeDecimalPad];
             cell.txtpiglet_den.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
             cell.txtpiglet_Tattoo.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
             cell.txtpiglet_transp.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
@@ -2742,7 +2769,8 @@ NSString* strpigletIdentitiesEdit;
             }else if ([textField.placeholder isEqualToString:@"Weight"]) {
                 
                 NSCharacterSet *characterSet = nil;
-                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                //***added decimal for Bug-29689 By M.
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890."];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
                
                 for (NSDictionary *entry in dka) {
@@ -4304,7 +4332,7 @@ float animatedDistance;
 for (NSDictionary *dict in _arrDynamic)
 {
     if ([[dict valueForKey:@"dk"]integerValue] == 169){
-        //**** commeneted below code for Bug-29652 By M.
+        //**** code changed below code for Bug-29652 By M.
         /*if (_pigletIdentitiesJsonArray1 == nil || [_pigletIdentitiesJsonArray1 count] == 0 ){
             UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
                                                                                        message:[self getTranslatedTextForString:@" Please add atleast on Piglet to the list."]
@@ -5141,26 +5169,232 @@ for (NSDictionary *dict in _arrDynamic)
        
         for (NSDictionary *dict in _arrDynamic) {
             //***added code below for bug-28565 By M.
-            if ([[dict valueForKey:@"dk"] integerValue] == 2){
-                if (strSelectedDateMMM == nil){
-                    NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
-                    [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
-                    
-                    strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
-                    strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
-                                                                                       withString:@""];
-                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+            if(![_strFromEditPage isEqualToString:@"FromEdit"]){
+                if ([[dict valueForKey:@"dk"] integerValue] == 2){
+                    if (strSelectedDateMMM == nil){
+                        NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
+                        [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
+                        
+                        strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
+                        strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
+                                                                                           withString:@""];
+                        [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                    }
+                    else {
+                        NSString *currentValue = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                        
+                        if ([currentValue rangeOfString:@"-"].location != NSNotFound) {
+                            currentValue = [currentValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
+                            [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
+                        } else {
+                            [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
+                        }
+                    }
                 }
-                else if ([[dictJson valueForKey:[dict valueForKey:@"dk"]] rangeOfString:@"-"].location != NSNotFound){
-                    
-                    strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
-                                                                                       withString:@""];
-                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
-                }//***else code added for bug-28889 By M.
-                else {
-                    [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+            }//added below code for Bug-29662
+             if([_strFromEditPage isEqualToString:@"FromEdit"]){
+               NSString *strDataType  = [self getViewType:[dict valueForKey:@"dt"]];
+                 
+                
+                
+                 if ([strDataType isEqualToString:@"Date"]){
+                     NSString *dateString = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                     BOOL isValidFormat = [self isStringInYYYYMMDDFormat:dateString];
+                     if(!isValidFormat){
+                         if ([_strOutputDateFormat isEqualToString:@"dd-MMM-yy"]){
+                             
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"MMM-dd-yy"]){
+                             
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"M d yy"]){
+                             _strOutputDateFormat = @"mm/dd/yy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"M d yyyy"]){
+                             _strOutputDateFormat = @"mm/dd/yyyy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"MM dd yy"]){
+                             _strOutputDateFormat = @"mm/dd/yy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"MM dd yyyy"]){
+                             _strOutputDateFormat = @"mm/dd/yyyy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"D m yy"]){
+                             _strOutputDateFormat = @"dd/mm/yy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"D m yyyy"]){
+                             _strOutputDateFormat = @"dd/mm/yyyy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"DD mm yy"]){
+                             _strOutputDateFormat = @"dd/mm/yy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"DD mm yyyy"]){
+                             _strOutputDateFormat = @"dd/mm/yyyy";
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                             
+                             [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                             NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                             
+                             NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                             [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                             NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                             [dictJson setValue:outputDateString forKey:[dict valueForKey:@"dk"]];
+                             
+                         }else if ([_strOutputDateFormat isEqualToString:@"Day of Year Format"]){
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             if (![strtmpDate isEqualToString: @""]){
+                                 NSArray *components = [strtmpDate componentsSeparatedByString:@"\n"];
+                                 
+                                 // Extract the individual parts
+                                 NSString *firstPart = components[0];
+                                 NSString *datePart = components[1];
+                                 
+                                 // Log the separated parts (Optional, for verification)
+                                 //NSLog(@"First Part: %@", firstPart);
+                                 //NSLog(@"Date Part: %@", datePart);
+                                 
+                                 // Date formatter to parse the original date string
+                                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                                 [dateFormatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+                                 NSDate *date = [dateFormatter dateFromString:datePart];
+                                 
+                                 // Date formatter to convert date to the desired format
+                                 NSDateFormatter *desiredDateFormatter = [[NSDateFormatter alloc] init];
+                                 [desiredDateFormatter setDateFormat:@"yyyyMMdd"];
+                                 NSString *desiredDateString = [desiredDateFormatter stringFromDate:date];
+                                 [dictJson setValue:desiredDateString forKey:[dict valueForKey:@"dk"]];
+                             }
+                             
+                         }       else if ([_strOutputDateFormat isEqualToString:@"DAYNUMBER"]){
+                             NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                             
+                             if (![strtmpDate isEqualToString: @""]){
+                                 NSArray *components = [strtmpDate componentsSeparatedByString:@"\n"];
+                                 
+                                 // Extract the individual parts
+                                 NSString *firstPart = components[0];
+                                 NSString *datePart = components[1];
+                                 
+                                 // Log the separated parts (Optional, for verification)
+                                 NSLog(@"First Part: %@", firstPart);
+                                 NSLog(@"Date Part: %@", datePart);
+                                 
+                                 // Date formatter to parse the original date string
+                                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                                 [dateFormatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+                                 NSDate *date = [dateFormatter dateFromString:datePart];
+                                 
+                                 // Date formatter to convert date to the desired format
+                                 NSDateFormatter *desiredDateFormatter = [[NSDateFormatter alloc] init];
+                                 [desiredDateFormatter setDateFormat:@"yyyyMMdd"];
+                                 NSString *desiredDateString = [desiredDateFormatter stringFromDate:date];
+                                 [dictJson setValue:desiredDateString forKey:[dict valueForKey:@"dk"]];
+                             }
+                         }
+                     }
                }
-         }
+           }
+            
             x++;
             NSString *strKey = [dict valueForKey:@"dk"]?[dict valueForKey:@"dk"]:@"";
             NSMutableString *strValue = [dictJson valueForKey:[dict valueForKey:@"dk"]]?[dictJson valueForKey:[dict valueForKey:@"dk"]]:@"";
@@ -8675,7 +8909,50 @@ for (NSDictionary *dict in _arrDynamic)
             [dateFormatterr setDateFormat:@"MMddYYYY"];
         }
         //end of M.
-        NSDate *dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];//YYYYMMDD
+       //***commented below for Bug-29662 By M.
+       // NSDate *dt2 = [dateFormatterr dateFromString:strPrevSelectedValue]; //YYYYMMDD
+        
+        //***added below code of Edit for Bug-29662 By M.
+        NSDate *dt2;
+        if(![_strFromEditPage isEqualToString:@"FromEdit"]){
+            dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];//YYYYMMDD
+        }else{
+            if (![_strOutputDateFormat isEqualToString:@"DAYNUMBER"] && ![_strOutputDateFormat isEqualToString:@"Day of Year Format"]){
+                NSDateFormatter *desiredDateFormatter = [[NSDateFormatter alloc] init];
+                [desiredDateFormatter setDateFormat:@"yyyyMMdd"];
+                dt2 = [desiredDateFormatter dateFromString:strPrevSelectedValue];
+              
+                
+            } else if ([_strOutputDateFormat isEqualToString:@"DAYNUMBER"] || [_strOutputDateFormat isEqualToString:@"Day of Year Format"] ){
+                
+                if (![strPrevSelectedValue isEqualToString: @""]){
+                    NSArray *components = [strPrevSelectedValue componentsSeparatedByString:@"\n"];
+                    
+                    // Extract the individual parts
+                    NSString *firstPart = components[0];
+                    NSString *datePart = components[1];
+                    
+                    // Log the separated parts (Optional, for verification)
+                    NSLog(@"First Part: %@", firstPart);
+                    NSLog(@"Date Part: %@", datePart);
+                    
+                    // Date formatter to parse the original date string
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"EEE,dd-MMM-yyyy"];
+                    NSDate *date = [dateFormatter dateFromString:datePart];
+                    
+                    // Date formatter to convert date to the desired format
+                    NSDateFormatter *desiredDateFormatter = [[NSDateFormatter alloc] init];
+                    [desiredDateFormatter setDateFormat:@"yyyyMMdd"];
+                    NSString *desiredDateString = [desiredDateFormatter stringFromDate:date];
+                    dt2 = [desiredDateFormatter dateFromString:desiredDateString];
+                }
+                
+            }else{
+                [dateFormatterr setDateFormat:@"MMddYYYY"];
+                dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];
+            }
+        }//end of M.
         
         self.dtPicker= [[UIDatePicker alloc] init];
         self.dtPicker.frame = CGRectMake(15, 20, 250, 80.0);
@@ -10915,6 +11192,7 @@ for (NSDictionary *dict in _arrDynamic)
                         NSString * dataArray = [dictJson valueForKey:@"169"];
                        
                         if (dataArray != nil) {
+                           
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadNestedTableNotification" object:nil userInfo:@{@"data": dataArray}];
                             
                         }
@@ -12807,5 +13085,15 @@ for (NSDictionary *dict in _arrDynamic)
         }
     }
     return pigletsArray;
+}
+- (BOOL)isStringInYYYYMMDDFormat:(NSString *)dateString {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyyMMdd"];
+    
+    // Set the locale to en_US_POSIX to ensure consistent parsing regardless of the user's locale settings
+    dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    
+    NSDate *date = [dateFormatter dateFromString:dateString];
+    return (date != nil);
 }
 @end

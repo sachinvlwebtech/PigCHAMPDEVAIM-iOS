@@ -16,7 +16,7 @@ BOOL chkMarkEdit = FALSE;
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.pigletIdenListArray = [NSMutableArray array];
+    self.pigletIdenListArray = [[NSMutableArray alloc]init];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleReloadNotification:) name:@"ReloadNestedTableNotification" object:nil];
     
 }
@@ -228,7 +228,7 @@ BOOL chkMarkEdit = FALSE;
 
     NSError *error;
     NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-    NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
+    //NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
     if (!error) {
         for (NSDictionary *dict in jsonArray) {
             NSMutableDictionary *editdata = [[NSMutableDictionary alloc]init];
@@ -244,7 +244,7 @@ BOOL chkMarkEdit = FALSE;
             [self.pigletIdenListArray addObject:editdata];
             NSLog(@"Piglet list Array%@",_pigletIdenListArray);
         }
-        
+        NSLog(@"Piglet list Array%@",_pigletIdenListArray);
     }
     //added for Bug-29596
     chkMarkEdit = TRUE;
