@@ -5179,24 +5179,28 @@ for (NSDictionary *dict in _arrDynamic)
                         strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                            withString:@""];
                         [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
-                    }
-                    else {
-                        NSString *currentValue = [dictJson valueForKey:[dict valueForKey:@"dk"]];
-                        
-                        if ([currentValue rangeOfString:@"-"].location != NSNotFound) {
-                            currentValue = [currentValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
-                            [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
-                        } else {
-                            [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
+                    }else {//added below changes for Bug-29712 By M.
+                        if (strSelectedDateMMM != nil){
+                          
+                            [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
+                        }else{
+                            NSString *currentValue = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                            
+                            if ([currentValue rangeOfString:@"-"].location != NSNotFound) {
+                                currentValue = [currentValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
+                                [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
+                            } else {
+                                [dictJson setValue:currentValue forKey:[dict valueForKey:@"dk"]];
+                            }
                         }
                     }
+                       
+                    
                 }
             }//added below code for Bug-29662
              if([_strFromEditPage isEqualToString:@"FromEdit"]){
                NSString *strDataType  = [self getViewType:[dict valueForKey:@"dt"]];
                  
-                
-                
                  if ([strDataType isEqualToString:@"Date"]){
                      NSString *dateString = [dictJson valueForKey:[dict valueForKey:@"dk"]];
                      BOOL isValidFormat = [self isStringInYYYYMMDDFormat:dateString];
@@ -5413,31 +5417,32 @@ for (NSDictionary *dict in _arrDynamic)
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
                     if ([key integerValue]==169){
                         dictTextFieldData = obj;
+                        
                     }
                 }];
-                
-                NSMutableArray *dataArray = [NSMutableArray array];
-                NSString *tmpSex,*tmpColor,*tmpDesig;
-                for (NSDictionary *textFieldDict  in dictTextFieldData) {
-                    if ([textFieldDict[@"37"] isEqualToString:@""])
-                    {
-                        NSLog(@"No data found");
-                    }else{
-                        tmpSex = [self getPigletIDS:textFieldDict[@"37"] optVal:1];
-                    }
-                    if ([textFieldDict[@"43"] isEqualToString:@""]){
-                        NSLog(@"No data found");
-                    }else{
-                        tmpColor = [self getPigletIDS:textFieldDict[@"43"] optVal:2];
-                    }
-                    if ([textFieldDict[@"44"] isEqualToString:@""]){
-                        NSLog(@"No data found");
-                    }else{
-                        tmpDesig = [self getPigletIDS:textFieldDict[@"44"] optVal:3];
-                    }
-                  
-                       NSDictionary *individualDict = @{
-                          
+                 
+                        NSMutableArray *dataArray = [NSMutableArray array];
+                        NSString *tmpSex,*tmpColor,*tmpDesig;
+                        for (NSDictionary *textFieldDict  in dictTextFieldData) {
+                            if ([textFieldDict[@"37"] isEqualToString:@""])
+                            {
+                                NSLog(@"No data found");
+                            }else{
+                                tmpSex = [self getPigletIDS:textFieldDict[@"37"] optVal:1];
+                            }
+                            if ([textFieldDict[@"43"] isEqualToString:@""]){
+                                NSLog(@"No data found");
+                            }else{
+                                tmpColor = [self getPigletIDS:textFieldDict[@"43"] optVal:2];
+                            }
+                            if ([textFieldDict[@"44"] isEqualToString:@""]){
+                                NSLog(@"No data found");
+                            }else{
+                                tmpDesig = [self getPigletIDS:textFieldDict[@"44"] optVal:3];
+                            }
+                            
+                            NSDictionary *individualDict = @{
+                                
                                 @"Identity": textFieldDict[@"34"],
                                 @"Tattoo": textFieldDict[@"35"],
                                 @"Transponder": textFieldDict[@"36"],
@@ -5452,17 +5457,22 @@ for (NSDictionary *dict in _arrDynamic)
                             };
                             // Add the individual dictionary to the array
                             [dataArray addObject:individualDict];
-                }
-
-                // Convert the array to JSON
-                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray options:NSJSONWritingPrettyPrinted error:nil];
-
-                // Convert JSON data to a string
-                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-                reqStringFUll=(NSMutableString*)[reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":%@",strKey,jsonString]];
-                NSLog(@"%@", reqStringFUll); // Print or use reqStringFUll as needed
-
+                        }
+                        
+                        // Convert the array to JSON
+                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray options:NSJSONWritingPrettyPrinted error:nil];
+                //***condition below added for bug-29711 and 29652 By M.
+                        if ([dataArray count] == 0){
+                            NSString *jsonString =@"[]";
+                            reqStringFUll=(NSMutableString*)[reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":%@",strKey,jsonString]];
+                        }else{
+                            // Convert JSON data to a string
+                            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                            
+                            reqStringFUll=(NSMutableString*)[reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":%@",strKey,jsonString]];
+                            NSLog(@"%@", reqStringFUll); // Print or use reqStringFUll as needed
+                        }
+                   
             }
             else if ([[dict valueForKey:@"dk"] integerValue] == 48){
                 NSArray *arr = [strValue componentsSeparatedByString:@"\n"];
@@ -8594,14 +8604,14 @@ for (NSDictionary *dict in _arrDynamic)
                 
                 NSArray* resultArray ;
                 if (TapedDropDownTag==4){
-                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"dt"
+                    sortBy = [[NSSortDescriptor alloc] initWithKey:@"ln"
                                                          ascending:YES];
                     sortDescriptors = [[NSArray alloc] initWithObjects:sortBy, nil];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Sex" andPredicate:nil andSortDescriptors:sortDescriptors];
                     for (int count=0; count<resultArray.count; count++){
                         NSDictionary *dict = [[NSMutableDictionary alloc]init];
-                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dt"]?[[resultArray objectAtIndex:count] valueForKey:@"dt"]:@"" forKey:@"visible"];
-                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"dk"]?[[resultArray objectAtIndex:count] valueForKey:@"dk"]:@"" forKey:@"dataTosend"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"ln"]?[[resultArray objectAtIndex:count] valueForKey:@"ln"]:@"" forKey:@"visible"];
+                        [dict setValue:[[resultArray objectAtIndex:count] valueForKey:@"id"]?[[resultArray objectAtIndex:count] valueForKey:@"id"]:@"" forKey:@"dataTosend"];
                         if (![_arrDropDown containsObject:dict]) {
                                 [_arrDropDown addObject:dict];
                             }
@@ -9553,10 +9563,14 @@ for (NSDictionary *dict in _arrDynamic)
                     if ([[dict valueForKey:@"dk"] integerValue]==51 || [[dict valueForKey:@"dk"] integerValue]==54 || [[dict valueForKey:@"dk"] integerValue]==58){
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
                         [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
-                    }else if ([[dict valueForKey:@"dk"] integerValue]==57){
-                        [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
-                        [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
-                    }//51 = 0,57 = 1 Nurse sow wean
+                    }//changed below default value from 1 to 0 below code for Bug-29666 by M.
+                    else if ([[dict valueForKey:@"dk"] integerValue]==57){
+                        [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
+                        [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
+                    }
+                    
+                    //51 = 0,57 = 1 Nurse sow wean
+                    
                     //***added below condition for Avg.Piglet Age default to 0 Bug- 28603
                     else if ([[dict valueForKey:@"dk"] integerValue]==58){
                         [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
@@ -12879,12 +12893,12 @@ for (NSDictionary *dict in _arrDynamic)
     
     switch(inputopt){
         case 1:
-            
+            //code changed for Sex for Bug-29678 By M.
             for (int count=0; count<arrDropDownSex.count; count++)
             {
-                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]:@"";
+                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"ln"]:@"";
                 if ([dtValue isEqualToString:inPString]) {
-                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]:@"";
+                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"id"]:@"";
                     break;
                 }
             }
@@ -12914,12 +12928,12 @@ for (NSDictionary *dict in _arrDynamic)
             return strId;
             break;
         case 4:
-            
+            //code changed for Sex for Bug-29678 By M.
             for (int count=0; count<arrDropDownSex.count; count++)
             {
-                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dk"]:@"";
+                NSString *dtValue = [[arrDropDownSex objectAtIndex:count] valueForKey:@"id"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"id"]:@"";
                 if ([dtValue isEqualToString:inPString]) {
-                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"dt"]:@"";
+                    strId = [[arrDropDownSex objectAtIndex:count] valueForKey:@"ln"]?[[arrDropDownSex objectAtIndex:count] valueForKey:@"ln"]:@"";
                     break;
                 }
             }

@@ -591,11 +591,11 @@ NSString *strFarms;
                             {
                                 pdResults = [dict objectForKey:@"_PD_RESULTS"];
                             }
-                            
+                            //***code changed below from sex to piglet_sex for Bug-29678 and 29643 By M.
                             NSArray *sex;
-                            if (![[dict objectForKey:@"_SEX"] isKindOfClass:[NSNull class]])
+                            if (![[dict objectForKey:@"_PIGLET_SEX"] isKindOfClass:[NSNull class]])
                             {
-                                sex = [dict objectForKey:@"_SEX"];
+                                sex = [dict objectForKey:@"_PIGLET_SEX"];
                             }
                             //~~~~~ for piglet_identities By M.
                             NSArray *color;
