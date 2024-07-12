@@ -2740,7 +2740,9 @@ NSString* strpigletIdentitiesEdit;
                     return NO;
                 }
             }else if ([textField.placeholder isEqualToString:@"Tattoo"]){
-                
+                //***code added for Bug-28839 By M.
+                NSInteger maxtattolenghth = 0;
+                maxtattolenghth = [[pref valueForKey:@"tattoolength"] integerValue];
                 NSCharacterSet *characterSet = nil;
                 characterSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"];
                 NSRange location = [string rangeOfCharacterFromSet:characterSet];
@@ -2755,13 +2757,16 @@ NSString* strpigletIdentitiesEdit;
                     
                     return YES;
                 }
-                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                //if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
+                //***code added for Bug-28839 By M.
+                if ((location.location != NSNotFound)&& (newString.length <= maxtattolenghth)) {
                     NSMutableString *tmp = [newString mutableCopy];
                   
                     [pigletIdentityDict setObject:newString forKey:@"Tattoo"];
                                  
                     [pigletIdentityJsonDict setObject:tmp forKey:@"35"];
-                      return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                     // return (((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])));
+                    return (((location.location != NSNotFound) && (newString.length <= maxtattolenghth)));;
                 }
                 else{
                     return NO;

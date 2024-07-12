@@ -49,7 +49,38 @@
                   endingLineNumber = "1228"
                   offsetFromSymbolStart = "11568">
                </Location>
+               <Location
+                  uuid = "B15BFD82-5002-4291-A498-3C5B38986A56 - 63ef4e015b5b0d2d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[DynamicFormViewController tableView:cellForRowAtIndexPath:]"
+                  moduleName = "PigChamp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manjusharashinkar/Documents/GitHub/AIM-iOS/PigChamp/DynamicFormViewController.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1228"
+                  endingLineNumber = "1228"
+                  offsetFromSymbolStart = "13545">
+               </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F4040ABB-E4BD-4AD7-9817-821E77B69E01"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PigChamp/DynamicFormViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2762"
+            endingLineNumber = "2762"
+            landmarkName = "-textField:shouldChangeCharactersInRange:replacementString:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
