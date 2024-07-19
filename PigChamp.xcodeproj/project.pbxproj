@@ -80,6 +80,7 @@
 		11ED05B61CB24C4F00BCC461 /* CollectionViewCellSowDetailedReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 11ED05B51CB24C4F00BCC461 /* CollectionViewCellSowDetailedReport.m */; };
 		11F9A23A228462E500463EEA /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F9A236228462E400463EEA /* TPKeyboardAvoidingScrollView.m */; };
 		11F9A23B228462E500463EEA /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F9A238228462E400463EEA /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		CB3682342C4969A4008D1842 /* sptwoTextCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CB3682322C4969A3008D1842 /* sptwoTextCustomCell.m */; };
 		CBB307B32C05B05E00784C46 /* PigletIdTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB307AF2C05B05E00784C46 /* PigletIdTableViewCell.m */; };
 		CBC99D582C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBC99D572C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m */; };
 /* End PBXBuildFile section */
@@ -239,6 +240,8 @@
 		165A869978256BF80EC45333 /* Pods-PigChamp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PigChamp.release.xcconfig"; path = "Pods/Target Support Files/Pods-PigChamp/Pods-PigChamp.release.xcconfig"; sourceTree = "<group>"; };
 		5B2C92D473F3240562908814 /* libPods-PigChamp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PigChamp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		858B5F88F2AC457466F7E266 /* Pods-PigChamp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PigChamp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PigChamp/Pods-PigChamp.debug.xcconfig"; sourceTree = "<group>"; };
+		CB3682322C4969A3008D1842 /* sptwoTextCustomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sptwoTextCustomCell.m; sourceTree = "<group>"; };
+		CB3682332C4969A3008D1842 /* sptwoTextCustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sptwoTextCustomCell.h; sourceTree = "<group>"; };
 		CBB307AF2C05B05E00784C46 /* PigletIdTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PigletIdTableViewCell.m; sourceTree = "<group>"; };
 		CBB307B12C05B05E00784C46 /* PigletIdTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PigletIdTableViewCell.h; sourceTree = "<group>"; };
 		CBC99D562C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PigletIdentitiesTableViewCell.h; sourceTree = "<group>"; };
@@ -276,6 +279,8 @@
 		113F60511BDE5F5D00E66692 /* DynamicForm */ = {
 			isa = PBXGroup;
 			children = (
+				CB3682332C4969A3008D1842 /* sptwoTextCustomCell.h */,
+				CB3682322C4969A3008D1842 /* sptwoTextCustomCell.m */,
 				CBC99D562C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.h */,
 				CBC99D572C05BACB0085E4E4 /* PigletIdentitiesTableViewCell.m */,
 				CBB307B12C05B05E00784C46 /* PigletIdTableViewCell.h */,
@@ -902,6 +907,7 @@
 				118AB0AD1C92D3AB006FB722 /* SowDetailsViewController.m in Sources */,
 				11A9C0DE1BECCA9F00D268F3 /* AboutViewController.m in Sources */,
 				114855DA1D34C85D00AA7916 /* iRCustomCell.m in Sources */,
+				CB3682342C4969A4008D1842 /* sptwoTextCustomCell.m in Sources */,
 				1177C9A01BD795CA00A23EC5 /* Reachability.m in Sources */,
 				11791C9E1C0331BA005D25AF /* cell.m in Sources */,
 				11C2CED81BD67B1D002C14DA /* DataEntryViewController.m in Sources */,
@@ -983,8 +989,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1033,8 +1039,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1066,8 +1072,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Y44NMWY76J;
@@ -1075,12 +1081,12 @@
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 5.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = PigChamp_DistributionFeb24;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PigChamp_DistributionFeb24;
+				PROVISIONING_PROFILE_SPECIFIER = PigChamp_NewDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PigChamp_NewDev;
 			};
 			name = Debug;
 		};
@@ -1090,8 +1096,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Y44NMWY76J;
@@ -1100,12 +1106,12 @@
 				INFOPLIST_FILE = PigChamp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 5.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venturelabour.pigchamp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = PigChamp_DistributionFeb24;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PigChamp_DistributionFeb24;
+				PROVISIONING_PROFILE_SPECIFIER = PigChamp_NewDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PigChamp_NewDev;
 			};
 			name = Release;
 		};

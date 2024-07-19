@@ -1,14 +1,14 @@
 //
-//  PigletIdTableViewCell.m
+//  sptwoTextCustomCell.m
 //  PigChamp
 //
-//  Created by ManjushaRashinkar on 20/03/24.
-//  Copyright © 2024 Venturelabour. All rights reserved.
+//  Created by Venturelabour on 12/07/16.
+//  Copyright © 2016 Venturelabour. All rights reserved.
 //
 
-#import "PigletIdTableViewCell.h"
+#import "sptwoTextCustomCell.h"
 
-@implementation PigletIdTableViewCell
+@implementation sptwoTextCustomCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -20,4 +20,5 @@
 
     // Configure the view for the selected state
 }
+
 @end

@@ -17,6 +17,7 @@
 #import "textCustomCell.h"
 #import "iRCustomCell.h"
 #import "twoTextCustomCell.h"
+#import "sptwoTextCustomCell.h"
 #import "threeTextCustomCell.h"
 #import "Note.h"
 #import "EADSessionController.h"
@@ -106,6 +107,7 @@ NSString* strpigletIdentitiesEdit;
         _pigletidentitiesJsonArryinUnchk= [[NSMutableArray alloc]init];
         //added for bug-29661 By M.
         strSelectedDateMMM = nil;
+        strpigletIdentitiesEdit = nil;
         [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -606,7 +608,8 @@ NSString* strpigletIdentitiesEdit;
                             [dictText setValue:@"" forKey:@"third"];
                             
                             [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
-                        }else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue] == 3 && [self isTwoText])){
+                        }// |||| added for fostered 57 for Bug-29732 By M.
+                        else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue] == 3 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue] == 57 && [self isTwoText])){
                             NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
                             [dictText setValue:@"" forKey:@"Male"];
                             [dictText setValue:@"" forKey:@"Female"];
@@ -1187,7 +1190,7 @@ NSString* strpigletIdentitiesEdit;
             return cell;
             
         }//added below 57 for bug-29360 By M.
-        else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText])  || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])) {
+        else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText])  || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])) {
             
             twoTextCustomCell *cell = (twoTextCustomCell*)[tableView dequeueReusableCellWithIdentifier:@"TwoText" forIndexPath:indexPath];
             cell.backgroundColor = [UIColor clearColor];
@@ -1235,7 +1238,57 @@ NSString* strpigletIdentitiesEdit;
             [cell.txtSecond setKeyboardType:UIKeyboardTypeNumberPad];
             
             return cell;
-        }else if ([[dict valueForKey:@"dk"] integerValue] == 48) {
+        }// |||| added for fostered 57 for Bug-29732 By M.
+        else if (([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])) {
+            
+            sptwoTextCustomCell *cell = (sptwoTextCustomCell*)[tableView dequeueReusableCellWithIdentifier:@"SPTwoText" forIndexPath:indexPath];
+           cell.backgroundColor = [UIColor clearColor];
+           //UILabel *lblDetails = (UILabel*)[cell viewWithTag:1];
+           cell.lblDetail.text = [dict valueForKey:@"Lb"]?[dict valueForKey:@"Lb"]:@"";
+           
+           if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+               if ([[dict valueForKey:@"ac"] integerValue]==1 && [[dict valueForKey:@"co"] integerValue]==1){
+                   cell.lblDetail.font = [UIFont boldSystemFontOfSize:17];
+               }
+               else {
+                   cell.lblDetail.font = [UIFont systemFontOfSize:17];
+               }
+           }
+           else{
+               if ([[dict valueForKey:@"ac"] integerValue]==1 && [[dict valueForKey:@"co"] integerValue]==1){
+                   cell.lblDetail.font = [UIFont boldSystemFontOfSize:13];
+               }
+               else{
+                   cell.lblDetail.font = [UIFont systemFontOfSize:13];
+               }
+           }
+           
+           //
+           __block NSDictionary *dictText;//= [_dictDynamic valueForKey:@"Lb"];
+           
+           [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+             
+               if ([key integerValue]==57){
+              
+                   dictText = obj;
+                   *stop = YES;
+               }
+           }];
+           // Safely set txtFirst and txtSecond text
+           cell.txtFirst.text = [dictText valueForKey:@"Male"];
+           cell.txtFirst.tag =indexPath.row;
+           
+           //UITextField *txtSecond = (UITextField*)[cell viewWithTag:101];
+           cell.txtSecond.text = [dictText valueForKey:@"Female"];
+           cell.txtSecond.tag =indexPath.row;
+           
+           [cell.txtFirst setKeyboardType:UIKeyboardTypeNumberPad];
+           [cell.txtSecond setKeyboardType:UIKeyboardTypeNumberPad];
+             
+           
+           return cell;
+       }
+        else if ([[dict valueForKey:@"dk"] integerValue] == 48) {
             
             
             Note *cell = (Note*)[tableView dequeueReusableCellWithIdentifier:@"Note" forIndexPath:indexPath];
@@ -2076,7 +2129,7 @@ NSString* strpigletIdentitiesEdit;
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     @try {
         //~~~added for piglet identities By M.
-        NSDictionary *dict = [[NSDictionary alloc]init];
+       /* NSDictionary *dict = [[NSDictionary alloc]init];
         if([_strFromEditPage isEqualToString:@"FromEdit"]){
             NSInteger index = NSNotFound;
             // Iterate through the array of dictionaries
@@ -2091,6 +2144,37 @@ NSString* strpigletIdentitiesEdit;
             }
             dict = [self.arrDynamic objectAtIndex:index];
         }else{
+            dict = [self.arrDynamic objectAtIndex:textField.tag];
+        }*/
+        //added @@@@@  for Piglet Identities Edit issue
+        NSDictionary *dict = [[NSDictionary alloc] init];
+
+        if ([_strFromEditPage isEqualToString:@"FromEdit"]) {
+            NSInteger index = NSNotFound;
+            for (NSInteger i = 0; i < self.arrDynamic.count; i++) {
+                NSDictionary *dict1 = self.arrDynamic[i];
+                
+                // Check if the value of the "dk" key is equal to 169
+                if ([dict1[@"dk"] integerValue] == 169) {
+                    index = i;
+                    break; // Exit the loop since we found the index
+                }
+            }
+            //added @@@@@
+            if (index != NSNotFound) {
+                PigletIdentitiesTableViewCell *cell = [self findCellForTextField:textField];
+                if (cell){
+                    dict = [self.arrDynamic objectAtIndex:index];
+                }
+                else {
+                    
+                    dict = [self.arrDynamic objectAtIndex:textField.tag];
+                }
+            } else {
+               
+                dict = [self.arrDynamic objectAtIndex:textField.tag];
+            }
+        } else {
             dict = [self.arrDynamic objectAtIndex:textField.tag];
         }
         //commented below for Piglet Identities
@@ -2398,7 +2482,7 @@ NSString* strpigletIdentitiesEdit;
                 return YES;
             }
         }*/
-        else if ([[dict valueForKey:@"dk"]integerValue]==57) {
+        /*else if ([[dict valueForKey:@"dk"]integerValue]==57) {
             if([string isEqualToString:@""]) {
                 [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
@@ -2417,7 +2501,7 @@ NSString* strpigletIdentitiesEdit;
             else {
                 return NO;
             }
-        }
+        }*/
         //***commented by M. for Bug-28773
             /*else if ([[dict valueForKey:@"dk"]integerValue]==51) {
                 if([string isEqualToString:@""]){
@@ -3393,6 +3477,64 @@ NSString* strpigletIdentitiesEdit;
                 else
                     return NO;
             }*/
+        }// |||| added for fostered 57 for Bug-29732 By M.
+        else if (([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
+            
+            NSLog(@"data item key=%@",[dict valueForKey:@"dk"]);
+            
+            __block NSMutableDictionary *dictText;
+            [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                
+                if ([key integerValue]==57) {
+                    dictText = obj;
+                }
+            }];
+            if ([textField.placeholder isEqualToString:@"Male"]) {
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Male"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && (newString.length <3))|| [string isEqualToString:@" "]) {
+                    //[dictText setValue:newString forKey:@"Male"];
+                    
+                    [dictText setObject:newString forKey:@"Male"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return (((location.location != NSNotFound) && (newString.length <3)) || [string isEqualToString:@""]);
+                }
+                else{
+                    return NO;
+                }
+            }else if ([textField.placeholder isEqualToString:@"Female"]){
+                NSCharacterSet *characterSet = nil;
+                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
+                NSRange location = [string rangeOfCharacterFromSet:characterSet];
+                //@@@@@ by M.
+                if([string isEqualToString:@""]) {
+                    [dictText setObject:newString forKey:@"Female"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return YES;
+                }
+                if (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@" "]) {
+                    //[dictText setValue:newString forKey:@"Female"];
+                    [dictText setObject:newString forKey:@"Female"];
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    
+                    return (((location.location != NSNotFound) && ([newString length] < 3)) || [string isEqualToString:@""]);
+                }
+                else
+                    return NO;
+            }
         }
         //Added for not able to enter value in Piglet Weaned and Liveborn by priyanka on 23rdOct20
         else if ([[dict valueForKey:@"dk"]integerValue]==51 || [[dict valueForKey:@"dk"]integerValue]==15){
@@ -3743,13 +3885,22 @@ float animatedDistance;
                 index = i;
                 break; // Exit the loop since we found the index
             }
-        }
-        dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:index];
+        }//added @@@@@
+        if (index != NSNotFound) {
+            dictCurrentTextFieldClicked = [self.arrDynamic objectAtIndex:index];
+            } else {
+                // Handle the case where the index was not found (optional)
+                // For example, set dict to nil or an empty dictionary
+                dictCurrentTextFieldClicked = @{};
+            }
+        } else {
+            dictCurrentTextFieldClicked = [self.arrDynamic objectAtIndex:textField.tag];
+        }//dictCurrentTextFieldClicked        dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:index];
         //end by M.
-    }else{
-        dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:textField.tag];
+   // }else{
+        //dictCurrentTextFieldClicked =  [self.arrDynamic objectAtIndex:textField.tag];
         NSLog(@"Current field: %@",dictCurrentTextFieldClicked);
-    }
+    //}
     //    fullDataString = @"100000985152001342978";
     //    [self callTransponderClicked:self.txtReference];
     
@@ -3785,16 +3936,20 @@ float animatedDistance;
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     self.activeTextField = nil;
-    //~~~~~ added below code for Piglet Identities By M.
-    if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
-        [_pigletIdentitiesArray addObject:pigletIdentityDict];
+    //added @@@@@ below condition added  for piglet identities
+    PigletIdentitiesTableViewCell *cell = [self findCellForTextField:textField];
+    if (cell){
+        //~~~~~ added below code for Piglet Identities By M.
+        if (![_pigletIdentitiesArray containsObject:pigletIdentityDict]){
+            [_pigletIdentitiesArray addObject:pigletIdentityDict];
+        }
+        
+        [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
+        if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
+            [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
+        }
+        [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
     }
-    
-    [self.dictDynamic setObject:[_pigletIdentitiesArray mutableCopy] forKey:@"Piglet Identities"];
-    if (![_pigletIdentitiesJsonArray containsObject:pigletIdentityJsonDict]){
-        [_pigletIdentitiesJsonArray addObject:pigletIdentityJsonDict];
-    }
-    [dictJson setObject:[_pigletIdentitiesJsonArray mutableCopy] forKey:@"169"];
 }
 
 -(void)getRFID:(NSString*)transponder index:(NSInteger)index :(NSDictionary*)dictPassed{
@@ -4121,7 +4276,15 @@ float animatedDistance;
                     
                     [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                     //[_dictDynamic setObject:dictText forKey:[dict valueForKey:@"Lb"]];
-                }else if([[dict valueForKey:@"dk"] integerValue] == 6){
+                }// |||| added for fostered 57 for Bug-29732 By M.
+                else if (([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
+                    NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                    [dictText setValue:@"" forKey:@"Male"];
+                    [dictText setValue:@"" forKey:@"Female"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    //[_dictDynamic setObject:dictText forKey:[dict valueForKey:@"Lb"]];
+                } if([[dict valueForKey:@"dk"] integerValue] == 6){
                     NSMutableDictionary *dictBarn = [[NSMutableDictionary alloc]init];
                     [dictBarn setValue:@"" forKey:@"br"];
                     [dictBarn setValue:@"" forKey:@"rm"];
@@ -4250,7 +4413,16 @@ float animatedDistance;
                     
                     [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                     //[_dictDynamic setObject:dictText forKey:[dict valueForKey:@"Lb"]];
-                }else if([[dict valueForKey:@"dk"] integerValue] == 6){
+                }// |||| added for fostered 57 for Bug-29732 By M.
+                else if (([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
+                    NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
+                    [dictText setValue:@"" forKey:@"Male"];
+                    [dictText setValue:@"" forKey:@"Female"];
+                    
+                    [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
+                    //[_dictDynamic setObject:dictText forKey:[dict valueForKey:@"Lb"]];
+                }
+                else if([[dict valueForKey:@"dk"] integerValue] == 6){
                     NSMutableDictionary *dictBarn = [[NSMutableDictionary alloc]init];
                     [dictBarn setValue:@"" forKey:@"br"];
                     [dictBarn setValue:@"" forKey:@"rm"];
@@ -4411,16 +4583,36 @@ for (NSDictionary *dict in _arrDynamic)
                                     [uniqueArrayp addObject:item];
                                 }
                             }
-                            [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                            //[dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                            //added @@@@@ for piglet identities issue in Edit
+                            if (!(strpigletIdentitiesEdit == nil)){
+                                [uniqueArrayp addObjectsFromArray:[self getPigletsJsonStringToArray:strpigletIdentitiesEdit]];
+                                [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                            }else{
+                                [dictJson setValue:uniqueArrayp forKey:[dict valueForKey:@"dk"]];
+                            }
                         }
                     }
                 }
             }else if([_strFromEditPage isEqualToString:@"FromEdit"] && (!addnewPigFlg)){
                 for (NSDictionary *dict in _arrDynamic){
                     if ([[dict valueForKey:@"dk"]integerValue] == 169){
-                        [self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
+                        //[self.dictDynamic setValue:_pigletIdentitiesArray1 forKey:[dict valueForKey:@"Lb"]];
                         
-                        [dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+                        //[dictJson setValue:_pigletIdentitiesJsonArray1 forKey:[dict valueForKey:@"dk"]];
+                        //added @@@@@ for piglet identities  Edit issue
+                       
+                        if (!(strpigletIdentitiesEdit == nil)){
+                            [self.dictDynamic setValue:[self getPigletsJsonStringToArray:strpigletIdentitiesEdit] forKey:[dict valueForKey:@"Lb"]];
+                          
+                            [dictJson setValue:[self getPigletsJsonStringToArray:strpigletIdentitiesEdit] forKey:[dict valueForKey:@"dk"]];
+                        }
+                        else{
+                           
+                            [self.dictDynamic setValue:@[] forKey:[dict valueForKey:@"Lb"]];
+                          
+                            [dictJson setValue:@[] forKey:[dict valueForKey:@"dk"]];
+                        }
                     }
                 }
             }
@@ -4626,14 +4818,15 @@ for (NSDictionary *dict in _arrDynamic)
                     }
                 }];
             }//*** uncommented below condition for Bug-27775 By M @@@@@
-            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+            // |||| added for fostered for 57 Bug-29732 By M.
+            else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==15 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
             //***condition removed for Bug-27735 by M.
             //else if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
                 dictForPiglets = dict;
                 [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
                     //*** commented below condition for Bug-27775 By M @@@@@
                    // if ([key integerValue]==92){
-                    if([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3){
+                    if([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3 || [key integerValue]==57){
                         dictPigletsData = obj;
                     }
                 }];
@@ -5426,44 +5619,48 @@ for (NSDictionary *dict in _arrDynamic)
                     }
                 }];
                  
-                        NSMutableArray *dataArray = [NSMutableArray array];
-                        NSString *tmpSex,*tmpColor,*tmpDesig;
-                        for (NSDictionary *textFieldDict  in dictTextFieldData) {
-                            if ([textFieldDict[@"37"] isEqualToString:@""])
-                            {
-                                NSLog(@"No data found");
-                            }else{
-                                tmpSex = [self getPigletIDS:textFieldDict[@"37"] optVal:1];
-                            }
-                            if ([textFieldDict[@"43"] isEqualToString:@""]){
-                                NSLog(@"No data found");
-                            }else{
-                                tmpColor = [self getPigletIDS:textFieldDict[@"43"] optVal:2];
-                            }
-                            if ([textFieldDict[@"44"] isEqualToString:@""]){
-                                NSLog(@"No data found");
-                            }else{
-                                tmpDesig = [self getPigletIDS:textFieldDict[@"44"] optVal:3];
-                            }
-                            
-                            NSDictionary *individualDict = @{
-                                
-                                @"Identity": textFieldDict[@"34"],
-                                @"Tattoo": textFieldDict[@"35"],
-                                @"Transponder": textFieldDict[@"36"],
-                                @"Sex": tmpSex,
-                                @"Weight": textFieldDict[@"38"],
-                                @"Teats": textFieldDict[@"39"],
-                                @"TeatsLeft":textFieldDict[@"40"],
-                                @"TeatsBBLeft":textFieldDict[@"41"],
-                                @"TeatsBBRight":textFieldDict[@"42"],
-                                @"Color": tmpColor,
-                                @"Designation": tmpDesig
-                            };
-                            // Add the individual dictionary to the array
-                            [dataArray addObject:individualDict];
+                       // NSMutableArray *dataArray = [NSMutableArray array];
+                //added @@@@@ condition if added for Piglet Identities Edit issue
+                NSMutableArray *dataArray = [NSMutableArray array];
+                if ([dictTextFieldData count] > 0) {
+                    
+                    NSString *tmpSex,*tmpColor,*tmpDesig;
+                    for (NSDictionary *textFieldDict  in dictTextFieldData) {
+                        if ([textFieldDict[@"37"] isEqualToString:@""])
+                        {
+                            NSLog(@"No data found");
+                        }else{
+                            tmpSex = [self getPigletIDS:textFieldDict[@"37"] optVal:1];
+                        }
+                        if ([textFieldDict[@"43"] isEqualToString:@""]){
+                            NSLog(@"No data found");
+                        }else{
+                            tmpColor = [self getPigletIDS:textFieldDict[@"43"] optVal:2];
+                        }
+                        if ([textFieldDict[@"44"] isEqualToString:@""]){
+                            NSLog(@"No data found");
+                        }else{
+                            tmpDesig = [self getPigletIDS:textFieldDict[@"44"] optVal:3];
                         }
                         
+                        NSDictionary *individualDict = @{
+                            
+                            @"Identity": textFieldDict[@"34"],
+                            @"Tattoo": textFieldDict[@"35"],
+                            @"Transponder": textFieldDict[@"36"],
+                            @"Sex": tmpSex,
+                            @"Weight": textFieldDict[@"38"],
+                            @"Teats": textFieldDict[@"39"],
+                            @"TeatsLeft":textFieldDict[@"40"],
+                            @"TeatsBBLeft":textFieldDict[@"41"],
+                            @"TeatsBBRight":textFieldDict[@"42"],
+                            @"Color": tmpColor,
+                            @"Designation": tmpDesig
+                        };
+                        // Add the individual dictionary to the array
+                        [dataArray addObject:individualDict];
+                    }
+                }
                         // Convert the array to JSON
                         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray options:NSJSONWritingPrettyPrinted error:nil];
                 //***condition below added for bug-29711 and 29652 By M.
@@ -5518,6 +5715,23 @@ for (NSDictionary *dict in _arrDynamic)
                     //***uncommented below condition for Bug-27775 By M @@@@@
                     if ([key integerValue]==51 || [key integerValue]==15 || [key integerValue]==3) {
                     //if ([key integerValue]==51 || [key integerValue]==3) {
+                        dictTextFieldData = obj;
+                    }
+                }];
+                
+                strValue = (NSMutableString*)[[[strValue stringByAppendingString:[dictTextFieldData valueForKey:@"Male"]] stringByAppendingString:@"|"] stringByAppendingString:[dictTextFieldData valueForKey:@"Female"]];
+                
+                reqStringFUll = [reqStringFUll stringByAppendingString:[NSString stringWithFormat:@"\"%@\":\"%@\"",strKey,strValue]];
+            }// |||| added for fostered 57 for Bug-29732 By M.
+            else if (([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])) {
+                
+                __block NSDictionary *dictTextFieldData,*dictForGuilt;
+                strValue=(NSMutableString*)@"";
+                dictForGuilt = dict;
+                [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+                    
+                    if ([key integerValue]==57) {
+                  
                         dictTextFieldData = obj;
                     }
                 }];
@@ -8932,13 +9146,140 @@ for (NSDictionary *dict in _arrDynamic)
         if(![_strFromEditPage isEqualToString:@"FromEdit"]){
             dt2 = [dateFormatterr dateFromString:strPrevSelectedValue];//YYYYMMDD
         }else{
-            if (![_strOutputDateFormat isEqualToString:@"DAYNUMBER"] && ![_strOutputDateFormat isEqualToString:@"Day of Year Format"]){
-                NSDateFormatter *desiredDateFormatter = [[NSDateFormatter alloc] init];
-                [desiredDateFormatter setDateFormat:@"yyyyMMdd"];
-                dt2 = [desiredDateFormatter dateFromString:strPrevSelectedValue];
-              
+            if ([_strOutputDateFormat isEqualToString:@"dd-MMM-yy"]){
                 
-            } else if ([_strOutputDateFormat isEqualToString:@"DAYNUMBER"] || [_strOutputDateFormat isEqualToString:@"Day of Year Format"] ){
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+            
+            }else if ([_strOutputDateFormat isEqualToString:@"MMM-dd-yy"]){
+                
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+            }else if ([_strOutputDateFormat isEqualToString:@"M d yy"]){
+                _strOutputDateFormat = @"mm/dd/yy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+            }else if ([_strOutputDateFormat isEqualToString:@"M d yyyy"]){
+                _strOutputDateFormat = @"mm/dd/yyyy";
+                
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+            }else if ([_strOutputDateFormat isEqualToString:@"MM dd yy"]){
+                _strOutputDateFormat = @"mm/dd/yy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+            }else if ([_strOutputDateFormat isEqualToString:@"MM dd yyyy"]){
+                _strOutputDateFormat = @"mm/dd/yyyy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+                
+            }else if ([_strOutputDateFormat isEqualToString:@"D m yy"]){
+                _strOutputDateFormat = @"dd/mm/yy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+                
+            }else if ([_strOutputDateFormat isEqualToString:@"D m yyyy"]){
+                _strOutputDateFormat = @"dd/mm/yyyy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+                
+            }else if ([_strOutputDateFormat isEqualToString:@"DD mm yy"]){
+                _strOutputDateFormat = @"dd/mm/yy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+                
+            }else if ([_strOutputDateFormat isEqualToString:@"DD mm yyyy"]){
+                _strOutputDateFormat = @"dd/mm/yyyy";
+                NSString *strtmpDate = [dictJson valueForKey:[dict valueForKey:@"dk"]];
+                
+                NSDateFormatter* inputdateFormatter = [[NSDateFormatter alloc] init];
+                
+                [inputdateFormatter setDateFormat:_strOutputDateFormat];
+                NSDate *inputDate = [inputdateFormatter dateFromString:strtmpDate];
+                
+                NSDateFormatter* outputDateFormatter = [[NSDateFormatter alloc] init];
+                [outputDateFormatter setDateFormat:@"yyyyMMdd"];
+                NSString *outputDateString = [outputDateFormatter stringFromDate:inputDate];
+                dt2 = [outputDateFormatter dateFromString:outputDateString];
+                
+            }
+                else if ([_strOutputDateFormat isEqualToString:@"DAYNUMBER"] || [_strOutputDateFormat isEqualToString:@"Day of Year Format"] ){
                 
                 if (![strPrevSelectedValue isEqualToString: @""]){
                     NSArray *components = [strPrevSelectedValue componentsSeparatedByString:@"\n"];
@@ -9555,7 +9896,8 @@ for (NSDictionary *dict in _arrDynamic)
                         [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
                     }
                     //For setting default value 0
-                    if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText])){
+                    // |||| added for fostered 57 for Bug-29732 By M.
+                    if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==3 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
                         NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
                         [dictText setValue:@"0" forKey:@"Male"];
                         [dictText setValue:@"0" forKey:@"Female"];
@@ -9582,7 +9924,8 @@ for (NSDictionary *dict in _arrDynamic)
                         [dictJson setValue:@"0" forKey:[dict valueForKey:@"dk"]];
                     }
                     //For setting default value 0
-                    if ([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]){
+                    // |||| added for fostered 57 for Bug-29732 By M.
+                    if (([[dict valueForKey:@"dk"] integerValue]==51 && [self isTwoText]) || ([[dict valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
                         NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
                         [dictText setValue:@"0" forKey:@"Male"];
                         [dictText setValue:@"0" forKey:@"Female"];
@@ -10978,7 +11321,34 @@ for (NSDictionary *dict in _arrDynamic)
                                         
                                         [dictJson setObject:dictText forKey:[DictAvailble valueForKey:@"dataItemKey"]];
                                     }
+                                }// |||| added for fostered for Bug-29732
+                                if ( ([[DictDynamic valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
+                                    if ((([DictDynamic valueForKey:@"dk"] == [DictAvailble valueForKey:@"dataItemKey"]) || ([[DictDynamic valueForKey:@"dk"] isEqualToString:[DictAvailble valueForKey:@"dataItemKey"]]) ) && [strDataType isEqualToString:@"TextField"]) {
+                                        __block NSMutableDictionary *dictText; //= [[NSMutableDictionary alloc]init];
+                                        __block  NSString *strVal = [DictAvailble valueForKey:@"val"];
+                                        [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                                            if ([key integerValue]==57) {
+                                                dictText = obj;
+                                            }
+                                        }];
+                                        
+                                        if ([strVal rangeOfString:@"|"].location != NSNotFound) {
+                                            NSArray *explodedString = [strVal componentsSeparatedByString:@"|"];
+                                            if (explodedString.count==2) {
+                                                //  [dictText setValue:[explodedString objectAtIndex:0]?[explodedString objectAtIndex:0]:@"" forKey:@"first"];
+                                                //  [dictText setValue:[explodedString objectAtIndex:1]?[explodedString objectAtIndex:1]:@"" forKey:@"second"];
+                                                [dictText setValue:[explodedString objectAtIndex:0]?[explodedString objectAtIndex:0]:@"" forKey:@"Male"];
+                                                [dictText setValue:[explodedString objectAtIndex:1]?[explodedString objectAtIndex:1]:@"" forKey:@"Female"];
+                                            }
+                                        }else{
+                                            [dictText setValue:strVal forKey:@"Male"];
+                                            [dictText setValue:@"" forKey:@"Female"];
+                                        }
+                                        
+                                        [dictJson setObject:dictText forKey:[DictAvailble valueForKey:@"dataItemKey"]];
+                                    }
                                 }
+                                
                                 
                                 if ((([DictDynamic valueForKey:@"dk"] == [DictAvailble valueForKey:@"dataItemKey"]) || ([[DictDynamic valueForKey:@"dk"] isEqualToString:[DictAvailble valueForKey:@"dataItemKey"]])) && [strDataType isEqualToString:@"DropDown"]) {
                                     if ([[DictDynamic valueForKey:@"dk"] integerValue]!=6) {
@@ -11017,7 +11387,28 @@ for (NSDictionary *dict in _arrDynamic)
                                                 }
                                                 [dictJson setObject:dictText forKey:[DictAvailble valueForKey:@"dataItemKey"]];
                                             }
-                                        }         //-----------
+                                        }// |||| added for fostered 57 for Bug-29732
+                                        else if (([[DictDynamic valueForKey:@"dk"] integerValue]==57 && [self isTwoText])){
+                                            if ((([DictDynamic valueForKey:@"dk"] == [DictAvailble valueForKey:@"dataItemKey"]) || ([[DictDynamic valueForKey:@"dk"] isEqualToString:[DictAvailble valueForKey:@"dataItemKey"]]) ) && [strDataType isEqualToString:@"TextField"]) {
+                                                __block NSMutableDictionary *dictText; //=
+                                                __block  NSString *strVal = [DictAvailble valueForKey:@"val"];
+                                                [dictJson enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                                                    if ([key integerValue]==57) {
+                                                        dictText = obj;
+                                                    }
+                                                }];
+                                                
+                                                NSArray *explodedString = [strVal componentsSeparatedByString:@"|"];
+                                                if (explodedString.count==2) {
+                                                    //  [dictText setValue:[explodedString objectAtIndex:0]?[explodedString objectAtIndex:0]:@"" forKey:@"first"];
+                                                    //  [dictText setValue:[explodedString objectAtIndex:1]?[explodedString objectAtIndex:1]:@"" forKey:@"second"];
+                                                    [dictText setValue:[explodedString objectAtIndex:0]?[explodedString objectAtIndex:0]:@"" forKey:@"Male"];
+                                                    [dictText setValue:[explodedString objectAtIndex:1]?[explodedString objectAtIndex:1]:@"" forKey:@"Female"];
+                                                }
+                                                [dictJson setObject:dictText forKey:[DictAvailble valueForKey:@"dataItemKey"]];
+                                            }
+                                        }
+                                        //-----------
                                         else{
                                             [self.dictDynamic setValue:[DictAvailble valueForKey:@"val"] forKey:[DictDynamic valueForKey:@"Lb"]];
                                             [dictJson setValue:[DictAvailble valueForKey:@"val"] forKey:[DictDynamic valueForKey:@"dk"]];
