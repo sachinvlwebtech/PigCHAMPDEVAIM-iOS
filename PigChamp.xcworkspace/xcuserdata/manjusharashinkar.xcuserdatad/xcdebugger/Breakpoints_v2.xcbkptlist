@@ -14,8 +14,8 @@
             filePath = "PigChamp/DynamicFormViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9429"
-            endingLineNumber = "9429"
+            startingLineNumber = "9288"
+            endingLineNumber = "9288"
             landmarkName = "-btnDate_tapped:"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,56 +30,8 @@
             filePath = "PigChamp/DynamicFormViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9441"
-            endingLineNumber = "9441"
-            landmarkName = "-btnDate_tapped:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C337F4CC-E492-4812-B6C9-D45486FA1DB4"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PigChamp/DynamicFormViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9464"
-            endingLineNumber = "9464"
-            landmarkName = "-btnDate_tapped:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B3424185-3862-4819-8774-B8A2456FE3A0"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PigChamp/DynamicFormViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9468"
-            endingLineNumber = "9468"
-            landmarkName = "-btnDate_tapped:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2E38B4D2-6A73-4CC9-8A88-77F945364996"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PigChamp/DynamicFormViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9482"
-            endingLineNumber = "9482"
+            startingLineNumber = "9300"
+            endingLineNumber = "9300"
             landmarkName = "-btnDate_tapped:"
             landmarkType = "7">
          </BreakpointContent>
