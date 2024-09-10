@@ -143,7 +143,7 @@ BOOL isThousandFormatReport = NO;
     strDateGreaterMsg = @"Please select End Date greater than or equal Start Date.";
     if (resultArray1.count!=0){
         for (int i=0; i<resultArray1.count; i++){
-            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
         }
         
         for (int i=0; i<18; i++) {
@@ -1309,12 +1309,12 @@ BOOL isThousandFormatReport = NO;
             //
             ////                if (resultArray1.count!=0){
             ////                    for (int i=0; i<resultArray1.count; i++){
-            ////                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            ////                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
             ////                    }
             ////                }
             //
             //                for (int i=0; i<resultArray1.count; i++){
-            //                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            //                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
             //                }
             //
             //                for (int i=0; i<5; i++) {
@@ -1886,7 +1886,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -1926,7 +1926,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -1953,7 +1953,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -1990,7 +1990,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2070,7 +2070,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2142,7 +2142,7 @@ BOOL isThousandFormatReport = NO;
             {
                 
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 [_arrDynamicReport removeAllObjects];
                 
@@ -2206,7 +2206,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++) {
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2289,7 +2289,7 @@ BOOL isThousandFormatReport = NO;
             //if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++) {
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2344,7 +2344,7 @@ BOOL isThousandFormatReport = NO;
             // if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2386,7 +2386,7 @@ BOOL isThousandFormatReport = NO;
             // if (resultArray1.count!=0)
             {
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 [_arrDynamicReport removeAllObjects];
@@ -2656,7 +2656,7 @@ BOOL isThousandFormatReport = NO;
     NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     if (resultArray1.count!=0){
         for (int i=0; i<resultArray1.count; i++){
-            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
         }
         for (int i=0; i<1; i++) {
             if (i==0)

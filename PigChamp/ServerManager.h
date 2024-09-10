@@ -35,4 +35,8 @@
 
 
 + (void)sendRequestForUserParametersData:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
+//>>>>>trello
+
++ (void)getAllLanguageTranslation:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure;
+
 @end

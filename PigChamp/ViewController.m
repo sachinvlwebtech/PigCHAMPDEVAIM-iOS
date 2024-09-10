@@ -142,6 +142,78 @@ NSString *Success        = @"";
             NSLog(@"Exception in get language list=%@",exception.description);
         }
 } 
+
+//>>>trello
+-(void)callLoadLanguageData{
+    
+        @try {
+        if ([[ControlSettings sharedSettings] isNetConnected ]){
+            
+            [ServerManager getAllLanguageTranslation:^(NSString *responseData) {
+                
+                    NSArray *_arrTransLanguage = [NSJSONSerialization JSONObjectWithData:[responseData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                //Trello
+                  _arrayEnglish = [[NSMutableArray alloc]init];                    if(_arrTransLanguage.count > 0){
+                        _arrayEnglish = [_arrTransLanguage copy];
+                        
+                    }
+                }
+             onFailure:^(NSString *responseData, NSError *error) {
+                [_customIOS7AlertView close];
+                
+                id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *strDate = [dateformate stringFromDate:[NSDate date]];
+                
+                NSString *strErr = [NSString stringWithFormat:@"User Name = %@,,error = %@,DateTime=%@,Event=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userName"],error.description,strDate,@"Simple Report"];
+                [tracker set:kGAIScreenName value:strErr];
+                [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+                
+                UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                           message:[@"" valueForKey:@"Error"]
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+                logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+                UIView *controllerView = myAlertController.view;
+                [controllerView addSubview:logoImageView];
+                [controllerView bringSubviewToFront:logoImageView];
+                UIAlertAction* ok = [UIAlertAction
+                                     actionWithTitle:@"OK"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action) {
+                                         //[self.navigationController popToRootViewControllerAnimated:YES];
+                                         [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                     }];
+                
+                [myAlertController addAction: ok];
+                [self presentViewController:myAlertController animated:YES completion:nil];
+            }];
+        }
+        else {
+            UIAlertController *myAlertController = [UIAlertController alertControllerWithTitle:@"PigCHAMP"
+                                                                                       message:@"You must be online for the app to function."
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+            UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(35, 7, 40, 40)];
+            logoImageView.image = [UIImage imageNamed:@"menuLogo.jpg"];
+            UIView *controllerView = myAlertController.view;
+            [controllerView addSubview:logoImageView];
+            [controllerView bringSubviewToFront:logoImageView];
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action) {
+                                     [myAlertController dismissViewControllerAnimated:YES completion:nil];
+                                 }];
+            
+            [myAlertController addAction: ok];
+            [self presentViewController:myAlertController animated:YES completion:nil];
+        }
+        }@catch (NSException *exception) {
+            NSLog(@"Exception in get language list=%@",exception.description);
+        }
+    }
+/*
 -(void)callLoadLanguageData{
     NSString *str = [[[_pref valueForKey:@"baseURL"] stringByAppendingString:@"lngmin/"] stringByAppendingString:[NSString stringWithFormat:@"%@_mob.lng",[_pref valueForKey:@"selectedLanguage"]]];
      NSData *data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:str]];
@@ -165,7 +237,7 @@ NSString *Success        = @"";
              [_arrayEnglish addObject:dict];
          }
      }
-}
+}*/
 -(void)callGetLanguageListAPI
 {
     @try {
@@ -340,7 +412,8 @@ NSString *Success        = @"";
 //        [[self.pickerLanguage.subviews objectAtIndex:1] setBackgroundColor:[UIColor darkGrayColor]];
 //        [[self.pickerLanguage.subviews objectAtIndex:2] setBackgroundColor:[UIColor darkGrayColor]];
         if (pickerView==self.pickerLanguage) {
-            return [[_arrLanguage objectAtIndex:row] valueForKey:@"name"];
+            //Trello
+            return [[_arrLanguage objectAtIndex:row] valueForKey:@"description"];
         }
     }
     @catch (NSException *exception){
@@ -369,7 +442,8 @@ NSString *Success        = @"";
         
         if (pickerView==self.pickerLanguage)
         {
-            lblSortText.text = [[_arrLanguage objectAtIndex:row] valueForKey:@"name"];
+            //trello
+            lblSortText.text = [[_arrLanguage objectAtIndex:row] valueForKey:@"description"];
             return lblSortText;
         }
     }
@@ -2227,7 +2301,7 @@ NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSM
 NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
 if (resultArray1.count!=0){
 for (int i=0; i<resultArray1.count; i++){
-    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
 }
 for (int i=0; i<1; i++) {
     if (i==0)
@@ -2400,11 +2474,12 @@ return strSearchTitle;
             if(buttonIndex == 0) {
                 if (weakSelf.arrLanguage.count>0) {
                     NSInteger row = [weakSelf.pickerLanguage selectedRowInComponent:0];
-                    [weakSelf.btnLanguage setTitle:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"] forState:UIControlStateNormal];
-                    
+                   // [weakSelf.btnLanguage setTitle:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"] forState:UIControlStateNormal];
+                    //>>>>>>>> trello language
+                    [weakSelf.btnLanguage setTitle:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"description"] forState:UIControlStateNormal];
                     //http://192.168.20.40/PigchampWeb/ //http://rdstest.pigchamp.com/
                     
-                    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+                   /* NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
  
                       NSString *str = [[[defaults valueForKey:@"baseURL"] stringByAppendingString:@"lngmin/"] stringByAppendingString:[NSString stringWithFormat:@"%@_mob.lng",[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"]]];
                 //    NSString *str = [[NSLocalizedString(@"baseUrl" , @"") stringByAppendingString:@"lngmin/"] stringByAppendingString:[NSString stringWithFormat:@"%@_mob.lng",[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"]]];
@@ -2416,9 +2491,9 @@ return strSearchTitle;
                      
                      NSData *data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:strencoded]];*/
                     /*********************************************************************/
-                    NSString *gameFileContents = [[NSString alloc] initWithData:data encoding:NSUTF16StringEncoding];
+                   // NSString *gameFileContents = [[NSString alloc] initWithData:data encoding:NSUTF16StringEncoding];
                     //  NSLog(@"gameFileContents%@", gameFileContents);
-                    
+                  /*
                     NSMutableArray *allLinedStrings = (NSMutableArray*)[gameFileContents componentsSeparatedByString:@"\r\n"];
                     NSMutableArray *newArray;// = [[NSMutableArray alloc]init];
                     _arrayEnglish = [[NSMutableArray alloc]init];
@@ -2436,9 +2511,14 @@ return strSearchTitle;
                             [weakSelf.arrayEnglish addObject:dict];
                         }
                     }
+                    */
+                    //[weakSelf.pref setValue:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"] forKey:@"selectedLanguage"];
                     
-                    [weakSelf.pref setValue:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"name"] forKey:@"selectedLanguage"];
+                    [weakSelf.pref setValue:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"description"] forKey:@"selectedLanguage"];
+                    //<<<< trello for langu
+                    [weakSelf.pref setValue:[[weakSelf.arrLanguage objectAtIndex:row] valueForKey:@"code"] forKey:@"selectedLanguageCode"];
                     [weakSelf.pref synchronize];
+                    [weakSelf callLoadLanguageData];
                 }
                 
                 [weakSelf.alertForLanguage close];
@@ -2449,7 +2529,8 @@ return strSearchTitle;
         
         for (int count=0;count<weakSelf.arrLanguage.count;count++) {
             if (strPrevSelectedValue.length>0){
-                if( [strPrevSelectedValue caseInsensitiveCompare:[[weakSelf.arrLanguage objectAtIndex:count] valueForKey:@"name"]] == NSOrderedSame){
+                //trello
+                if( [strPrevSelectedValue caseInsensitiveCompare:[[weakSelf.arrLanguage objectAtIndex:count] valueForKey:@"description"]] == NSOrderedSame){
                     [self.pickerLanguage selectRow:count inComponent:0 animated:NO];
                     [self.pickerLanguage setShowsSelectionIndicator:YES];
                 }
@@ -2597,6 +2678,8 @@ return strSearchTitle;
     [self callGetLanguageListAPI];
     [self callSessionTimeoutValue];
     [_pref setValue:@"English (US)" forKey:@"selectedLanguage"];
+    //<<<< trello for lang
+    [_pref setValue:@"en-US" forKey:@"selectedLanguageCode"];
     [self.btnLanguage setTitle:[_pref valueForKey:@"selectedLanguage"] forState:UIControlStateNormal];
     [_pref synchronize];
     [self callLoadLanguageData];

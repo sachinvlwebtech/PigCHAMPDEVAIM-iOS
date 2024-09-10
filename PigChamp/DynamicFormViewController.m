@@ -182,7 +182,7 @@ NSString* strpigletIdentitiesEdit;
         strMsgTranspoder = @"Are you sure you want to continue without trasponder?";
         if (resultArray1.count!=0){
             for (int i=0; i<resultArray1.count; i++){
-                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 //NSLog(@"dictMenu=%@",dictMenu);
             }
             
@@ -1673,7 +1673,7 @@ NSString* strpigletIdentitiesEdit;
                 
                 if (resultArray1.count!=0){
                     for (int i=0; i<resultArray1.count; i++){
-                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                     }
                     
                     for (int i=0; i<3; i++) {
@@ -2390,33 +2390,37 @@ NSString* strpigletIdentitiesEdit;
             else
                 return NO;
         }
+        
         //******************************** code addded for Bug 28781 By M.
         else if ([[dict valueForKey:@"dk"]integerValue]==3 && (![self isTwoText])) { //added twotext condition for Bug-27775  by M @@@@@
-            if([string isEqualToString:@""]){
-                [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
-                [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
-                return YES;
-            }
-            NSString *strMinVal =[dict valueForKey:@"mnV"]?[dict valueForKey:@"mnV"]:@"";
-            NSString *strMaxVal = [dict valueForKey:@"mxV"]?[dict valueForKey:@"mxV"]:@"";
-            
-            if (([strMinVal integerValue]>=0) && ([strMaxVal integerValue]>0)&&([newString length]<=2)) {
-                NSCharacterSet *characterSet = nil;
-                characterSet = [NSCharacterSet characterSetWithCharactersInString:@"01234567890"];
-                NSRange location = [string rangeOfCharacterFromSet:characterSet];
-                if ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue])) {
-                    [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
-                    [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
-                    return ((location.location != NSNotFound) && ([newString integerValue] >= [strMinVal integerValue] && [newString integerValue] <= [strMaxVal integerValue]));
-                }
-                else
-                    return NO;
-            }
-            else
-                return NO;
-            }
-        //**************
-        //***code added for Number of Piglet for Bug-28773 By M.
+            if ([string isEqualToString:@""]) {
+                   [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                   [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                   return YES;
+               }
+               
+               NSString *strMinVal = [dict valueForKey:@"mnV"] ? [dict valueForKey:@"mnV"] : @"";
+               NSString *strMaxVal = [dict valueForKey:@"mxV"] ? [dict valueForKey:@"mxV"] : @"";
+               
+               // Convert newString to integer value to compare
+               NSInteger intNewValue = [newString integerValue];
+               
+               // Adjusting the character set to include negative sign
+               NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789-"];
+               
+               // Check if the replacement string contains only valid characters
+               NSRange location = [string rangeOfCharacterFromSet:characterSet];
+               if (location.location != NSNotFound &&
+                   [newString rangeOfCharacterFromSet:[characterSet invertedSet]].location == NSNotFound &&
+                   intNewValue >= [strMinVal integerValue] &&
+                   intNewValue <= [strMaxVal integerValue]) {
+                   
+                   [self.dictDynamic setValue:newString forKey:[dict valueForKey:@"Lb"]];
+                   [dictJson setValue:newString forKey:[dict valueForKey:@"dk"]];
+                   return YES;
+               } else {
+                   return NO;
+               }}//***code added for Number of Piglet for Bug-28773 By M.
      /*   else if ([[dict valueForKey:@"dk"]integerValue]==3) {
             //*** added spacing for backspace key was not working Bug-28773 and added validation for length bug-28791 By M.
             if([string isEqualToString:@""]) {
@@ -4492,7 +4496,7 @@ float animatedDistance;
         
         if (resultArray1.count!=0){
             for (int i=0; i<resultArray1.count; i++){
-                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
             }
             
             for (int i=0; i<1; i++) {
@@ -4916,7 +4920,7 @@ for (NSDictionary *dict in _arrDynamic)
                 
                 if (resultArray1.count!=0){
                     for (int i=0; i<resultArray1.count; i++){
-                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                     }
                     
                     for (int i=0; i<1; i++) {
@@ -5028,7 +5032,7 @@ for (NSDictionary *dict in _arrDynamic)
             
             if (resultArray1.count!=0){
                 for (int i=0; i<resultArray1.count; i++){
-                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                    [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 }
                 
                 for (int i=0; i<1; i++) {
@@ -5182,7 +5186,7 @@ for (NSDictionary *dict in _arrDynamic)
     //    NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     //
     //    for (int i=0; i<resultArray1.count; i++){
-    //        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+    //        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
     //    }
     //
     //    for (int i=0; i<2; i++) {
@@ -6580,7 +6584,7 @@ for (NSDictionary *dict in _arrDynamic)
     NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     
     for (int i=0; i<resultArray1.count; i++){
-        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
     }
     
     for (int i=0; i<2; i++) {
@@ -7287,7 +7291,7 @@ for (NSDictionary *dict in _arrDynamic)
     NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     
     for (int i=0; i<resultArray1.count; i++){
-        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
     }
     
     for (int i=0; i<2; i++) {
@@ -12632,7 +12636,7 @@ for (NSDictionary *dict in _arrDynamic)
         if (resultArray1.count!=0)
         {
             for (int i=0; i<resultArray1.count; i++){
-                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
             }
             
             for (int i=0; i<1; i++) {
@@ -12682,7 +12686,7 @@ for (NSDictionary *dict in _arrDynamic)
     NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     if (resultArray1.count!=0){
         for (int i=0; i<resultArray1.count; i++){
-            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
         }
         for (int i=0; i<1; i++) {
             if (i==0)

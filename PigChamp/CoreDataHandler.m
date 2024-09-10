@@ -884,7 +884,9 @@ this function updates sqllite entries via core data
         
         NSMutableArray *predicateList = [NSMutableArray array];
             if ([Checkstring length] > 0) {
-                NSPredicate *pred = [NSPredicate predicateWithFormat:@"englishText == [c] %@",Checkstring];
+                //trello
+                //NSPredicate *pred = [NSPredicate predicateWithFormat:@"englishText == [c] %@",Checkstring];
+                NSPredicate *pred = [NSPredicate predicateWithFormat:@"key == [c] %@",Checkstring];
                 [predicateList addObject:pred];
             }
         // NSCompoundPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateList];
@@ -909,6 +911,55 @@ this function updates sqllite entries via core data
     
     return fetchResults;
 }
+//trello
+-(NSArray*)getTranslatedText:(NSMutableArray*)arrayOfIds{
+    static NSString * fetchRequestString = @"fetchResults";
+    NSArray *fetchResults;
+    
+    @synchronized (fetchRequestString)
+    {
+//        NSString *searchString = @"John  Sm ";
+//        NSArray *words = [searchString componentsSeparatedByString:@" "];
+        
+        NSMutableArray *predicateList = [NSMutableArray array];
+        for (NSString *word in arrayOfIds) {
+            if ([word length] > 0) {
+                NSPredicate *pred = [NSPredicate predicateWithFormat:@"key ==[c] %@",word];
+                [predicateList addObject:pred];
+            }
+        }
+        
+        NSCompoundPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateList];
+        
+        NSManagedObjectContext *moc = [self defaultManagedObjectContext];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        [fetchRequest setEntity:[NSEntityDescription entityForName:@"LngData" inManagedObjectContext:moc]];
+        [fetchRequest setPredicate:predicate];
+        
+        NSError *error = nil;
+
+        // Log the predicate to debug
+        NSLog(@"Fetching with predicate: %@", predicate);
+        
+        // Ensure that the context is saved before fetching
+        if ([moc hasChanges]){
+            if (![moc save:&error]) {
+                NSLog(@"Unresolved error saving context: %@, %@", error, [error userInfo]);
+                return nil;
+            }
+        }
+        
+        fetchResults = [moc executeFetchRequest:fetchRequest error:&error];
+        
+        if (error) {
+            NSLog(@"Error executing fetch request: %@, %@", error, [error userInfo]);
+        } else {
+            NSLog(@"Fetch results count: %lu", (unsigned long)fetchResults.count);
+        }   }
+    
+    return fetchResults;
+}
+/*
 -(NSArray*)getTranslatedText:(NSMutableArray*)arrayOfIds{
     static NSString * fetchRequestString = @"fetchResults";
     NSArray *fetchResults;
@@ -946,7 +997,7 @@ this function updates sqllite entries via core data
     }
     
     return fetchResults;
-}
+}*/
 
 -(NSArray*)getTranslated:(NSMutableArray*)arrayOfIds{
     static NSString * fetchRequestString = @"fetchResults";
@@ -954,7 +1005,9 @@ this function updates sqllite entries via core data
     
     @synchronized (fetchRequestString)
     {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"englishText IN %@", arrayOfIds];
+       // NSPredicate *predicate = [NSPredicate predicateWithFormat:@"englishText IN %@", arrayOfIds];
+        //trello
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"key IN %@", arrayOfIds];
         NSManagedObjectContext * moc = [self defaultManagedObjectContext];
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         [fetchRequest setEntity:[NSEntityDescription entityForName:@"LngData" inManagedObjectContext:moc]];
@@ -1014,7 +1067,67 @@ this function updates sqllite entries via core data
 
 }
 
+//>>>>> for trello
+-(BOOL)insertLangaugeList:(NSArray *)arrlanglist{
+    BOOL response = YES;
+    NSError* error;
 
+    NSManagedObjectContext* managedObjectContext = [self defaultManagedObjectContext];
+    
+    for (int counter=0; counter<arrlanglist.count; counter++){
+        NSManagedObject *langManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"LangList" inManagedObjectContext:managedObjectContext];
+           NSDictionary *dict = [arrlanglist objectAtIndex:counter];
+
+           // Extract the specific fields you want to save
+           id field1Value = dict[@"code"];
+           id field2Value = dict[@"description"];
+
+           // Set the values on the managed object
+           [langManagedObject setValue:field1Value forKey:@"code"];
+           [langManagedObject setValue:field2Value forKey:@"name"];
+       }
+
+       // Save the context to persist the changes
+       NSError *error1 = nil;
+       if (![managedObjectContext save:&error1]) {
+           NSLog(@"Failed to save to Core Data: %@", error1.localizedDescription);
+       }
+    [self commitDefaultMOC];
+    return response;
+    }
+//<<<< trello
+-(BOOL)inserttranslatedLangaugeStrings:(NSArray*)arrtranslng{
+    BOOL response = YES;
+    
+
+    NSManagedObjectContext* managedObjectContext = [self defaultManagedObjectContext];
+    
+    for (int counter=0; counter<arrtranslng.count; counter++){
+        //NSManagedObject *langManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"LngData" inManagedObjectContext:managedObjectContext];
+         //  NSDictionary *dict = [arrtranslng objectAtIndex:counter];
+
+           // Extract the specific fields you want to save
+         //  NSString *field1Value = dict[@"key"];
+          // NSString *field2Value = dict[@"trn"];
+
+           // Set the values on the managed object
+         //  [langManagedObject setValue:field1Value forKey:@"englishText"];
+          // [langManagedObject setValue:field2Value forKey:@"translatedText"];
+       
+             NSManagedObject* treatmentManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"LngData" inManagedObjectContext:managedObjectContext];
+             NSDictionary* dict = [arrtranslng objectAtIndex:counter];
+             [treatmentManagedObject setValuesForKeysWithDictionary:dict];
+        
+       }
+
+       // Save the context to persist the changes
+       NSError *error1 = nil;
+       if (![managedObjectContext save:&error1]) {
+           NSLog(@"Failed to save to Core Data: %@", error1.localizedDescription);
+       }
+    [self commitDefaultMOC];
+    return response;
+}
 #pragma mark Entity Delete functions
 
 // this function will remove all entries from the specified entity name

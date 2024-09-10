@@ -139,4 +139,9 @@
 -(NSArray*)getValuesBarnRoomPen:(NSString*)entityName column:(NSString*)column andPredicate:(NSPredicate*)predicate andSortDescriptors:(NSArray*)sortDescriptors;
 -(NSArray*)getTranslated:(NSMutableArray*)arrayOfIds;
 -(NSString*)getTranslatedTextForString:(NSString*)Checkstring;
+
+//>>>>> for trello task
+-(BOOL)insertLangaugeList:(NSArray *)arrlanglist;
+-(BOOL)inserttranslatedLangaugeStrings:(NSArray*)arrtranslng;
+
 @end

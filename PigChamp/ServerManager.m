@@ -373,7 +373,50 @@ static NSURLConnection *theConnection;
 
 
 
-
+//>>>>> for trello
++ (void)sendRequestForLanguageList:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure {
+    @try{
+        NSString *serviceUrl = @"";
+        //>>>>>language transalation new api cal
+        serviceUrl = [[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]]
+                      stringByAppendingString:@"SrvAdmin.svc/Translations/Languages"];
+   
+        //@"https://lng.pigchamp.com"] stringByAppendingString:@"/api/translation/languages"];
+        
+        serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        //NSString *string = [NSString stringWithFormat:@"%@", serviceUrl];
+        
+        NSMutableURLRequest * request = [[NSMutableURLRequest alloc] init];
+        NSURL *url = [NSURL URLWithString:serviceUrl];
+        [request setURL:url];
+        [request setHTTPMethod:@"GET"];
+        //>>>>> trello language transalation new api call
+       [request setValue:@"1qdvF7EBCfqU02XwVedQvw1hMWs/I18sGGfhzh448IU=" forHTTPHeaderField:@"ApiKey"];
+        NSData *requestBody = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+        [request setHTTPBody:requestBody];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            @try
+            {
+                id langResponse = [[NSString alloc] initWithBytes: [data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+                
+                if(!connectionError){
+                    success(langResponse);
+                    NSLog(@"^^^^^^^language list is -- %@",langResponse);
+                }
+             else {
+                    NSLog(@"Expected an array in the JSON response");
+                }
+            }
+            @catch (NSException *exception){
+                failure(@"Error Occured", connectionError);
+            }}];
+    }
+    @catch (NSException *exception) {
+        
+    }
+}
+/*
 + (void)sendRequestForLanguageList:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure {
     @try{
         NSString *serviceUrl = @"";
@@ -441,7 +484,51 @@ static NSURLConnection *theConnection;
         
     }
 }
+*/
 
+//trello
++ (void)getAllLanguageTranslation:(void (^)(NSString *responseData))success onFailure:(void (^) (NSString *responseData, NSError *error))failure {
+    @try{
+        NSString *serviceUrl = @"";
+        NSUserDefaults *pref;
+        //>>>>>language transalation new api cal
+        // serviceUrl = [[serviceUrl stringByAppendingString :@"https://lng.pigchamp.com/api/translation/phrases/2/"] stringByAppendingString:[NSString stringWithFormat:@"%@/?onlyUntranslated=False",[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedLanguageCode"]]];
+        //:@"https://dev-pc-mobile10.farmsstaging.com/SrvAdmin.svc/Translations/Phrases?appkey=2&langcode="] stringByAppendingString:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedLanguageCode"]]];
+        serviceUrl = [[[serviceUrl stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"]] stringByAppendingString:@"SrvAdmin.svc/Translations/Phrases?"] stringByAppendingString:[NSString stringWithFormat:@"appkey=2&langcode=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedLanguageCode"]]];
+        
+        serviceUrl = [serviceUrl stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        //NSString *string = [NSString stringWithFormat:@"%@", serviceUrl];
+        
+        NSMutableURLRequest * request = [[NSMutableURLRequest alloc] init];
+        NSURL *url = [NSURL URLWithString:serviceUrl];
+        [request setURL:url];
+        [request setHTTPMethod:@"GET"];
+        //>>>>>language transalation new api call
+       [request setValue:@"1qdvF7EBCfqU02XwVedQvw1hMWs/I18sGGfhzh448IU=" forHTTPHeaderField:@"ApiKey"];
+        NSData *requestBody = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+        [request setHTTPBody:requestBody];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            @try
+            {
+                id langResponse = [[NSString alloc] initWithBytes: [data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+                
+                if(!connectionError){
+                    success(langResponse);
+                    NSLog(@"^^^^^^^Translated language strings are -- %@",langResponse);
+                }
+             else {
+                    NSLog(@"Expected an array in the JSON response");
+                }
+            }
+            @catch (NSException *exception){
+                failure(@"Error Occured", connectionError);
+            }}];
+    }
+    @catch (NSException *exception) {
+        
+    }
+}
 + (void)sendRequestForLogin:(NSString*)userName password:(NSString*)password accountNumber:(NSString*)accNumber language:(NSString*)language  onSucess:(void (^)(NSString *responseData))success onFailure:(void (^) (NSMutableDictionary *responseData, NSError *error))failure
 {
     @try{
@@ -518,7 +605,8 @@ static NSURLConnection *theConnection;
                     
                     if (resultArray1.count!=0) {
                         for (int i=0; i<resultArray1.count; i++) {
-                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                            //trello
+                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                         }
                         
                         for (int i=0; i<2; i++) {
@@ -611,7 +699,8 @@ static NSURLConnection *theConnection;
                     
                     if (resultArray1.count!=0){
                         for (int i=0; i<resultArray1.count; i++){
-                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                            //trello
+                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                         }
                         
                         for (int i=0; i<2; i++) {
@@ -658,7 +747,7 @@ static NSURLConnection *theConnection;
                 
                 if (resultArray1.count!=0){
                     for (int i=0; i<resultArray1.count; i++){
-                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                     }
                     
                     for (int i=0; i<2; i++) {
@@ -735,7 +824,7 @@ static NSURLConnection *theConnection;
                 
                 if (resultArray1.count!=0){
                     for (int i=0; i<resultArray1.count; i++){
-                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                     }
                     
                     for (int i=0; i<2; i++) {
@@ -907,7 +996,7 @@ static NSURLConnection *theConnection;
                 
                 if (resultArray1.count!=0){
                     for (int i=0; i<resultArray1.count; i++){
-                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                        [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                     }
                     
                     for (int i=0; i<6; i++) {
@@ -1096,7 +1185,7 @@ static NSURLConnection *theConnection;
                 //
                 //                    if (resultArray1.count!=0) {
                 //                        for (int i=0; i<resultArray1.count; i++) {
-                //                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                //                            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
                 //                        }
                 //
                 //                        for (int i=0; i<2; i++) {

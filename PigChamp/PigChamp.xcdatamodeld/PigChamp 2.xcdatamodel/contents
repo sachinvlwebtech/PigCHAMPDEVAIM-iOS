@@ -121,6 +121,10 @@
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="LangList" representedClassName="LngData" syncable="YES">
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Leakage" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ln" optional="YES" attributeType="String" syncable="YES"/>
@@ -132,8 +136,8 @@
         <attribute name="sn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="LngData" representedClassName="LngData" syncable="YES">
-        <attribute name="englishText" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="translatedText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="trn" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Locations" syncable="YES">
         <attribute name="br" optional="YES" attributeType="String" syncable="YES"/>

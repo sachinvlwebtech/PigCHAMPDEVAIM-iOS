@@ -77,7 +77,7 @@ BOOL isOpenHelp = NO;
 
         if (resultArray1.count!=0){
             for (int i=0; i<resultArray1.count; i++){
-                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+                [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
             }
             
             for (int i=0; i<4; i++) {
@@ -297,7 +297,7 @@ BOOL isOpenHelp = NO;
     NSMutableDictionary *dictMenu = [[NSMutableDictionary alloc]init];
     if (resultArray1.count!=0){
         for (int i=0; i<resultArray1.count; i++){
-            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"translatedText"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"englishText"] uppercaseString]];
+            [dictMenu setObject:[[resultArray1 objectAtIndex:i]valueForKey:@"trn"] forKey:[[[resultArray1 objectAtIndex:i]valueForKey:@"key"] uppercaseString]];
         }
         for (int i=0; i<1; i++) {
             if (i==0)
@@ -330,9 +330,9 @@ BOOL isOpenHelp = NO;
 //        
 //        NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:@"Help",nil]];
 //        if (resultArray1.count>0) {
-//            if (![[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"] isKindOfClass:[NSNull class]]){
-//                if ([[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"] length]>0){
-//                    self.slidingViewController.title = [[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"]?[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"]:@"";
+//            if (![[[resultArray1 objectAtIndex:0]valueForKey:@"trn"] isKindOfClass:[NSNull class]]){
+//                if ([[[resultArray1 objectAtIndex:0]valueForKey:@"trn"] length]>0){
+//                    self.slidingViewController.title = [[resultArray1 objectAtIndex:0]valueForKey:@"trn"]?[[resultArray1 objectAtIndex:0]valueForKey:@"trn"]:@"";
 //                }
 //            }
 //        }
@@ -360,9 +360,9 @@ BOOL isOpenHelp = NO;
 //        self.slidingViewController.title = @"PigCHAMP";
 //        NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:[[NSMutableArray alloc] initWithObjects:@"PigCHAMP",nil]];
 //        if (resultArray1.count>0) {
-//            if (![[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"] isKindOfClass:[NSNull class]]){
-//                if ([[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"] length]>0){
-//                    self.slidingViewController.title = [[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"]?[[resultArray1 objectAtIndex:0]valueForKey:@"translatedText"]:@"";
+//            if (![[[resultArray1 objectAtIndex:0]valueForKey:@"trn"] isKindOfClass:[NSNull class]]){
+//                if ([[[resultArray1 objectAtIndex:0]valueForKey:@"trn"] length]>0){
+//                    self.slidingViewController.title = [[resultArray1 objectAtIndex:0]valueForKey:@"trn"]?[[resultArray1 objectAtIndex:0]valueForKey:@"trn"]:@"";
 //                }
 //            }
 //        }
