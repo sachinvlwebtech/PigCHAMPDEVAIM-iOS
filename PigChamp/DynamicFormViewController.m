@@ -9849,9 +9849,6 @@ for (NSDictionary *dict in _arrDynamic)
                       [inputDateFormatter setDateFormat:@"dd/MM/yyyy"]; //changed due to bug 30218
 
                     NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
-
-                    
-                    //
                     NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
                     [dateFormatters setDateFormat:@"dd/MM/yyyy"];
                     NSDate *date  = [dateFormatters dateFromString:strSelectedDate];
