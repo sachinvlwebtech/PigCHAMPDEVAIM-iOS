@@ -5361,6 +5361,17 @@ for (NSDictionary *dict in _arrDynamic)
                 strServiceName = @"/SrvEVTCommon.svc/SaveEventJson?";
                 break;
                 //"/SrvEVTCommon.svc/SaveEventJson/";
+                //ttBoar
+            case 113:
+                strServiceName = @"/SrvEVTArival.svc/SaveEVTBoarRetained?";
+                break;
+            case 114:
+                strServiceName = @"SrvEVTMatings.svc/SaveEVTBoarAvailable?";
+                break;
+            case 116:
+                strServiceName = @"SrvEVTDepartures.svc/SaveEVTBoarTransfer";
+                break;
+          
             default:
                 break;
         }
@@ -8338,7 +8349,7 @@ for (NSDictionary *dict in _arrDynamic)
                 if ([self.strEventCode isEqualToString:@"1"] || [self.strEventCode isEqualToString:@"2"]) {
                     predicate = [NSPredicate predicateWithFormat:@"sx == 'M' OR sx == '' OR sx == null"];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:sortDescriptors];
-                }else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"]){
+                }else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"] || [self.strEventCode isEqualToString:@"113"]){
                     predicate = [NSPredicate predicateWithFormat:@"sx == 'F' OR sx == '' OR sx == null"];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:sortDescriptors];
                 }
@@ -9678,7 +9689,7 @@ for (NSDictionary *dict in _arrDynamic)
         [_alertForPickUpDate setOnButtonTouchUpInside:^(CustomIOS7AlertView *alertView, int buttonIndex) {
             if(buttonIndex == 0){
                 NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"MM/dd/yyyy"];
+                [formatter setDateFormat:@"dd/MM/yyyy"];
                 
                 NSString *strSelectedDate = [formatter stringFromDate:weakSelf.dtPicker.date];
                 NSString *strBaseDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZD"];
@@ -9773,6 +9784,24 @@ for (NSDictionary *dict in _arrDynamic)
                     NSDate *dtselectedDate = [formatter dateFromString:strSelectedDate];
                     NSDate *Firstdate= [weakSelf getFirstDateOfCurrentYear:dtselectedDate];
                     
+//                    // demo code
+//                    //
+//                            [formatter setDateFormat:@"MM/dd/yyyy"];
+//                            [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+//                            // Convert string to NSDate
+//                            NSDate *dtSelectedDates = [formatter dateFromString:strSelectedDate];
+//                     
+//                                NSLog(@"Converted date: %@", dtSelectedDates);
+//                                [formatter setDateFormat:@"dd/MM/yyyy"];
+//                                NSString *dtselectedDate = [formatter stringFromDate:dtSelectedDates];
+//                                NSLog(@"Formatted date string: %@", dtselectedDate);
+//                            
+//                    NSDate *Firstdate= [weakSelf getFirstDateOfCurrentYear:dtselectedDate];
+//                    //
+                    
+                    
+                    
+                    
                     // NSDate *BaseDate = [formatter dateFromString:strBaseDate];
                     //int days = [dtselectedDate timeIntervalSinceDate:Firstdate]/24/60/60;
                     // NSLog(@"days:%d",days);
@@ -9815,9 +9844,17 @@ for (NSDictionary *dict in _arrDynamic)
                 }else if([_strDateFormat isEqualToString:@"4"]){
                     //4 = mm/dd/yy        e.g. 10/09/23
                     NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                  //  [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    //issue here 30218 V10
+                      [inputDateFormatter setDateFormat:@"dd/MM/yyyy"]; //changed due to bug 30218
+
                     NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
 
+                    
+                    //
+                    NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+                    [dateFormatters setDateFormat:@"dd/MM/yyyy"];
+                    NSDate *date  = [dateFormatters dateFromString:strSelectedDate];
                     // Create a date formatter for the desired output format
                     NSDateFormatter *outputDateFormatter = [[NSDateFormatter alloc] init];
                     [outputDateFormatter setDateFormat:@"MM/dd/yy"];
@@ -10731,7 +10768,7 @@ for (NSDictionary *dict in _arrDynamic)
                         predicate = [NSPredicate predicateWithFormat:@"sx == 'M' OR sx == '' OR sx == null"];
                         resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:sortDescriptors];
                     }
-                    else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"]){
+                    else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"] || [self.strEventCode isEqualToString:@"113"]){
                         predicate = [NSPredicate predicateWithFormat:@"sx == 'F' OR sx == '' OR sx == null"];
                         resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:sortDescriptors];
                     }
@@ -12130,7 +12167,7 @@ for (NSDictionary *dict in _arrDynamic)
                     predicate = [NSPredicate predicateWithFormat:@"(sx == 'M' OR sx == '' OR sx == null) AND id=%@",Id];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:nil];
                 }
-                else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"]){
+                else if ([self.strEventCode isEqualToString:@"4"] || [self.strEventCode isEqualToString:@"5"] || [self.strEventCode isEqualToString:@"8"]||[self.strEventCode isEqualToString:@"6"]|| [self.strEventCode isEqualToString:@"113"]){
                     predicate = [NSPredicate predicateWithFormat:@"(sx == 'F' OR sx == '' OR sx == null) AND id==%@",Id];
                     resultArray = [[CoreDataHandler sharedHandler] getValuesToListWithEntityName:@"Genetics" andPredicate:predicate andSortDescriptors:nil];
                 }

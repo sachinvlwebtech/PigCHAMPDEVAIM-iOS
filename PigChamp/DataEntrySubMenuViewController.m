@@ -303,6 +303,8 @@ BOOL isOpen = NO;
             [arrMenu addObject:@"Boar Arrival"];
             [arrMenu addObject:@"Gilt Arrival"];
             [arrMenu addObject:@"Gilt Retained"];
+            //ttBoar
+            [arrMenu addObject:@"Boar Retained"];
             [arrMenu addObject:@"Sow Arrival"];
             [arrMenu addObject:@"Batch Gilt Arrival"];
 
@@ -316,8 +318,8 @@ BOOL isOpen = NO;
                 }
                 
                 [arrMenu removeAllObjects];
-
-            for (int i=0; i<6; i++) {
+//ttBoar
+            for (int i=0; i<7; i++) {
                 if (i==0) {
                     if ([dictMenu objectForKey:[@"Semen Purchase" uppercaseString]] && ![[dictMenu objectForKey:[@"Semen Purchase" uppercaseString]] isKindOfClass:[NSNull class]]) {
                         [self addObject:[dictMenu objectForKey:[@"Semen Purchase" uppercaseString]]?[dictMenu objectForKey:[@"Semen Purchase" uppercaseString]]:@"" englishVersion:@"Semen Purchase"];
@@ -346,14 +348,20 @@ BOOL isOpen = NO;
                     else{
                         [arrMenu addObject:@"Gilt Retained"];
                     }
-                }else  if (i==4){
+                }//ttBoar
+                else  if (i==4){
+                    if ([dictMenu objectForKey:[@"Boar Retained" uppercaseString]] && ![[dictMenu objectForKey:[@"Boar Retained" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                        [self addObject:[dictMenu objectForKey:[@"Boar Retained" uppercaseString]]?[dictMenu objectForKey:[@"Boar Retained" uppercaseString]]:@"" englishVersion:@"Boar Retained"];
+                    }
+                }
+                else  if (i==5){
                     if ([dictMenu objectForKey:[@"Sow Arrival" uppercaseString]] && ![[dictMenu objectForKey:[@"Sow Arrival" uppercaseString]] isKindOfClass:[NSNull class]]) {
                         [self addObject:[dictMenu objectForKey:[@"Sow Arrival" uppercaseString]]?[dictMenu objectForKey:[@"Sow Arrival" uppercaseString]]:@"" englishVersion:@"Sow Arrival"];
                     }
                     else{
                         [arrMenu addObject:@"Sow Arrival"];
                     }
-                }else  if (i==5){
+                }else  if (i==6){
                     if ([dictMenu objectForKey:[@"Batch Gilt Arrival" uppercaseString]] && ![[dictMenu objectForKey:[@"Batch Gilt Arrival" uppercaseString]] isKindOfClass:[NSNull class]]) {
                         [self addObject:[dictMenu objectForKey:[@"Batch Gilt Arrival" uppercaseString]]?[dictMenu objectForKey:[@"Batch Gilt Arrival" uppercaseString]]:@"" englishVersion:@"Batch Gilt Arrival"];
                     }
@@ -369,6 +377,8 @@ BOOL isOpen = NO;
             [arrEventCode addObject:@"2"];
             [arrEventCode addObject:@"4"];
             [arrEventCode addObject:@"5"];
+            //ttBoar
+            [arrEventCode addObject:@"113"];
             [arrEventCode addObject:@"6"];
             [arrEventCode addObject:@"8"];
         }else if ([countMenu isEqualToString:@"1"]) {
@@ -378,6 +388,8 @@ BOOL isOpen = NO;
             [arrMenu addObject:@"Female Sale"];
             [arrMenu addObject:@"Boar Sale"];
             [arrMenu addObject:@"Female Transfer"];
+            //ttBoar
+            [arrMenu addObject:@"Male Transfer"];
             
             NSArray* resultArray1 = [[CoreDataHandler sharedHandler] getTranslatedText:arrMenu];
             if (resultArray1.count!=0) {
@@ -387,7 +399,7 @@ BOOL isOpen = NO;
                 }
                 [arrMenu removeAllObjects];
                 
-                for (int i=0; i<6; i++) {
+                for (int i=0; i<7; i++) {
                     if (i==0) {
                         if ([dictMenu objectForKey:[@"Female Death" uppercaseString]] && ![[dictMenu objectForKey:[@"Female Death" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Female Death" uppercaseString]]?[dictMenu objectForKey:[@"Female Death" uppercaseString]]:@"" englishVersion:@"Female Death"];
@@ -423,6 +435,13 @@ BOOL isOpen = NO;
                         else{
                             [arrMenu addObject:@"Female Transfer"];
                         }
+                    }else  if (i==5){
+                            if ([dictMenu objectForKey:[@"Male Transfer" uppercaseString]] && ![[dictMenu objectForKey:[@"Male Transfer" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                                [self addObject:[dictMenu objectForKey:[@"Male Transfer" uppercaseString]]?[dictMenu objectForKey:[@"Male Transfer" uppercaseString]]:@"" englishVersion:@"Male Transfer"];
+                            }
+                            else{
+                                [arrMenu addObject:@"Male Transfer"];
+                            }
                     }
                 }
             }
@@ -433,6 +452,8 @@ BOOL isOpen = NO;
             [arrEventCode addObject:@"13"];
             [arrEventCode addObject:@"12"];
             [arrEventCode addObject:@"44"];
+            //ttBoar
+            [arrEventCode addObject:@"116"];
         }else if ([countMenu isEqualToString:@"2"])
         {
             [arrMenu removeAllObjects];
@@ -441,6 +462,7 @@ BOOL isOpen = NO;
             [arrMenu addObject:@"Boar Joining Boar Group"];
             [arrMenu addObject:@"Boar Leaving Boar Group"];
             [arrMenu addObject:@"Gilt Made Available"];
+            [arrMenu addObject:@"Boar Made Available"];
             [arrMenu addObject:@"Mating"];
             [arrMenu addObject:@"Observed Heat"];
             [arrMenu addObject:@"Pregnancy Check Result"];
@@ -456,7 +478,7 @@ BOOL isOpen = NO;
                 }
                 [arrMenu removeAllObjects];
                 
-                for (int i=0; i<9; i++) {
+                for (int i=0; i<10; i++) {
                     if (i==0) {
                         if ([dictMenu objectForKey:[@"Abortion" uppercaseString]] && ![[dictMenu objectForKey:[@"Abortion" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Abortion" uppercaseString]]?[dictMenu objectForKey:[@"Abortion" uppercaseString]]:@"" englishVersion:@"Abortion"];
@@ -493,27 +515,34 @@ BOOL isOpen = NO;
                             [arrMenu addObject:@"Gilt Made Available"];
                         }
                     }else  if (i==5){
+                        if ([dictMenu objectForKey:[@"Boar Made Available" uppercaseString]] && ![[dictMenu objectForKey:[@"Boar Made Available" uppercaseString]] isKindOfClass:[NSNull class]]) {
+                            [self addObject:[dictMenu objectForKey:[@"Boar Made Available" uppercaseString]]?[dictMenu objectForKey:[@"Boar Made Available" uppercaseString]]:@"" englishVersion:@"Boar Made Available"];
+                        }
+                        else{
+                            [arrMenu addObject:@"Boar Made Available"];
+                        }
+                    }else  if (i==6){
                         if ([dictMenu objectForKey:[@"Mating" uppercaseString]] && ![[dictMenu objectForKey:[@"Mating" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Mating" uppercaseString]]?[dictMenu objectForKey:[@"Mating" uppercaseString]]:@"" englishVersion:@"Mating"];
                         }
                         else{
                             [arrMenu addObject:@"Mating"];
                         }
-                    }else  if (i==6){
+                    }else  if (i==7){
                         if ([dictMenu objectForKey:[@"Observed Heat" uppercaseString]] && ![[dictMenu objectForKey:[@"Observed Heat" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Observed Heat" uppercaseString]]?[dictMenu objectForKey:[@"Observed Heat" uppercaseString]]:@"" englishVersion:@"Observed Heat"];
                         }
                         else{
                             [arrMenu addObject:@"Observed Heat"];
                         }
-                    }else  if (i==7){
+                    }else  if (i==8){
                         if ([dictMenu objectForKey:[@"Pregnancy Check Result" uppercaseString]] && ![[dictMenu objectForKey:[@"Pregnancy Check Result" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Pregnancy Check Result" uppercaseString]]?[dictMenu objectForKey:[@"Pregnancy Check Result" uppercaseString]]:@"" englishVersion:@"Pregnancy Check Result"];
                         }
                         else{
                             [arrMenu addObject:@"Pregnancy Check Result"];
                         }
-                    }else  if (i==8){
+                    }else  if (i==9){
                         if ([dictMenu objectForKey:[@"Semen Collection" uppercaseString]] && ![[dictMenu objectForKey:[@"Semen Collection" uppercaseString]] isKindOfClass:[NSNull class]]) {
                             [self addObject:[dictMenu objectForKey:[@"Semen Collection" uppercaseString]]?[dictMenu objectForKey:[@"Semen Collection" uppercaseString]]:@"" englishVersion:@"Semen Collection"];
                         }
@@ -531,6 +560,8 @@ BOOL isOpen = NO;
             [arrEventCode addObject:@"23"];
             [arrEventCode addObject:@"24"];
             [arrEventCode addObject:@"17"];
+            //ttBoar
+            [arrEventCode addObject:@"114"];
             [arrEventCode addObject:@"19"];
             [arrEventCode addObject:@"18"];
             [arrEventCode addObject:@"20"];
