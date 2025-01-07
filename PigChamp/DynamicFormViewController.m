@@ -1100,7 +1100,6 @@ NSString* strpigletIdentitiesEdit;
         if ([[dict valueForKey:@"dk"] integerValue]==1 || [[dict valueForKey:@"dk"] integerValue]==63 || [[dict valueForKey:@"dk"] integerValue]==12 || [[dict valueForKey:@"dk"] integerValue]==29 || [[dict valueForKey:@"dk"] integerValue]==69 || [[dict valueForKey:@"dk"] integerValue]==38 || [[dict valueForKey:@"dk"] integerValue]==39 || [[dict valueForKey:@"dk"] integerValue]==32 || [[dict valueForKey:@"dk"] integerValue]==27 || [[dict valueForKey:@"dk"] integerValue]==59 || [[dict valueForKey:@"dk"] integerValue]==68 || [[dict valueForKey:@"dk"] integerValue]==60 || [[dict valueForKey:@"dk"] integerValue]==21 || [[dict valueForKey:@"dk"] integerValue]==7){
             //*************Code change on 18th May by Priyanka - Destaination sow purpose**************//
             
-            
             iRCustomCell *cell;
             //            cell = [tableView dequeueReusableCellWithIdentifier:@"TextWihScanner" forIndexPath:indexPath];
             //
@@ -5385,9 +5384,11 @@ for (NSDictionary *dict in _arrDynamic)
                 if ([[dict valueForKey:@"dk"] integerValue] == 2){
                     if (strSelectedDateMMM == nil){
                         NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
-                        [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
-                        
-                        strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
+                      //  [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
+                        [dateFormatterNew setDateFormat:@"dd/MM/yyyy"];
+                      //  strSelectedDatee = [dateFormatterr stringFromDate:[NSDate date]];
+                        strSelectedDateMMM = convertDateFormat([dateFormatterNew stringFromDate:[NSDate date]]); // c
+                     //   strSelectedDateMMM = [dateFormatterNew stringFromDate:[NSDate date]];
                         strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                            withString:@""];
                         [dictJson setValue:strSelectedDateMMM forKey:[dict valueForKey:@"dk"]];
@@ -9730,11 +9731,13 @@ for (NSDictionary *dict in _arrDynamic)
                 NSDateFormatter* dateFormatterNew = [[NSDateFormatter alloc] init];
                 //*** code changed dateformatter changed from dd-MM-yyyy to YYYY-MM-dd cause format required to sent to API --Bugnet No- 27974 by M.Start
                 [dateFormatterNew setDateFormat:@"YYYY-MM-dd"];//,MMMM dd
-               // [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
+              //    [dateFormatterNew setDateFormat:@"dd-MM-yyyy"];
                 // code added by M. End
                 //***condition of else added below for bug - 28889 By M.
                 if ([[dict valueForKey:@"dk"] integerValue] == 2){
-                    strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
+                            
+                    strSelectedDateMMM = convertDateFormat(strSelectedDate);// add by sachin due to bug 30436
+              //    strSelectedDateMMM = [dateFormatterNew stringFromDate:weakSelf.dtPicker.date];
                     strSelectedDateMMM = [strSelectedDateMMM stringByReplacingOccurrencesOfString:@"-"
                                                                                        withString:@""];
                     //***commented below line cause of duplication By M.
@@ -9752,6 +9755,7 @@ for (NSDictionary *dict in _arrDynamic)
                 if (isThousandFormat) {
                     NSString *strBaseDate = [pref valueForKey:@"ZD"];
                     [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
+                    NSString *strSelectedDate = [dateFormatterr stringFromDate:weakSelf.dtPicker.date]; // add by sachin due to bug 30436
                     NSDate *dtselectedDate = [dateFormatterr dateFromString:strSelectedDate];
                     [dateFormatterr setDateFormat:@"YYYYMMdd"];
                     NSDate *BaseDate = [dateFormatterr dateFromString:strBaseDate];
@@ -9863,7 +9867,8 @@ for (NSDictionary *dict in _arrDynamic)
                 }else if([_strDateFormat isEqualToString:@"5"]){
                     //5 = dd/mm/yy        e.g. 09/10/23
                     NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                    [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                 //   [inputDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    [inputDateFormatter setDateFormat:@"dd/MM/yyyy"]; // format changed due to date format issue bug 30218
                     NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDate];
 
                     // Create a date formatter for the desired output format
@@ -10033,7 +10038,9 @@ for (NSDictionary *dict in _arrDynamic)
                     //SDate *dt2=[NSDate date];;
                     [dateFormatterr setDateFormat:@"YYYYMMdd"];
                     if (prevDate.length==0) {
-                        strSelectedDatee = [dateFormatterr stringFromDate:[NSDate date]];
+                        [dateFormatterr setDateFormat:@"dd/MM/yyyy"];
+                      //  strSelectedDatee = [dateFormatterr stringFromDate:[NSDate date]];
+                        strSelectedDatee = convertDateFormat([dateFormatterr stringFromDate:[NSDate date]]); // change due to wrong date (bug 30436), change by sachin
                         // dt2=[NSDate date];
                     }else{
                         [dateFormatterr setDateFormat:@"MM/dd/yyyy"];
@@ -10094,7 +10101,7 @@ for (NSDictionary *dict in _arrDynamic)
                         /***************/
                         
                         NSString *strSelectedDateDayOFYear = [[strSelectedDateyearformat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];
-                        
+    //********
                         /*****************/
                         
                         // NSString *strSelectedDate100 = [[calFormat stringByAppendingString:@"\n"] stringByAppendingString:[dateFormatterr stringFromDate:dtselectedDate]];6
@@ -10119,7 +10126,7 @@ for (NSDictionary *dict in _arrDynamic)
                     else if([_strDateFormat isEqualToString:@"4"]){
                         
                         NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        [inputDateFormatter setDateFormat:@"yyyy-MM-dd"];
                         NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
                         
                         // Create a date formatter for the desired output format
@@ -10133,7 +10140,8 @@ for (NSDictionary *dict in _arrDynamic)
                     else if([_strDateFormat isEqualToString:@"5"]){
                         
                         NSDateFormatter *inputDateFormatter = [[NSDateFormatter alloc] init];
-                        [inputDateFormatter setDateFormat:@"yyyyMMdd"];
+                        inputDateFormatter.timeZone = [NSTimeZone localTimeZone];
+                        [inputDateFormatter setDateFormat:@"yyyy-MM-dd"];
                         NSDate *inputDate = [inputDateFormatter dateFromString:strSelectedDatee];
                         
                         // Create a date formatter for the desired output format
@@ -10177,11 +10185,17 @@ for (NSDictionary *dict in _arrDynamic)
                             [dictJson setObject:dictText forKey:[dict valueForKey:@"dk"]];
                         }
                     }//15,18,19,153 = 0 ...-Farrowing
+                    else if ([[dict valueForKey:@"dk"] integerValue]==169){ // add by sachin due to bug 30218 set defalult value
+                        NSMutableDictionary *mutableDict = [[dictJson valueForKey:@"169"] mutableCopy];
+                        [mutableDict setValue:@"Barrow" forKey:@"37"];
+                        [mutableDict setValue:@"BBwrk - Black Berkshire" forKey:@"43"];
+                        [mutableDict setValue:@"FP - Final Product" forKey:@"44"];
+                        [dictJson setObject:mutableDict forKey:@"169"];
+                    }
                 }else if(strEventCode.integerValue ==27){
                     if ([[dict valueForKey:@"dk"] integerValue]==3) {
                         if ([self isTwoText]){
                             [_dictDynamic setValue:@"0" forKey:[dict valueForKey:@"Lb"]];
-                            
                             NSMutableDictionary *dictText = [[NSMutableDictionary alloc]init];
                             [dictText setValue:@"0" forKey:@"Male"];
                             [dictText setValue:@"0" forKey:@"Female"];
@@ -10357,9 +10371,7 @@ for (NSDictionary *dict in _arrDynamic)
             }else if ([[dict valueForKey:@"dk"] integerValue]==42){
                 [_dictDynamic setValue:@"1" forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:@"1" forKey:[dict valueForKey:@"dk"]];
-            }//~~~~ added for Piglet Identities By M.
-            else if ([[dict valueForKey:@"dk"] integerValue]==169){
-                
+            }else if ([[dict valueForKey:@"dk"] integerValue]==169){    //~~~~ added for Piglet Identities By M.
                 [_dictDynamic setValue:pigletIdentityDict forKey:[dict valueForKey:@"Lb"]];
                 [dictJson setValue:pigletIdentityJsonDict forKey:[dict valueForKey:@"dk"]];
             }
@@ -10394,6 +10406,7 @@ for (NSDictionary *dict in _arrDynamic)
         //        }
         
         //Changed on 21st Oct 20 For maintaining last selected value of Locations
+        
         if (flag == 1){
             NSDictionary * dictJSON = [pref objectForKey:@"lastSelectedDictJSON"];
             [dictJson setValue:[dictJSON valueForKey:@"6"] forKey:@"6"];
@@ -10428,9 +10441,7 @@ for (NSDictionary *dict in _arrDynamic)
             }
             
         }
-        
-        
-        
+
     }
     @catch (NSException *exception) {
         NSLog(@"Exception in fillDefaultValuesForMandatoryFields=%@",exception.description);
@@ -13827,5 +13838,28 @@ for (NSDictionary *dict in _arrDynamic)
     
     NSDate *date = [dateFormatter dateFromString:dateString];
     return (date != nil);
+}
+NSString *convertDateFormat(NSString *dateString) {
+    // Create a date formatter for the original format (dd-MM-yyyy)
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:@"dd-MM-yyyy"];
+    
+    // Parse the input string into a NSDate object
+    NSDate *date = [inputFormatter dateFromString:dateString];
+    
+    if (!date) {
+        // If the input string is not a valid date, return nil or handle the error
+        NSLog(@"Invalid date format");
+        return nil;
+    }
+    
+    // Create a date formatter for the new format (yyyy-MM-dd)
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    // Convert the NSDate object to the new format string
+    NSString *formattedDate = [outputFormatter stringFromDate:date];
+    
+    return formattedDate;
 }
 @end
